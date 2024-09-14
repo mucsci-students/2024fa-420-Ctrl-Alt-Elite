@@ -1,6 +1,6 @@
 import java.util.HashSet;
 import java.util.Set;
-// test
+
 /**
  * Represents a UML class with a name and a set of attributes.
  */
