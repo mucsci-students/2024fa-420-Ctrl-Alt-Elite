@@ -2,3 +2,4 @@
 Team Members: 
 - Sydney Norgaard
 - Jordan Rios
+- Bishal Subedi
