@@ -1,4 +1,1 @@
-# Ctrl-Alt-Elite, 420-2024fa
-Team Members: 
-- Sydney Norgaard
-- Jordan Rios
+# 2024fa-420-Ctrl-Alt-Elite
