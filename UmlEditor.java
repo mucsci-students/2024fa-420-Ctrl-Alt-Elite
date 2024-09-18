@@ -124,5 +124,20 @@ public class UmlEditor {
         }
     }
 
-    // Save and load methods using JsonUtils would be implemented here.
+    // Getters and setters for classes and relationships
+    public Map<String, UmlClass> getClasses() {
+        return classes;
+    }
+
+    public void setClasses(Map<String, UmlClass> classes) {
+        this.classes = classes;
+    }
+
+    public Set<UmlRelationship> getRelationships() {
+        return relationships;
+    }
+
+    public void setRelationships(Set<UmlRelationship> relationships) {
+        this.relationships = relationships;
+    }
 }
