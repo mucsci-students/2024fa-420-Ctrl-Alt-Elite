@@ -1,37 +1,35 @@
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.Collections;
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class SaveLoad {
-    
-    
-    public void save (String fileName) {
-        Gson gson = new Gson();            // Creates a new Gson object to handle JSON operations.
-        try (FileWriter writer = new FileWriter(fileName)) { // Tries to open a file for writing.
-            gson.toJson(this, writer);  // Converts the current object (this) to JSON and writes it to the file.
-            System.out.println("Saved to " + fileName);     // Prints a message saying that the file was saved.
-        } catch (IOException e) {                           // If there’s a problem writing the file, it catches the error.
-            System.out.println("Error saving to file: " + e.getMessage());      // Prints an error message.
-        }
+    private UmlEditor umlEditor;
 
+    public SaveLoad(UmlEditor umlEditor) {
+        this.umlEditor = umlEditor;
     }
 
-    public void loadFromJson(String fileName) {
-        Gson gson = new Gson();
-        try (FileReader reader = new FileReader(fileName)) {
-            Type type = new TypeToken<UMLManager>() {}.getType();
-            UMLManager loadedManager = gson.fromJson(reader, type);
-            this.classes = loadedManager.classes;
-            this.relationships = loadedManager.relationships;
-            System.out.println("Loaded from " + fileName);
+    public void save(String filename) {
+        Gson gson = new Gson();  // Create a Gson object
+        try (FileWriter writer = new FileWriter(filename)) {
+            gson.toJson(umlEditor, writer);  // Convert umlEditor to JSON and write to file
+            System.out.println("Data successfully saved to " + filename);
         } catch (IOException e) {
-            System.out.println("Error loading from file: " + e.getMessage());
+            System.out.println("Failed to save data: " + e.getMessage());
+        }
+    }
+
+    public void loadFromJson(String filename) {
+        Gson gson = new Gson();
+        try (FileReader reader = new FileReader(filename)) {
+            Type umlEditorType = new TypeToken<UmlEditor>() {}.getType();  // Specify the type of UmlEditor
+            this.umlEditor = gson.fromJson(reader, umlEditorType);  // Load the JSON data into umlEditor
+            System.out.println("Data successfully loaded from " + filename);
+        } catch (IOException e) {
+            System.out.println("Failed to load data: " + e.getMessage());
         }
     }
 }
-
