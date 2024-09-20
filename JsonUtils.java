@@ -81,7 +81,7 @@ public class JsonUtils {
          * @return The relationships in the UML editor.
          */
         public Set<UmlRelationship> getRelationships() {
-            return relationships;
+             return relationships;
         }
     }
 }
