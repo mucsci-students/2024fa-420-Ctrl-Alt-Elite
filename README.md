@@ -9,6 +9,22 @@ This project results from a large-stakes, group assessment in the capstone cours
 
 ## Instructions for Downloading and Running the UML Editor
 
+### Adding the Gson JAR file to the Classpath
+We have implemented a way to save and load data entered into the UML editor. This is done by using a Gson library to create a local file in the JSON format to save to and load from. For these commands to work, you have to ensure that the proper file is installed and that it is connected to the program. Here are instructions for doing so in both Eclipse and VsCode:
+
+### Eclipse
+- Go to this link and download the .jar file, https://mvnrepository.com/artifact/com.google.code.gson/gson/2.11.0 
+- Right click on default package/scr folder that contains the .java files for the UML editor
+- Go to "Build Path" and click "Configure Build Path..."
+- Select the "Libraries" tab
+- Click on "Classpath"
+- Click "Add External JARs..." on the right
+- Locate the Gson file and select it
+- Click "Apply and Close"
+
+### VS Code
+- 
+
 
 ## Developers: 
 - Sydney Norgaard - sydney-norgaard
