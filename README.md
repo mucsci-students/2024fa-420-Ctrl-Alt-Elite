@@ -1,6 +1,3 @@
-# Ctrl-Alt-Elite, 420-2024fa
-Team Members: 
-- Sydney Norgaard
+# 2024fa-420-Ctrl-Alt-Elite
+Team Members:
 - Jordan Rios
-- Sujan Gurung
-- Bishal Subedi
