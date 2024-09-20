@@ -8,7 +8,7 @@ import java.util.Scanner;
  */
 public class Main {
 
-    /** The UML editor instance to manage classes and relationships. */
+    /** The UML editor instance to manage classes and relationships.*/
     private static UmlEditor umlEditor = new UmlEditor();
 
     /**
