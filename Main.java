@@ -121,27 +121,27 @@ public class Main {
                     umlEditor.listRelationships();
                     break;
 
-                // case "save":
-                //     System.out.println("Enter filename to save to: ");
-                //     String saveFilename = scanner.nextLine().trim();
-                //     try {
-                //         //JsonUtils.save(umlEditor, saveFilename);
-                //         System.out.println("Data saved to '" + saveFilename + "'.");
-                //     } catch (IOException e) {
-                //         System.out.println("Failed to save data: " + e.getMessage());
-                //     }
-                //     break;
+                 case "save":
+                     System.out.println("Enter filename to save to: ");
+                     String saveFilename = scanner.nextLine().trim();
+                     try {
+                         JsonUtils.save(umlEditor, saveFilename);
+                         System.out.println("Data saved to '" + saveFilename + "'.");
+                     } catch (IOException e) {
+                         System.out.println("Failed to save data: " + e.getMessage());
+                     }
+                     break;
 
-                // case "load":
-                //     System.out.println("Enter filename to load from: ");
-                //     String loadFilename = scanner.nextLine().trim();
-                //     try {
-                //         umlEditor = JsonUtils.load(loadFilename);
-                //         System.out.println("Data loaded from '" + loadFilename + "'.");
-                //     } catch (IOException e) {
-                //         System.out.println("Failed to load data: " + e.getMessage());
-                //     }
-                //     break;
+                 case "load":
+                     System.out.println("Enter filename to load from: ");
+                     String loadFilename = scanner.nextLine().trim();
+                     try {
+                         umlEditor = JsonUtils.load(loadFilename);
+                         System.out.println("Data loaded from '" + loadFilename + "'.");
+                     } catch (IOException e) {
+                         System.out.println("Failed to load data: " + e.getMessage());
+                     }
+                     break;
 
                 case "help":
                     displayHelp();
