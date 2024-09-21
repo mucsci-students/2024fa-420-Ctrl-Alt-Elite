@@ -1,19 +1,34 @@
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * The Main class provides a command-line interface for interacting with the UML editor.
+ * Users can perform various operations such as adding, deleting, renaming classes, and attributes,
+ * as well as managing relationships between classes. Commands can also save and load data in JSON format.
+ */
 public class Main {
+
+    /** The UML editor instance to manage classes and relationships.*/
     private static UmlEditor umlEditor = new UmlEditor();
 
+    /**
+     * The main method starts the command-line interface for interacting with the UML editor.
+     * It prompts the user for commands and performs the corresponding actions.
+     *
+     * @param args command line arguments (not used).
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
 
+        // Main loop for processing commands from the user
         while (!exit) {
             System.out.print("Enter a command (Type 'Help' for a list of commands): ");
             String command = scanner.nextLine().trim();
 
-            switch (command.toLowerCase()) {
-                case "addclass":
+            switch (command) {
+                case "AddClass":
+                    // Adds a class to the UML editor
                     System.out.println("Enter the class name: ");
                     String className = scanner.nextLine().trim();
                     if (umlEditor.addClass(className)) {
@@ -23,7 +38,8 @@ public class Main {
                     }
                     break;
 
-                case "deleteclass":
+                case "DeleteClass":
+                    // Deletes a class from the UML editor
                     System.out.println("Enter the class name to delete: ");
                     String classToDelete = scanner.nextLine().trim();
                     if (umlEditor.deleteClass(classToDelete)) {
@@ -33,7 +49,8 @@ public class Main {
                     }
                     break;
 
-                case "renameclass":
+                case "RenameClass":
+                    // Renames an existing class
                     System.out.println("Enter the class name to rename: ");
                     String oldClassName = scanner.nextLine().trim();
                     System.out.println("Enter the new class name: ");
@@ -45,7 +62,8 @@ public class Main {
                     }
                     break;
 
-                case "addattribute":
+                case "AddAttribute":
+                    // Adds an attribute to a class
                     System.out.println("Enter the class name to add the attribute to: ");
                     String classToAddAttribute = scanner.nextLine().trim();
                     System.out.println("Enter the attribute name: ");
@@ -57,7 +75,8 @@ public class Main {
                     }
                     break;
 
-                case "deleteattribute":
+                case "DeleteAttribute":
+                    // Deletes an attribute from a class
                     System.out.println("Enter the class name to delete the attribute from: ");
                     String classToDeleteAttribute = scanner.nextLine().trim();
                     System.out.println("Enter the attribute name to delete: ");
@@ -69,7 +88,8 @@ public class Main {
                     }
                     break;
 
-                case "renameattribute":
+                case "RenameAttribute":
+                    // Renames an attribute in a class
                     System.out.println("Enter the class name with the attribute to rename: ");
                     String classToRenameAttribute = scanner.nextLine().trim();
                     System.out.println("Enter the current attribute name: ");
@@ -83,7 +103,8 @@ public class Main {
                     }
                     break;
 
-                case "addrelationship":
+                case "AddRelationship":
+                    // Adds a relationship between two classes
                     System.out.println("Enter the source class: ");
                     String source = scanner.nextLine().trim();
                     System.out.println("Enter the destination class: ");
@@ -95,7 +116,8 @@ public class Main {
                     }
                     break;
 
-                case "deleterelationship":
+                case "DeleteRelationship":
+                    // Deletes a relationship between two classes
                     System.out.println("Enter the source class: ");
                     String deleteSource = scanner.nextLine().trim();
                     System.out.println("Enter the destination class: ");
@@ -107,52 +129,60 @@ public class Main {
                     }
                     break;
 
-                case "listclasses":
+                case "ListClasses":
+                    // Lists all classes and their attributes
                     umlEditor.listClasses();
                     break;
 
-                case "listclass":
+                case "ListClass":
+                    // Lists the attributes of a specified class
                     System.out.println("Enter the class name to list: ");
                     String listClassName = scanner.nextLine().trim();
                     umlEditor.listClass(listClassName);
                     break;
 
-                case "listrelationships":
+                case "ListRlationships":
+                    // Lists all relationships between classes
                     umlEditor.listRelationships();
                     break;
 
-                 case "save":
-                     System.out.println("Enter filename to save to: ");
-                     String saveFilename = scanner.nextLine().trim();
-                     try {
-                         JsonUtils.save(umlEditor, saveFilename);
-                         System.out.println("Data saved to '" + saveFilename + "'.");
-                     } catch (IOException e) {
-                         System.out.println("Failed to save data: " + e.getMessage());
-                     }
-                     break;
+                case "Save":
+                    // Saves the current UML data to a JSON file
+                    System.out.println("Enter a filename to save to: ");
+                    String saveFilename = scanner.nextLine().trim();
+                    try {
+                        JsonUtils.save(umlEditor, saveFilename);
+                        System.out.println("Data saved to '" + saveFilename + "'.");
+                    } catch (IOException e) {
+                        System.out.println("Failed to save data: " + e.getMessage());
+                    }
+                    break;
 
-                 case "load":
-                     System.out.println("Enter filename to load from: ");
-                     String loadFilename = scanner.nextLine().trim();
-                     try {
-                         umlEditor = JsonUtils.load(loadFilename);
-                         System.out.println("Data loaded from '" + loadFilename + "'.");
-                     } catch (IOException e) {
-                         System.out.println("Failed to load data: " + e.getMessage());
-                     }
-                     break;
+                case "Load":
+                    // Loads UML data from a JSON file
+                    System.out.println("Enter a filename to load from: ");
+                    String loadFilename = scanner.nextLine().trim();
+                    try {
+                        umlEditor = JsonUtils.load(loadFilename);
+                        System.out.println("Data loaded from '" + loadFilename + "'.");
+                    } catch (IOException e) {
+                        System.out.println("Failed to load data: " + e.getMessage());
+                    }
+                    break;
 
-                case "help":
+                case "Help":
+                    // Displays a list of available commands
                     displayHelp();
                     break;
 
-                case "exit":
+                case "Exit":
+                    // Exits the application
                     System.out.println("Exiting the application.");
                     exit = true;
                     break;
 
                 default:
+                    // Handles invalid commands
                     System.out.println("Invalid command. Type 'Help' for a list of valid commands.");
             }
         }
@@ -160,22 +190,25 @@ public class Main {
         scanner.close();
     }
 
+    /**
+     * Displays the available commands and their descriptions to the user.
+     */
     private static void displayHelp() {
         System.out.println("Available commands:");
-        System.out.println("addclass - Add a class");
-        System.out.println("deleteclass - Delete a class");
-        System.out.println("renameclass - Rename a class");
-        System.out.println("addattribute - Add an attribute to a class");
-        System.out.println("deleteattribute - Delete an attribute from a class");
-        System.out.println("renameattribute - Rename an attribute in a class");
-        System.out.println("addrelationship - Add a relationship between classes");
-        System.out.println("deleterelationship - Delete a relationship between classes");
-        System.out.println("listclasses - List all classes and their attributes");
-        System.out.println("listclass - List the contents of a specified class");
-        System.out.println("listrelationships - List all relationships");
-        System.out.println("save - Save data to a JSON file");
-        System.out.println("load - Load data from a JSON file");
-        System.out.println("help - Display this help menu");
-        System.out.println("exit - Exit the application");
+        System.out.println("AddClass - Add a class");
+        System.out.println("DeleteClass - Delete a class");
+        System.out.println("RenameClass - Rename a class");
+        System.out.println("AddAttribute - Add an attribute to a class");
+        System.out.println("DeleteAttribute - Delete an attribute from a class");
+        System.out.println("RenameAttribute - Rename an attribute in a class");
+        System.out.println("AddRelationship - Add a relationship between classes");
+        System.out.println("DeleteRelationship - Delete a relationship between classes");
+        System.out.println("ListClasses - List all classes and their attributes");
+        System.out.println("ListClass - List the contents of a specified class");
+        System.out.println("ListRelationships - List all relationships");
+        System.out.println("Save - Save data to a JSON file");
+        System.out.println("Load - Load data from a JSON file");
+        System.out.println("Help - Display this help menu");
+        System.out.println("Exit - Exit the application");
     }
 }
