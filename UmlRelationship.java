@@ -91,6 +91,3 @@ public class UmlRelationship {
     public String toString() {
         return "Relationship from '" + source + "' to '" + destination + "'";
     }
-}
-
-
