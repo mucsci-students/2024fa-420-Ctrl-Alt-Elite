@@ -42,4 +42,3 @@ public class UmlClass {
     public String toString() {
         return "Class: " + name + "\nAttributes: " + attributes;
     }
-}
