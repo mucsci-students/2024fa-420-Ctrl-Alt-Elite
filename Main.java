@@ -26,7 +26,7 @@ public class Main {
             System.out.print("Enter a command (Type 'Help' for a list of commands): ");
             String command = scanner.nextLine().trim();
 
-            switch (command.toLowerCase()) {
+            switch (command) {
                 case "AddClass":
                     // Adds a class to the UML editor
                     System.out.println("Enter the class name: ");
@@ -141,7 +141,7 @@ public class Main {
                     umlEditor.listClass(listClassName);
                     break;
 
-                case "ListRlationships":
+                case "ListRelationships":
                     // Lists all relationships between classes
                     umlEditor.listRelationships();
                     break;
