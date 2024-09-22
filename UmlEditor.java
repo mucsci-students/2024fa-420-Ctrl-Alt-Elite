@@ -16,13 +16,13 @@ public class UmlEditor {
         this.relationships = new HashSet<>();
     }
 
-    // Adds a new class if it doesn't already exist
+    // Adds a new class if it doesn't already exist and the name is not null or empty
     public boolean addClass(String name) {
-        if (!classes.containsKey(name)) {
-            classes.put(name, new UmlClass(name));
-            return true;
+        if (name == null || name.isEmpty() || classes.containsKey(name)) {
+            return false;  // Return false if name is null, empty, or class already exists
         }
-        return false;
+        classes.put(name, new UmlClass(name));
+        return true;
     }
 
     // Deletes a class and all relationships involving that class
@@ -36,29 +36,36 @@ public class UmlEditor {
         return false;
     }
 
-    // Renames a class and updates all relationships involving the old class name
     public boolean renameClass(String oldName, String newName) {
-        if (classes.containsKey(oldName) && !classes.containsKey(newName)) {
-            UmlClass umlClass = classes.remove(oldName);
-            umlClass.setName(newName);
-            classes.put(newName, umlClass);
-            
-            // Update relationships with the new class name
-            Set<UmlRelationship> updatedRelationships = new HashSet<>();
-            for (UmlRelationship rel : relationships) {
-                if (rel.getSource().equals(oldName)) {
-                    updatedRelationships.add(new UmlRelationship(newName, rel.getDestination()));
-                } else if (rel.getDestination().equals(oldName)) {
-                    updatedRelationships.add(new UmlRelationship(rel.getSource(), newName));
-                } else {
-                    updatedRelationships.add(rel);
-                }
-            }
-            relationships = updatedRelationships;
-            return true;
+        // Check for null or empty newName and if oldName exists
+        if (oldName == null || newName == null || newName.isEmpty() || !classes.containsKey(oldName)) {
+            return false;  // Invalid conditions
         }
-        return false;
+        
+        // Check if the new name already exists
+        if (classes.containsKey(newName)) {
+            return false;  // New name already exists
+        }
+        
+        UmlClass umlClass = classes.remove(oldName);
+        umlClass.setName(newName);
+        classes.put(newName, umlClass);
+        
+        // Update relationships with the new class name
+        Set<UmlRelationship> updatedRelationships = new HashSet<>();
+        for (UmlRelationship rel : relationships) {
+            if (rel.getSource().equals(oldName)) {
+                updatedRelationships.add(new UmlRelationship(newName, rel.getDestination()));
+            } else if (rel.getDestination().equals(oldName)) {
+                updatedRelationships.add(new UmlRelationship(rel.getSource(), newName));
+            } else {
+                updatedRelationships.add(rel);
+            }
+        }
+        relationships = updatedRelationships;
+        return true;
     }
+
 
     // Adds an attribute to a specified class
     public boolean addAttribute(String className, String attribute) {
@@ -87,13 +94,17 @@ public class UmlEditor {
         return false;
     }
 
-    // Adds a relationship between two classes if both exist
+    // Adds a relationship between two classes if both exist and are not the same
     public boolean addRelationship(String source, String destination) {
+        if (source.equals(destination)) {
+            return false;  // Can't relate a class to itself
+        }
         if (classes.containsKey(source) && classes.containsKey(destination)) {
             return relationships.add(new UmlRelationship(source, destination));
         }
-        return false;
+        return false;  // One or both classes do not exist
     }
+
 
     // Deletes a relationship between two classes
     public boolean deleteRelationship(String source, String destination) {
