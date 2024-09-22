@@ -8,10 +8,10 @@
 This project results from a large-stakes, group assessment in the capstone course, Software Engineering, from the 2024 Fall semester. The main purpose of this project is to give the team of students an opportunity to engage with the principles of software development in an encouraging and educational environment. 
 
 ## Instructions for Downloading and Running the UML Editor
-### Clone the Repository
+### 1. Clone the Repository
 
 
-### Adding the Gson JAR file to the Classpath
+### 2. Adding the Gson JAR file to the Classpath
 We have implemented a way to save and load data entered into the UML editor. This is done by using a Gson library to create a local file in the JSON format to save to and load from. For these commands to work, you have to ensure that the proper file is installed and that it is connected to the program. Here are instructions for doing so in both Eclipse and VsCode:
 
 ### Eclipse
