@@ -1,11 +1,9 @@
-package Test;
+
 
 import static org.junit.jupiter.api.Assertions.*;  // JUnit 5 assertions
 import org.junit.jupiter.api.BeforeEach;  // JUnit 5 setup
 import org.junit.jupiter.api.DisplayName; // JUnit DisplayName annotation
 import org.junit.jupiter.api.Test;  // JUnit 5 Test annotation
-
-import UmlEditor;
 
 /**
  * A test class for the UmlEditor class
@@ -206,78 +204,151 @@ public class UmlEditorTest {
     
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO start back here
     /**
      * Test deleting an attribute from a class.
      */
     @Test
+    @DisplayName ("DeleteAttribute: Delete an attribute from a class")
     public void testDeleteAttribute() {
         umlEditor.addClass("ClassA");
         umlEditor.addAttribute("ClassA", "Attribute1");
-        assertTrue(umlEditor.deleteAttribute("ClassA", "Attribute1"));  // Successfully deleted attribute
-        assertFalse(umlEditor.deleteAttribute("ClassA", "Attribute2"));  // Attribute doesn't exist
+        assertTrue(umlEditor.deleteAttribute("ClassA", "Attribute1"), 
+        		() -> "Error with deleting an attribute."); 
     }
     
- // Test deleting a non-existent attribute
+    /**
+     * Test deleting an attribute that does not exist, should fail.
+     */
     @Test
-    public void testDeleteNonExistentAttribute() {
-        umlEditor.addClass("ClassA");
-        assertFalse(umlEditor.deleteAttribute("ClassA", "NonExistentAttribute"));  // Attribute does not exist
+    @DisplayName ("DeleteAttribute: Delete and attribute that does not exist, failure test")
+    public void testDeleteAttributeNotExist() {
+    	umlEditor.addClass("ClassA");
+    	assertFalse(umlEditor.deleteAttribute("ClassA", "NonExistentAttribute"), 
+    			() -> "Error with deleting an attribute that does not exist.");
+    }
+    
+    /**
+     * Test deleting an attribute with a class that does not exist, should fail.
+     */
+    @Test
+    @DisplayName ("AddAttribute: Delete an attribute to a class that does not exist, failure test")
+    public void testDeleteAttributeFalseClass() {
+    	assertFalse(umlEditor.deleteAttribute("ClassA", "Attribute1"), 
+    			() -> "Error with deleting from non-existent class.");
     }
     
 /*----------------------------------------------------------------------------------------------------------------*/
-
-    // Test renaming an attribute
+    
+    /**
+     * Test renaming an attribute.
+     */
     @Test
+    @DisplayName ("RenameAttribute: Rename and attribute")
     public void testRenameAttribute() {
         umlEditor.addClass("ClassA");
         umlEditor.addAttribute("ClassA", "Attribute1");
-        assertTrue(umlEditor.renameAttribute("ClassA", "Attribute1", "Attribute2"));  // Successfully renamed
-        assertFalse(umlEditor.renameAttribute("ClassA", "Attribute1", "Attribute3"));  // Old attribute doesn't exist
+        assertTrue(umlEditor.renameAttribute("ClassA", "Attribute1", "Attribute2"),
+        		() -> "Error with renaming an attribute.");
     }
+    
+    /**
+     * Test renaming an attribute that does not exist, should fail
+     */
+    @Test
+    @DisplayName ("RenameAttribute: Rename an attribute that does not exist, failure test")
+    public void testRenameAttributeNotExist() {
+    	umlEditor.addClass("ClassA");
+    	assertFalse(umlEditor.renameAttribute("ClassA", "Attribute1", "Attribute3"),
+    			() -> "Error with renaming an attribute that does not exist.");
+    }
+    
+    /**
+     * Test renaming an attribute with a class that does not exist, should fail.
+     */
+    @Test
+    @DisplayName ("AddAttribute: Rename an attribute to a class that does not exist, failure test")
+    public void testRenameAttributeFalseClass() {
+    	assertFalse(umlEditor.renameAttribute("ClassA", "Attribute1", "Attribute2"), 
+    			() -> "Error with renaming from non-existent class.");
+    }
+    
     
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    // Test adding a relationship between classes
+    /**
+     * Test adding a relationship between classes.
+     */
     @Test
+    @DisplayName ("AddRelationship: Add a relationship between classes")
     public void testAddRelationship() {
         umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
-        assertTrue(umlEditor.addRelationship("ClassA", "ClassB"));  // Relationship added
-        assertFalse(umlEditor.addRelationship("ClassA", "ClassC"));  // ClassC doesn't exist
+        assertTrue(umlEditor.addRelationship("ClassA", "ClassB"),
+        		() -> "Error with adding a relationsip between classes");
     }
     
- // Test adding a relationship between the same class
+    /**
+     * Test adding a relationship between the same class, should fail.
+     */
     @Test
+    @DisplayName ("AddRelationship: Add a relationship between a class and itself, failure test")
     public void testAddRelationshipBetweenSameClass() {
         umlEditor.addClass("ClassA");
-        assertFalse(umlEditor.addRelationship("ClassA", "ClassA"));  // Can't relate a class to itself
+        assertFalse(umlEditor.addRelationship("ClassA", "ClassA"),
+        		() -> "Error with adding a relationship between a class and itself.");
     }
-    
-    // Test adding a relationship between non-existent classes
+
+    /**
+     * Test adding a relationship between non-existent classes, should fail.
+     */
     @Test
+    @DisplayName ("AddRelationship: Add a relationship between non-existent classes, failure test")
     public void testAddRelationshipNonExistentClasses() {
         umlEditor.addClass("ClassA");
-        assertFalse(umlEditor.addRelationship("ClassA", "NonExistentClass"));  // ClassB doesn't exist
+        assertFalse(umlEditor.addRelationship("ClassA", "NonExistentClass"),
+        		() -> "Error with adding a relationship bewteen non-existent classes (Test 1).");
+        assertFalse(umlEditor.addRelationship("NonExistentClass", "ClassA"),
+        		() -> "Error with adding a relationship bewteen non-existent classes (Test 1).");
     }
     
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    // Test deleting a relationship between classes
+    /**
+     * Test deleting a relationship between classes.
+     */
     @Test
+    @DisplayName ("DeleteRelationship: Delete a relationship between two classes")
     public void testDeleteRelationship() {
         umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
         umlEditor.addRelationship("ClassA", "ClassB");
-        assertTrue(umlEditor.deleteRelationship("ClassA", "ClassB"));  // Relationship deleted
-        assertFalse(umlEditor.deleteRelationship("ClassA", "ClassC"));  // Relationship doesn't exist
+        assertTrue(umlEditor.deleteRelationship("ClassA", "ClassB"),
+        		() -> "Error with deleting a relationship.");
     }
     
- // Test deleting a relationship between non-existent classes
+    /**
+     * Test deleting a relationship that does not exist, should fail.
+     */
     @Test
+    @DisplayName ("DeleteRelationship: Delete a relationship that does not exist, failure test")
+    public void testDeleteRelationshipNotExist() {
+    	umlEditor.addClass("ClassA");
+        umlEditor.addClass("ClassB");
+    	assertFalse(umlEditor.deleteRelationship("ClassA", "ClassB"),
+        		() -> "Error with deleting a relationship that does not exist.");
+    }
+    
+    /**
+     *  Test deleting a relationship between non-existent classes, should fail.
+     */
+    @Test
+    @DisplayName ("DeleteRelationship: Delete a relationship between two classes that do not exist, failure test")
     public void testDeleteRelationshipNonExistentClasses() {
         umlEditor.addClass("ClassA");
-        assertFalse(umlEditor.deleteRelationship("ClassA", "NonExistentClass"));  // Relationship doesn't exist
+        assertFalse(umlEditor.deleteRelationship("ClassA", "NonExistentClass"),
+        		() -> "Error with deleting a relationship from non-existent classes (Test 1).");
+        assertFalse(umlEditor.deleteRelationship("NonExistentClass", "ClassA"),
+        		() -> "Error with deleting a relationship from non-existent classes (Test 2).");
     }
     
 /*----------------------------------------------------------------------------------------------------------------*/
