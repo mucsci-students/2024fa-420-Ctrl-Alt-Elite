@@ -3,6 +3,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * The UmlEditor class is responsible for managing UML diagrams, specifically UML classes
+ * and relationships between them. It provides functionality to add, delete, and rename 
+ * UML classes and attributes, as well as manage relationships between classes.
+ */
 public class UmlEditor {
     // A map to store UML classes by their name
     private Map<String, UmlClass> classes;
