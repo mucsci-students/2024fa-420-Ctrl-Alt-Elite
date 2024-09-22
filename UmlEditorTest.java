@@ -1,5 +1,3 @@
-
-
 import static org.junit.jupiter.api.Assertions.*;  // JUnit 5 assertions
 import org.junit.jupiter.api.BeforeEach;  // JUnit 5 setup
 import org.junit.jupiter.api.DisplayName; // JUnit DisplayName annotation
@@ -9,7 +7,8 @@ import org.junit.jupiter.api.Test;  // JUnit 5 Test annotation
  * A test class for the UmlEditor class
  */
 public class UmlEditorTest {
-	/** A UmlEditor object for that will be tested on. */
+	
+	/** A UmlEditor object that will be tested on. */
     private UmlEditor umlEditor;
 
     /**

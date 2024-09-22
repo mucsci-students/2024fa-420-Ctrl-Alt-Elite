@@ -19,7 +19,7 @@ public class UmlClassTest {
     }
 
     /**
-     * Test that etName returns the name of the class.
+     * Test that getName returns the name of the class.
      */
     @Test
     @DisplayName ("GetName: Retrive the name of the class")
