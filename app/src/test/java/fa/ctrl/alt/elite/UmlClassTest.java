@@ -1,4 +1,4 @@
-package gradletest;
+package fa.ctrl.alt.elite;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;

@@ -10,5 +10,5 @@ plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
 }
 
-rootProject.name = '2024fa-420-Ctrl-Alt-Elite'
+rootProject.name = '420Project'
 include('app')

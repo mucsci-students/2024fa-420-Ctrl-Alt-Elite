@@ -1,5 +1,9 @@
+package fa.ctrl.alt.elite;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.FileReader;
@@ -35,16 +39,20 @@ public class JsonUtils {
      *
      * @param filename The name of the file to load the data from.
      * @return An {@link UmlEditor} instance populated with the loaded classes and relationships.
-     * @throws IOException If there is an issue reading the file.
+     * @throws IOException If there is an issue reading the file or if the JSON is invalid.
      */
     public static UmlEditor load(String filename) throws IOException {
         try (FileReader reader = new FileReader(filename)) {
             Type type = new TypeToken<UmlEditorData>() {}.getType();
-            UmlEditorData data = gson.fromJson(reader, type);
-            UmlEditor editor = new UmlEditor();
-            editor.setClasses(data.getClasses());
-            editor.setRelationships(data.getRelationships());
-            return editor;
+            try {
+                UmlEditorData data = gson.fromJson(reader, type);
+                UmlEditor editor = new UmlEditor();
+                editor.setClasses(data.getClasses());
+                editor.setRelationships(data.getRelationships());
+                return editor;
+            } catch (JsonParseException e) {
+                throw new IOException("Invalid JSON format", e);
+            }
         }
     }
 

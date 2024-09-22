@@ -1,4 +1,4 @@
-package gradletest;
+package fa.ctrl.alt.elite;
 
 import static org.junit.jupiter.api.Assertions.*;  // JUnit 5 assertions
 import org.junit.jupiter.api.BeforeEach;  // JUnit 5 setup
