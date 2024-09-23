@@ -1,8 +1,0 @@
-Class: ClassA
-Attributes: []
- Class 'ClassB' does not exist.
-(Relationship from 'ClassA' to 'ClassB'
-Class: ClassA
-Attributes: []
-Class: ClassB
-Attributes: []

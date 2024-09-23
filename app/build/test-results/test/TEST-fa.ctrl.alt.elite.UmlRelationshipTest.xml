@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="fa.ctrl.alt.elite.UmlRelationshipTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2024-09-22T05:55:19" hostname="JORDANS-DESKTOP" time="0.003">
-  <properties/>
-  <testcase name="testConstructorAndGetters()" classname="fa.ctrl.alt.elite.UmlRelationshipTest" time="0.0"/>
-  <testcase name="testHashCode()" classname="fa.ctrl.alt.elite.UmlRelationshipTest" time="0.0"/>
-  <testcase name="testEquality()" classname="fa.ctrl.alt.elite.UmlRelationshipTest" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
