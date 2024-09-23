@@ -1,4 +1,5 @@
 # 2024fa-420-Ctrl-Alt-Elite
+
 ### Table of Contents
 - [Project Description](https://github.com/mucsci-students/2024fa-420-Ctrl-Alt-Elite/tree/README#project-description)
   - [Instructions for Downloading and Running the UML Editor](https://github.com/mucsci-students/2024fa-420-Ctrl-Alt-Elite/tree/README#instructions-for-downloading-and-running-the-uml-editor)
