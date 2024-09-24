@@ -1,4 +1,4 @@
-package fa.ctrl.alt.elite;
+package app;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-package fa.ctrl.alt.elite;
+package app;
 
 import java.io.IOException;
 import java.util.Scanner;

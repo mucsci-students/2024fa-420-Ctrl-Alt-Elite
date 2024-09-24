@@ -1,4 +1,4 @@
-package fa.ctrl.alt.elite;
+package app;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

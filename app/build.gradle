@@ -23,7 +23,7 @@ java {
 }
 
 application {
-    mainClass = 'fa.ctrl.alt.elite.Main' // Ensure this points to your main class
+    mainClass = 'app.Main' // Ensure this points to your main class
 }
 
 tasks.named('test') {
@@ -40,5 +40,8 @@ run {
     }
 }
 
+test {
+    useJUnitPlatform()
+}
 
 
