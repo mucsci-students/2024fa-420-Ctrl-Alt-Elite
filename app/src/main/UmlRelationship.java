@@ -108,4 +108,5 @@ public class UmlRelationship {
 		// If both source and destination are equal, the objects are equal
 		return true;
 	}
+	
 }
