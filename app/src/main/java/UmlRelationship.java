@@ -1,7 +1,3 @@
-package app;
-
-import java.util.Objects;
-
 /**
  * Represents a UML relationship between two classes.
  * Each relationship has a source class and a destination class.

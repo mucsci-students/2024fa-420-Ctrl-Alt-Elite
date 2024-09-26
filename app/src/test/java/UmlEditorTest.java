@@ -1,5 +1,3 @@
-package app;
-
 import static org.junit.jupiter.api.Assertions.*;  // JUnit 5 assertions
 import org.junit.jupiter.api.BeforeEach;  // JUnit 5 setup
 import org.junit.jupiter.api.DisplayName; // JUnit DisplayName annotation

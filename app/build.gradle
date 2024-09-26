@@ -23,7 +23,7 @@ java {
 }
 
 application {
-    mainClass = 'app.Main' // Ensure this points to your main class
+    mainClass = 'Main' // Point this to your Main class
 }
 
 tasks.named('test') {
@@ -32,29 +32,20 @@ tasks.named('test') {
 
 run {
     standardInput = System.in
-}
-
-run {
     doFirst {
         println("Starting the application...")
     }
 }
 
-test {
-    useJUnitPlatform()
-}
-
 sourceSets {
     main {
         java {
-            srcDirs = ['src/main'] // Change from 'src/main/java'
+            srcDirs = ['src/main/java'] // Correctly point to your source directory
         }
     }
     test {
         java {
-            srcDirs = ['src/test'] // Change from 'src/test/java'
+            srcDirs = ['src/test/java'] // Correctly point to your test directory
         }
     }
 }
-
-
