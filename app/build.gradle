@@ -1,0 +1,51 @@
+plugins {
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Use JUnit Jupiter for testing.
+    testImplementation libs.junit.jupiter
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Dependencies used by the application.
+    implementation 'com.google.code.gson:gson:2.11.0'
+    implementation 'com.google.guava:guava:31.0.1-jre' // Specify the Guava version
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+application {
+    mainClass = 'Main' // Point this to your Main class
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+run {
+    standardInput = System.in
+    doFirst {
+        println("Starting the application...")
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java'] // Correctly point to your source directory
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java'] // Correctly point to your test directory
+        }
+    }
+}
