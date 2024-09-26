@@ -141,7 +141,7 @@ public class Main {
                     umlEditor.listClass(listClassName);
                     break;
 
-                case "ListRelationships":
+                case "ListRlationships":
                     // Lists all relationships between classes
                     umlEditor.listRelationships();
                     break;
