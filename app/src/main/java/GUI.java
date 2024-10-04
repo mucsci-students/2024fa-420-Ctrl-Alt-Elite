@@ -156,13 +156,20 @@ public class GUI extends JFrame {
         panel.add(deleteAttributeButton);
 
 
-        // Add Relationship
+       // Add Relationship
 JTextField sourceClassField = new JTextField();
 JTextField destinationClassField = new JTextField();
 JButton addRelationshipButton = new JButton("Add Relationship");
+
 addRelationshipButton.addActionListener(e -> {
-    String source = sourceClassField.getText();
-    String destination = destinationClassField.getText();
+    String source = sourceClassField.getText().trim(); // Trim whitespace
+    String destination = destinationClassField.getText().trim(); // Trim whitespace
+
+    if (source.isEmpty() || destination.isEmpty()) {
+        outputArea.append("Source and destination class names cannot be empty.\n");
+        return; // Exit if either field is empty
+    }
+
     if (umlEditor.addRelationship(source, destination)) {
         outputArea.append("Relationship added from '" + source + "' to '" + destination + "'.\n");
         drawingPanel.repaint();  // Repaint to show the updated relationships
@@ -172,6 +179,7 @@ addRelationshipButton.addActionListener(e -> {
     sourceClassField.setText("");
     destinationClassField.setText("");
 });
+
 
 
 
@@ -381,10 +389,6 @@ addRelationshipButton.addActionListener(e -> {
     
     
         
-    
-    
-    
-
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

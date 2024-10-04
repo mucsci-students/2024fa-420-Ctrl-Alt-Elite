@@ -95,16 +95,20 @@ public class UmlEditor {
         return false;
     }
 
-    // Adds a relationship between two classes if both exist and are not the same
-    public boolean addRelationship(String source, String destination) {
-        if (source.equals(destination)) {
-            return false;  // Can't relate a class to itself
-        }
-        if (classes.containsKey(source) && classes.containsKey(destination)) {
-            return relationships.add(new UmlRelationship(source, destination));
-        }
-        return false;  // One or both classes do not exist
+    /**
+ * Adds a relationship between two classes if both exist.
+ * Self-relationships (where a class has a relationship to itself) are allowed.
+ * 
+ * @param source the name of the source class
+ * @param destination the name of the destination class
+ * @return true if the relationship was added successfully, false otherwise
+ */
+public boolean addRelationship(String source, String destination) {
+    if (classes.containsKey(source) && classes.containsKey(destination)) {
+        return relationships.add(new UmlRelationship(source, destination));
     }
+    return false;  // One or both classes do not exist
+}
 
 
     // Deletes a relationship between two classes
