@@ -37,70 +37,77 @@ public class UmlClassTest {
         assertEquals("ClassB", umlClass.getName());
     }
     
+    //TODO
     /**
      * Test that an attribute can be successfully added.
      */
     @Test
     @DisplayName ("AddAttribute: Add an attribute to the class")
     public void testAddAttribute() {
-        assertTrue(umlClass.addAttribute("Attribute1"));
+        assertTrue(umlClass.addMethod("Attribute1"));
     }
     
+    //TODO
     /**
      * Test a duplicate attribute being added, should fail.
      */
     @Test
     @DisplayName ("AddAttribute: Add a duplicate attribute, failure test")
     public void testAddAttributeNotExist() {
-        umlClass.addAttribute("Attribute1");
-        assertFalse(umlClass.addAttribute("Attribute1"));
+        umlClass.addMethod("Attribute1");
+        assertFalse(umlClass.addMethod("Attribute1"));
     }
 
+    //TODO
     /**
      * Test deleting an attribute.
      */
     @Test
     @DisplayName ("DeleteAttribute: Delete an attribute")
     public void testDeleteAttribute() {
-        umlClass.addAttribute("Attribute1");
-        assertTrue(umlClass.deleteAttribute("Attribute1"));
+        umlClass.addMethod("Attribute1");
+        assertTrue(umlClass.deleteMethod("Attribute1"));
     }
     
+    //TODO
     /**
      * Test deleting an attribute that does not exist, should fail.
      */
     @Test
     @DisplayName ("DeleteAttribute: Delete an attribute that dose not exist, failure test")
     public void testDeleteAttributeNotExist() {
-        assertFalse(umlClass.deleteAttribute("Attribute1"));
+        assertFalse(umlClass.deleteMethod("Attribute1"));
     }
 
+    //TODO
     /**
      * Test renaming an attribute.
      */
     @Test
     @DisplayName ("RenameAttribute: Rename an attribute")
     public void testRenameAttribute() {
-        umlClass.addAttribute("Attribute1");
-        assertTrue(umlClass.renameAttribute("Attribute1", "Attribute2"));
+        umlClass.addMethod("Attribute1");
+        assertTrue(umlClass.renameMethod("Attribute1", "Attribute2"));
     }
     
+    //TODO
     /**
      * Test renaming an attribute that does not exist, should fail.
      */
     @Test
     @DisplayName ("RenameAttribute: Rename an attribute that does not exist, failure test")
     public void testRenameAttributeNotExist() {
-        assertFalse(umlClass.renameAttribute("Attribute1", "Attribute2"));
+        assertFalse(umlClass.renameMethod("Attribute1", "Attribute2"));
     }
 
+    //TODO
     /**
      * Test that toString returns what it should.
      */
     @Test
     @DisplayName ("ToString: Print out the object in the correct way with the correct information")
     public void testToString() {
-        umlClass.addAttribute("Attribute1");
+        umlClass.addMethod("Attribute1");
         assertEquals("Class: ClassA\nAttributes: [Attribute1]", umlClass.toString().trim());
     }
 }

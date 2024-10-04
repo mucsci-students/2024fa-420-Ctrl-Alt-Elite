@@ -62,32 +62,35 @@ public class Main {
                     }
                     break;
 
+                    //TODO
                 case "AddAttribute":
                     // Adds an attribute to a class
                     System.out.println("Enter the class name to add the attribute to: ");
                     String classToAddAttribute = scanner.nextLine().trim();
                     System.out.println("Enter the attribute name: ");
                     String attributeName = scanner.nextLine().trim();
-                    if (umlEditor.addAttribute(classToAddAttribute, attributeName)) {
+                    if (umlEditor.addMethod(classToAddAttribute, attributeName)) {
                         System.out.println("Attribute '" + attributeName + "' added to class '" + classToAddAttribute + "'.");
                     } else {
                         System.out.println("Failed to add attribute. Name may be invalid or duplicated, or class does not exist.");
                     }
                     break;
 
+                    //TODO
                 case "DeleteAttribute":
                     // Deletes an attribute from a class
                     System.out.println("Enter the class name to delete the attribute from: ");
                     String classToDeleteAttribute = scanner.nextLine().trim();
                     System.out.println("Enter the attribute name to delete: ");
                     String attributeToDelete = scanner.nextLine().trim();
-                    if (umlEditor.deleteAttribute(classToDeleteAttribute, attributeToDelete)) {
+                    if (umlEditor.deleteMethod(classToDeleteAttribute, attributeToDelete)) {
                         System.out.println("Attribute '" + attributeToDelete + "' has been deleted from class '" + classToDeleteAttribute + "'.");
                     } else {
                         System.out.println("Failed to delete attribute. Name may be invalid or class does not exist.");
                     }
                     break;
 
+                    //TODO
                 case "RenameAttribute":
                     // Renames an attribute in a class
                     System.out.println("Enter the class name with the attribute to rename: ");
@@ -96,7 +99,7 @@ public class Main {
                     String oldAttributeName = scanner.nextLine().trim();
                     System.out.println("Enter the new attribute name: ");
                     String newAttributeName = scanner.nextLine().trim();
-                    if (umlEditor.renameAttribute(classToRenameAttribute, oldAttributeName, newAttributeName)) {
+                    if (umlEditor.renameMethod(classToRenameAttribute, oldAttributeName, newAttributeName)) {
                         System.out.println("Attribute '" + oldAttributeName + "' has been renamed to '" + newAttributeName + "' in class '" + classToRenameAttribute + "'.");
                     } else {
                         System.out.println("Failed to rename attribute. Name may be invalid or duplicated, or class does not exist.");
@@ -129,11 +132,13 @@ public class Main {
                     }
                     break;
 
+                    //TODO
                 case "ListClasses":
                     // Lists all classes and their attributes
                     umlEditor.listClasses();
                     break;
 
+                    //TODO
                 case "ListClass":
                     // Lists the attributes of a specified class
                     System.out.println("Enter the class name to list: ");
@@ -170,6 +175,7 @@ public class Main {
                     }
                     break;
 
+                    //TODO
                 case "Help":
                     // Displays a list of available commands
                     displayHelp();
