@@ -273,19 +273,33 @@ addRelationshipButton.addActionListener(e -> {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+    
             // Draw rectangles for each class
             for (Map.Entry<String, Point> entry : classPositions.entrySet()) {
                 String className = entry.getKey();
                 Point position = entry.getValue();
-                g.drawRect(position.x, position.y, 100, 50);  // Draw rectangle
-                g.drawString(className, position.x + 10, position.y + 20);  // Draw class name
-                // Draw attributes if necessary
+    
+                // Draw rectangle with a section for the class name and another for attributes
+                int rectWidth = 100;
+                int rectHeight = 80;
+                int classNameSectionHeight = 30;  // Height for class name section
+    
+                // Draw the outer rectangle
+                g.drawRect(position.x, position.y, rectWidth, rectHeight);
+    
+                // Draw the divider line between class name and attributes section
+                g.drawLine(position.x, position.y + classNameSectionHeight, position.x + rectWidth, position.y + classNameSectionHeight);
+    
+                // Draw class name in the top section
+                g.drawString(className, position.x + 10, position.y + 20);  // Centered vertically in the class name section
+    
+                // Draw attributes in the lower section
                 UmlClass umlClass = umlEditor.getClass(className);
                 if (umlClass != null) {
-                    int attributeY = position.y + 30;  // Start position for attributes
+                    int attributeY = position.y + classNameSectionHeight + 20;  // Start position for attributes
                     for (String attribute : umlClass.getAttributes()) {
-                        g.drawString(attribute, position.x + 10, attributeY);
-                        attributeY += 15;  // Increment for next attribute
+                        g.drawString(attribute, position.x + 10, attributeY);  // Draw each attribute
+                        attributeY += 15;  // Increment Y position for next attribute
                     }
                 }
             }
@@ -296,22 +310,16 @@ addRelationshipButton.addActionListener(e -> {
                 Point destination = classPositions.get(relationship.getDestination());
                 if (source != null && destination != null) {
                     // Calculate the Y positions for the source and destination
-                    int sourceY = source.y + 25;  // Middle of the source rectangle
-                    int destinationY = destination.y + 25;  // Middle of the destination rectangle
+                    int sourceY = source.y + 40;  // Middle of the source rectangle (adjusted for the divided sections)
+                    int destinationY = destination.y + 40;  // Middle of the destination rectangle
     
-                    // Check for overlap
-                    if (source.x + 100 < destination.x) { // If source is to the left of destination
-                        // Draw line without interference
-                        g.drawLine(source.x + 50, sourceY, destination.x + 50, destinationY);
-                    } else {
-                        // If they are in line, offset the Y position
-                        g.drawLine(source.x + 50, sourceY, destination.x + 50, sourceY + 50); // Draw straight line to the right
-                        g.drawLine(destination.x + 50, sourceY + 50, destination.x + 50, destinationY); // Draw down to destination
-                    }
+                    // Draw a line between the source and destination
+                    g.drawLine(source.x + 50, sourceY, destination.x + 50, destinationY);
                 }
             }
         }
     }
+    
     
 
 
