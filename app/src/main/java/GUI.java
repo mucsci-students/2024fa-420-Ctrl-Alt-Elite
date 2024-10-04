@@ -3,6 +3,10 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+
 
 public class GUI extends JFrame {
     private UmlEditor umlEditor;
@@ -270,6 +274,54 @@ addRelationshipButton.addActionListener(e -> {
 
 
     private class DrawingPanel extends JPanel {
+        private Point dragStartPoint;
+        private String selectedClassName;
+    
+        public DrawingPanel() {
+            // Add mouse listeners for dragging
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    // Check if a class is clicked
+                    for (Map.Entry<String, Point> entry : classPositions.entrySet()) {
+                        String className = entry.getKey();
+                        Point position = entry.getValue();
+                        Rectangle rect = new Rectangle(position.x, position.y, 100, 50 + (umlEditor.getClass(className).getAttributes().size() * 15));
+                        if (rect.contains(e.getPoint())) {
+                            selectedClassName = className;  // Set the selected class
+                            dragStartPoint = e.getPoint();  // Store the initial drag point
+                            break;
+                        }
+                    }
+                }
+    
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    selectedClassName = null;  // Clear selection on mouse release
+                    dragStartPoint = null;  // Clear drag start point
+                }
+            });
+    
+            addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseDragged(MouseEvent e) {
+                    // If a class is selected, update its position
+                    if (selectedClassName != null && dragStartPoint != null) {
+                        Point currentPoint = e.getPoint();
+                        Point oldPosition = classPositions.get(selectedClassName);
+                        if (oldPosition != null) {
+                            // Calculate the new position
+                            int newX = oldPosition.x + (currentPoint.x - dragStartPoint.x);
+                            int newY = oldPosition.y + (currentPoint.y - dragStartPoint.y);
+                            classPositions.put(selectedClassName, new Point(newX, newY));  // Update the position
+                            dragStartPoint = currentPoint;  // Update the drag start point for smooth dragging
+                            repaint();  // Repaint the panel to show the updated position
+                        }
+                    }
+                }
+            });
+        }
+    
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -280,20 +332,20 @@ addRelationshipButton.addActionListener(e -> {
                 Point position = entry.getValue();
                 UmlClass umlClass = umlEditor.getClass(className);
                 int attributeCount = (umlClass != null) ? umlClass.getAttributes().size() : 0;
-                int boxHeight = 50 + (attributeCount * 15);  // Increase box height for each attribute
+                int boxHeight = 50 + (attributeCount * 15);  // Dynamic box height
     
-                // Draw the rectangle for the class with dynamic height
+                // Draw the rectangle for the class
                 g.drawRect(position.x, position.y, 100, boxHeight);
     
-                // Draw the class name in the upper part of the box
+                // Draw the class name
                 g.drawString(className, position.x + 10, position.y + 20);
     
                 // Draw a line to separate class name and attributes
                 g.drawLine(position.x, position.y + 30, position.x + 100, position.y + 30);
     
-                // Draw attributes below the line
+                // Draw attributes
                 if (umlClass != null) {
-                    int attributeY = position.y + 45;  // Start position for the first attribute
+                    int attributeY = position.y + 45;  // Start position for attributes
                     for (String attribute : umlClass.getAttributes()) {
                         g.drawString(attribute, position.x + 10, attributeY);
                         attributeY += 15;  // Increment for the next attribute
@@ -306,16 +358,29 @@ addRelationshipButton.addActionListener(e -> {
                 Point source = classPositions.get(relationship.getSource());
                 Point destination = classPositions.get(relationship.getDestination());
                 if (source != null && destination != null) {
-                    // Calculate the Y positions for the source and destination
-                    int sourceY = source.y + 25;  // Middle of the source rectangle
-                    int destinationY = destination.y + 25;  // Middle of the destination rectangle
+                    // Calculate the bounds of the source and destination boxes
+                    int sourceWidth = 100;
+                    int destinationWidth = 100;
     
-                    // Draw line between source and destination
-                    g.drawLine(source.x + 50, sourceY, destination.x + 50, destinationY);
+                    int sourceHeight = 50 + (umlEditor.getClass(relationship.getSource()).getAttributes().size() * 15);
+                    int destinationHeight = 50 + (umlEditor.getClass(relationship.getDestination()).getAttributes().size() * 15);
+    
+                    // Draw line from the bottom center of the source to the top center of the destination
+                    int sourceX = source.x + (sourceWidth / 2);
+                    int sourceY = source.y + sourceHeight;  // Bottom of the source box
+    
+                    int destinationX = destination.x + (destinationWidth / 2);
+                    int destinationY = destination.y;  // Top of the destination box
+    
+                    // Draw line
+                    g.drawLine(sourceX, sourceY, destinationX, destinationY);
                 }
             }
         }
     }
+    
+    
+        
     
     
     
