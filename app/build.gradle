@@ -14,6 +14,8 @@ dependencies {
     // Dependencies used by the application.
     implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'com.google.guava:guava:31.0.1-jre' // Specify the Guava version
+
+    
 }
 
 java {
@@ -23,7 +25,7 @@ java {
 }
 
 application {
-    mainClass = 'Main' // Point this to your Main class
+    mainClass = 'ApplicationLauncher' // Point this to your GUI class
 }
 
 tasks.named('test') {

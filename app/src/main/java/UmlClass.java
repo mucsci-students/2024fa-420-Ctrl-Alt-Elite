@@ -73,6 +73,10 @@ public class UmlClass {
         return false;
     }
 
+    public Set<String> getAttributes() {
+        return attributes;
+    }
+
     /**
      * Returns a string representation of the UML class, including its name and attributes.
      * 

@@ -2,6 +2,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collections;
 
 public class UmlEditor {
     // A map to store UML classes by their name
@@ -150,5 +151,17 @@ public class UmlEditor {
 
     public void setRelationships(Set<UmlRelationship> relationships) {
         this.relationships = relationships;
+    }
+
+    public UmlClass getClass(String name) {
+        return classes.get(name); // Retrieve the class by name
+    }
+
+    public Set<String> getClassAttributes(String className) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.getAttributes();  // Assuming UmlClass has a getAttributes method
+        }
+        return Collections.emptySet();  // Return an empty list if the class doesn't exist
     }
 }
