@@ -67,27 +67,27 @@ public class UmlEditor {
     }
 
     //TODO
-    // Adds an attribute to a specified class
-    public boolean addMethod(String className, String attribute) {
+    // Adds a method to a specified class
+    public boolean addMethod(String className, String method) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
-            return umlClass.addMethod(attribute);
+            return umlClass.addMethod(method);
         }
         return false;
     }
 
     //TODO
-    // Deletes an attribute from a specified class
-    public boolean deleteMethod(String className, String attribute) {
+    // Deletes a method from a specified class
+    public boolean deleteMethod(String className, String method) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
-            return umlClass.deleteMethod(attribute);
+            return umlClass.deleteMethod(method);
         }
         return false;
     }
 
     //TODO
-    // Renames an attribute in a specified class
+    // Renames a mehtod in a specified class
     public boolean renameMethod(String className, String oldName, String newName) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {

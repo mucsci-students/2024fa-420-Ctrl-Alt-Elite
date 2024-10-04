@@ -2,7 +2,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Represents a UML class with a name and a set of attributes.
+ * Represents a UML class with a name and a set of methods.
  */
 public class UmlClass {
     private String name;

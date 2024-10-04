@@ -1,7 +1,10 @@
-import static org.junit.jupiter.api.Assertions.*;  // JUnit 5 assertions
-import org.junit.jupiter.api.BeforeEach;  // JUnit 5 setup
-import org.junit.jupiter.api.DisplayName; // JUnit DisplayName annotation
-import org.junit.jupiter.api.Test;  // JUnit 5 Test annotation
+import static org.junit.jupiter.api.Assertions.assertFalse;  // JUnit 5 assertions
+import static org.junit.jupiter.api.Assertions.assertNotNull;  // JUnit 5 setup
+import static org.junit.jupiter.api.Assertions.assertNull; // JUnit DisplayName annotation
+import static org.junit.jupiter.api.Assertions.assertTrue;  // JUnit 5 Test annotation
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /**
  * A test class for the UmlEditor class
@@ -169,76 +172,76 @@ public class UmlEditorTest {
 
     //TODO
     /**
-     * Test adding an attribute to a class.
+     * Test adding a mehtod to a class.
      */
     @Test
-    @DisplayName ("AddAttribute: Add an attribute to a class")
-    public void testAddAttribute() {
+    @DisplayName ("AddMethod: Add a method to a class")
+    public void testAddMethod() {
         umlEditor.addClass("ClassA");
-        assertTrue(umlEditor.addMethod("ClassA", "Attribute1"), 
-        		() -> "Error with adding attribute.");
+        assertTrue(umlEditor.addMethod("ClassA", "Method1"), 
+        		() -> "Error with adding method.");
     }
     
     //TODO
     /**
-     * Test adding an attribute to a class that does not exist, should fail.
+     * Test adding a method to a class that does not exist, should fail.
      */
     @Test
-    @DisplayName ("AddAttribute: Add an attribute to a class that does not exist, failure test")
-    public void testAddAttributeFalseClass() {
-    	assertFalse(umlEditor.addMethod("ClassB", "Attribute1"), 
+    @DisplayName ("AddMethod: Add a method to a class that does not exist, failure test")
+    public void testAddMethodFalseClass() {
+    	assertFalse(umlEditor.addMethod("ClassB", "Method1"), 
     			() -> "Error with adding to non-existent class.");
     }
     
     //TODO
     /**
-     * Test adding duplicate attribute names, should fail.
+     * Test adding duplicate method names, should fail.
      */
     @Test
-    @DisplayName ("AddAttribute: Add an attribute with a duplicate name, failure test")
-    public void testAddDuplicateAttribute() {
+    @DisplayName ("AddMethod: Add an method with a duplicate name, failure test")
+    public void testAddDuplicateMethod() {
         umlEditor.addClass("ClassA");
-        assertTrue(umlEditor.addMethod("ClassA", "Attribute1"), 
-        		() -> "Error with adding attribute in duplicate attribute test.");
-        assertFalse(umlEditor.addMethod("ClassA", "Attribute1"),
-        		() -> "Error with trying to add duplicate attribute.");
+        assertTrue(umlEditor.addMethod("ClassA", "Method1"), 
+        		() -> "Error with adding method in duplicate method test.");
+        assertFalse(umlEditor.addMethod("ClassA", "Method1"),
+        		() -> "Error with trying to add duplicate method.");
     }
     
 /*----------------------------------------------------------------------------------------------------------------*/
 
     //TODO
     /**
-     * Test deleting an attribute from a class.
+     * Test deleting a method from a class.
      */
     @Test
-    @DisplayName ("DeleteAttribute: Delete an attribute from a class")
-    public void testDeleteAttribute() {
+    @DisplayName ("DeleteMethod: Delete a method from a class")
+    public void testDeleteMethod() {
         umlEditor.addClass("ClassA");
-        umlEditor.addMethod("ClassA", "Attribute1");
-        assertTrue(umlEditor.deleteMethod("ClassA", "Attribute1"), 
-        		() -> "Error with deleting an attribute."); 
+        umlEditor.addMethod("ClassA", "Method1");
+        assertTrue(umlEditor.deleteMethod("ClassA", "Method1"), 
+        		() -> "Error with deleting a method."); 
     }
     
     //TODO
     /**
-     * Test deleting an attribute that does not exist, should fail.
+     * Test deleting a method that does not exist, should fail.
      */
     @Test
-    @DisplayName ("DeleteAttribute: Delete and attribute that does not exist, failure test")
-    public void testDeleteAttributeNotExist() {
+    @DisplayName ("DeleteMethod: Delete and method that does not exist, failure test")
+    public void testDeleteMethodNotExist() {
     	umlEditor.addClass("ClassA");
-    	assertFalse(umlEditor.deleteMethod("ClassA", "NonExistentAttribute"), 
-    			() -> "Error with deleting an attribute that does not exist.");
+    	assertFalse(umlEditor.deleteMethod("ClassA", "NonExistentMethod"), 
+    			() -> "Error with deleting a method that does not exist.");
     }
     
     //TODO
     /**
-     * Test deleting an attribute with a class that does not exist, should fail.
+     * Test deleting a method with a class that does not exist, should fail.
      */
     @Test
-    @DisplayName ("AddAttribute: Delete an attribute to a class that does not exist, failure test")
-    public void testDeleteAttributeFalseClass() {
-    	assertFalse(umlEditor.deleteMethod("ClassA", "Attribute1"), 
+    @DisplayName ("AddMethod: Delete a method to a class that does not exist, failure test")
+    public void testDeleteMethodFalseClass() {
+    	assertFalse(umlEditor.deleteMethod("ClassA", "Method1"), 
     			() -> "Error with deleting from non-existent class.");
     }
     
@@ -246,37 +249,37 @@ public class UmlEditorTest {
     
     //TODO
     /**
-     * Test renaming an attribute.
+     * Test renaming a method.
      */
     @Test
-    @DisplayName ("RenameAttribute: Rename and attribute")
-    public void testRenameAttribute() {
+    @DisplayName ("RenameMethod: Rename and method")
+    public void testRenameMethod() {
         umlEditor.addClass("ClassA");
-        umlEditor.addMethod("ClassA", "Attribute1");
-        assertTrue(umlEditor.renameMethod("ClassA", "Attribute1", "Attribute2"),
-        		() -> "Error with renaming an attribute.");
+        umlEditor.addMethod("ClassA", "Method1");
+        assertTrue(umlEditor.renameMethod("ClassA", "Method1", "Method2"),
+        		() -> "Error with renaming an method.");
     }
     
     //TODO
     /**
-     * Test renaming an attribute that does not exist, should fail
+     * Test renaming a method that does not exist, should fail
      */
     @Test
-    @DisplayName ("RenameAttribute: Rename an attribute that does not exist, failure test")
-    public void testRenameAttributeNotExist() {
+    @DisplayName ("RenameMethod: Rename a method that does not exist, failure test")
+    public void testRenameMethodNotExist() {
     	umlEditor.addClass("ClassA");
-    	assertFalse(umlEditor.renameMethod("ClassA", "Attribute1", "Attribute3"),
-    			() -> "Error with renaming an attribute that does not exist.");
+    	assertFalse(umlEditor.renameMethod("ClassA", "Method1", "Method3"),
+    			() -> "Error with renaming a method that does not exist.");
     }
     
     //TODO
     /**
-     * Test renaming an attribute with a class that does not exist, should fail.
+     * Test renaming a method with a class that does not exist, should fail.
      */
     @Test
-    @DisplayName ("AddAttribute: Rename an attribute to a class that does not exist, failure test")
-    public void testRenameAttributeFalseClass() {
-    	assertFalse(umlEditor.renameMethod("ClassA", "Attribute1", "Attribute2"), 
+    @DisplayName ("AddMethod: Rename an method to a class that does not exist, failure test")
+    public void testRenameMethodFalseClass() {
+    	assertFalse(umlEditor.renameMethod("ClassA", "Method1", "Method2"), 
     			() -> "Error with renaming from non-existent class.");
     }
     
@@ -369,9 +372,9 @@ public class UmlEditorTest {
     public void testListClasses() {
     	System.out.println("Expected Output: ");
     	System.out.println("Class: ClassA");
-        System.out.println("Attributes: []");
+        System.out.println("Methods: []");
         System.out.println("Class: ClassB");
-        System.out.println("Attributes: []");
+        System.out.println("Methods: []");
     	
     	umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
@@ -404,7 +407,7 @@ public class UmlEditorTest {
     public void testListClass() {
     	System.out.println("Expected Output: ");
         System.out.println("Class: ClassA");
-        System.out.println("Attributes: []");
+        System.out.println("Methods: []");
     	
     	umlEditor.addClass("ClassA");
           
