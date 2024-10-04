@@ -278,28 +278,25 @@ addRelationshipButton.addActionListener(e -> {
             for (Map.Entry<String, Point> entry : classPositions.entrySet()) {
                 String className = entry.getKey();
                 Point position = entry.getValue();
-    
-                // Draw rectangle with a section for the class name and another for attributes
-                int rectWidth = 100;
-                int rectHeight = 80;
-                int classNameSectionHeight = 30;  // Height for class name section
-    
-                // Draw the outer rectangle
-                g.drawRect(position.x, position.y, rectWidth, rectHeight);
-    
-                // Draw the divider line between class name and attributes section
-                g.drawLine(position.x, position.y + classNameSectionHeight, position.x + rectWidth, position.y + classNameSectionHeight);
-    
-                // Draw class name in the top section
-                g.drawString(className, position.x + 10, position.y + 20);  // Centered vertically in the class name section
-    
-                // Draw attributes in the lower section
                 UmlClass umlClass = umlEditor.getClass(className);
+                int attributeCount = (umlClass != null) ? umlClass.getAttributes().size() : 0;
+                int boxHeight = 50 + (attributeCount * 15);  // Increase box height for each attribute
+    
+                // Draw the rectangle for the class with dynamic height
+                g.drawRect(position.x, position.y, 100, boxHeight);
+    
+                // Draw the class name in the upper part of the box
+                g.drawString(className, position.x + 10, position.y + 20);
+    
+                // Draw a line to separate class name and attributes
+                g.drawLine(position.x, position.y + 30, position.x + 100, position.y + 30);
+    
+                // Draw attributes below the line
                 if (umlClass != null) {
-                    int attributeY = position.y + classNameSectionHeight + 20;  // Start position for attributes
+                    int attributeY = position.y + 45;  // Start position for the first attribute
                     for (String attribute : umlClass.getAttributes()) {
-                        g.drawString(attribute, position.x + 10, attributeY);  // Draw each attribute
-                        attributeY += 15;  // Increment Y position for next attribute
+                        g.drawString(attribute, position.x + 10, attributeY);
+                        attributeY += 15;  // Increment for the next attribute
                     }
                 }
             }
@@ -310,15 +307,16 @@ addRelationshipButton.addActionListener(e -> {
                 Point destination = classPositions.get(relationship.getDestination());
                 if (source != null && destination != null) {
                     // Calculate the Y positions for the source and destination
-                    int sourceY = source.y + 40;  // Middle of the source rectangle (adjusted for the divided sections)
-                    int destinationY = destination.y + 40;  // Middle of the destination rectangle
+                    int sourceY = source.y + 25;  // Middle of the source rectangle
+                    int destinationY = destination.y + 25;  // Middle of the destination rectangle
     
-                    // Draw a line between the source and destination
+                    // Draw line between source and destination
                     g.drawLine(source.x + 50, sourceY, destination.x + 50, destinationY);
                 }
             }
         }
     }
+    
     
     
 
