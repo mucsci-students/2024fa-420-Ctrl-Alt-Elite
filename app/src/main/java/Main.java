@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 /**
  * The Main class provides a command-line interface for interacting with the UML editor.
- * Users can perform various operations such as adding, deleting, renaming classes, and attributes,
+ * Users can perform various operations such as adding, deleting, renaming classes, and methods,
  * as well as managing relationships between classes. Commands can also save and load data in JSON format.
  */
 public class Main {
@@ -62,44 +62,48 @@ public class Main {
                     }
                     break;
 
-                case "AddAttribute":
-                    // Adds an attribute to a class
-                    System.out.println("Enter the class name to add the attribute to: ");
-                    String classToAddAttribute = scanner.nextLine().trim();
-                    System.out.println("Enter the attribute name: ");
-                    String attributeName = scanner.nextLine().trim();
-                    if (umlEditor.addAttribute(classToAddAttribute, attributeName)) {
-                        System.out.println("Attribute '" + attributeName + "' added to class '" + classToAddAttribute + "'.");
+                    //TODO
+                case "AddMethod":
+                    // Adds an method to a class
+                    System.out.println("Enter the class name to add the method to: ");
+                    String classToAddMethod = scanner.nextLine().trim();
+                    System.out.println("Enter the method name: ");
+                    String methodName = scanner.nextLine().trim();
+                    if (umlEditor.addMethod(classToAddMethod, methodName)) {
+                        System.out.println("Method '" + methodName + "' added to class '" + classToAddMethod + "'.");
                     } else {
-                        System.out.println("Failed to add attribute. Name may be invalid or duplicated, or class does not exist.");
+                        System.out.println("Failed to add method. Name may be invalid or duplicated, or class does not exist.");
                     }
                     break;
 
-                case "DeleteAttribute":
-                    // Deletes an attribute from a class
-                    System.out.println("Enter the class name to delete the attribute from: ");
-                    String classToDeleteAttribute = scanner.nextLine().trim();
-                    System.out.println("Enter the attribute name to delete: ");
-                    String attributeToDelete = scanner.nextLine().trim();
-                    if (umlEditor.deleteAttribute(classToDeleteAttribute, attributeToDelete)) {
-                        System.out.println("Attribute '" + attributeToDelete + "' has been deleted from class '" + classToDeleteAttribute + "'.");
+                    //TODO
+                case "DeleteMethod":
+                    // Deletes an method from a class
+                    System.out.println("Enter the class name to delete the method from: ");
+                    String classToDeleteMethod = scanner.nextLine().trim();
+                    System.out.println("Enter the method name to delete: ");
+                    String methodToDelete = scanner.nextLine().trim();
+                    if (umlEditor.deleteMethod(classToDeleteMethod, methodToDelete)) {
+                        System.out.println("Method '" + methodToDelete + "' has been deleted from class '" + classToDeleteMethod + "'.");
                     } else {
-                        System.out.println("Failed to delete attribute. Name may be invalid or class does not exist.");
+                        System.out.println("Failed to delete method. Name may be invalid or class does not exist.");
                     }
                     break;
 
-                case "RenameAttribute":
-                    // Renames an attribute in a class
-                    System.out.println("Enter the class name with the attribute to rename: ");
-                    String classToRenameAttribute = scanner.nextLine().trim();
-                    System.out.println("Enter the current attribute name: ");
-                    String oldAttributeName = scanner.nextLine().trim();
-                    System.out.println("Enter the new attribute name: ");
-                    String newAttributeName = scanner.nextLine().trim();
-                    if (umlEditor.renameAttribute(classToRenameAttribute, oldAttributeName, newAttributeName)) {
-                        System.out.println("Attribute '" + oldAttributeName + "' has been renamed to '" + newAttributeName + "' in class '" + classToRenameAttribute + "'.");
+                    //TODO
+                case "RenameMethod":
+                    // Renames a method in a class
+                    System.out.println("Enter the class name with the method to rename: ");
+                    String classToRenameMethod = scanner.nextLine().trim();
+                    System.out.println("Enter the current method name: ");
+                    String oldMethodName = scanner.nextLine().trim();
+                    System.out.println("Enter the new method name: ");
+                    String newMethodName = scanner.nextLine().trim();
+                    if (umlEditor.renameMethod(classToRenameMethod, oldMethodName, newMethodName)) {
+                        System.out.println("Method '" + oldMethodName + "' has been renamed to '" 
+                            + newMethodName + "' in class '" + classToRenameMethod + "'.");
                     } else {
-                        System.out.println("Failed to rename attribute. Name may be invalid or duplicated, or class does not exist.");
+                        System.out.println("Failed to rename method. Name may be invalid or duplicated, or class does not exist.");
                     }
                     break;
 
@@ -129,19 +133,21 @@ public class Main {
                     }
                     break;
 
+                    //TODO
                 case "ListClasses":
-                    // Lists all classes and their attributes
+                    // Lists all classes and their methods
                     umlEditor.listClasses();
                     break;
 
+                    //TODO
                 case "ListClass":
-                    // Lists the attributes of a specified class
+                    // Lists the methods of a specified class
                     System.out.println("Enter the class name to list: ");
                     String listClassName = scanner.nextLine().trim();
                     umlEditor.listClass(listClassName);
                     break;
 
-                case "ListRlationships":
+                case "ListRelationships":
                     // Lists all relationships between classes
                     umlEditor.listRelationships();
                     break;
@@ -170,6 +176,7 @@ public class Main {
                     }
                     break;
 
+                    //TODO
                 case "Help":
                     // Displays a list of available commands
                     displayHelp();
@@ -198,12 +205,12 @@ public class Main {
         System.out.println("AddClass - Add a class");
         System.out.println("DeleteClass - Delete a class");
         System.out.println("RenameClass - Rename a class");
-        System.out.println("AddAttribute - Add an attribute to a class");
-        System.out.println("DeleteAttribute - Delete an attribute from a class");
-        System.out.println("RenameAttribute - Rename an attribute in a class");
+        System.out.println("AddMethod - Add a method to a class");
+        System.out.println("DeleteMethod - Delete a method from a class");
+        System.out.println("RenameMethod - Rename a method in a class");
         System.out.println("AddRelationship - Add a relationship between classes");
         System.out.println("DeleteRelationship - Delete a relationship between classes");
-        System.out.println("ListClasses - List all classes and their attributes");
+        System.out.println("ListClasses - List all classes and their methods");
         System.out.println("ListClass - List the contents of a specified class");
         System.out.println("ListRelationships - List all relationships");
         System.out.println("Save - Save data to a JSON file");

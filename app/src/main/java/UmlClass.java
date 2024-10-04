@@ -2,11 +2,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Represents a UML class with a name and a set of attributes.
+ * Represents a UML class with a name and a set of methods.
  */
 public class UmlClass {
     private String name;
-    private Set<String> attributes;
+    private Set<String> methods;
 
     /**
      * Constructs a new UmlClass with the specified name.
@@ -15,7 +15,7 @@ public class UmlClass {
      */
     public UmlClass(String name) {
         this.name = name;
-        this.attributes = new HashSet<>();
+        this.methods = new HashSet<>();
     }
 
     /**
@@ -36,50 +36,56 @@ public class UmlClass {
         this.name = name;
     }
 
-    /**
-     * Adds a new attribute to the UML class.
+    
+    //TODO
+    /*
+     * Adds a new method to the UML class.
      * 
-     * @param attribute the name of the attribute to add
-     * @return {@code true} if the attribute was added, {@code false} if the attribute already exists
+     * @param methodName the name of the method to add
+     * @return {@code true} if the method was added, {@code false} if the method already exists
      */
-    public boolean addAttribute(String attribute) {
-        return attributes.add(attribute);
+    public boolean addMethod(String methodName) {
+        return methods.add(methodName);
+    }
+    
+    //TODO
+    /**
+     * Deletes a method from the UML class.
+     * 
+     * @param methodName the name of the method to delete
+     * @return {@code true} if the method was removed, {@code false} if the method was not found
+     */
+    public boolean deleteMethod(String methodName) {
+        return methods.remove(methodName);
     }
 
+    //TODO
     /**
-     * Deletes an attribute from the UML class.
+     * Renames an existing method in the UML class.
      * 
-     * @param attribute the name of the attribute to delete
-     * @return {@code true} if the attribute was removed, {@code false} if the attribute was not found
-     */
-    public boolean deleteAttribute(String attribute) {
-        return attributes.remove(attribute);
-    }
-
-    /**
-     * Renames an existing attribute in the UML class.
-     * 
-     * @param oldName the current name of the attribute to rename
-     * @param newName the new name of the attribute
-     * @return {@code true} if the attribute was successfully renamed, {@code false} if the old name was not found 
+     * @param oldName the current name of the method to rename
+     * @param newName the new name of the method
+     * @return {@code true} if the method was successfully renamed, {@code false} if the old name was not found 
      *         or if the new name already exists
      */
-    public boolean renameAttribute(String oldName, String newName) {
-        if (attributes.contains(oldName) && !attributes.contains(newName)) {
-            attributes.remove(oldName);
-            attributes.add(newName);
+    public boolean renameMethod(String oldName, String newName) {
+        if (methods.contains(oldName) && !methods.contains(newName)) {
+            methods.remove(oldName);
+            methods.add(newName);
             return true;
         }
         return false;
     }
 
+   //TODO
     /**
-     * Returns a string representation of the UML class, including its name and attributes.
+     * Returns a string representation of the UML class, including its name and methods, 
+     *  along with their parameters.
      * 
-     * @return a string containing the class name and its attributes
+     * @return a string containing the class name and its methods
      */
     @Override
     public String toString() {
-        return "Class: " + name + "\nAttributes: " + attributes;
+        return "Class: " + name + "\nMethods: " + methods;
     }
 }
