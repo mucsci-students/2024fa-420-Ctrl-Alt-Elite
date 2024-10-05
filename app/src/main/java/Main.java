@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -69,7 +70,26 @@ public class Main {
                     String classToAddMethod = scanner.nextLine().trim();
                     System.out.println("Enter the method name: ");
                     String methodName = scanner.nextLine().trim();
-                    if (umlEditor.addMethod(classToAddMethod, methodName)) {
+                    
+                    //TODO the command prompts again, says its invaild, and prompts again when the exceiton gets thrown
+                    System.out.println("Enter the number(0, 1, 2, etc.) of parameters for the method: ");
+                    int paraNum = 0;
+                    try {
+                        paraNum = scanner.nextInt();
+                    } catch (Exception e) {
+                        System.out.println("Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                        break;
+                    }
+                    scanner.nextLine();
+                    
+                    ArrayList<String> paraList = new ArrayList<>();
+                    for (int i = 1; i <= paraNum; i++) {
+                        System.out.println("Enter the name of parameter " + i + ": ");
+                        String paraName = scanner.nextLine().trim();
+                        paraList.add(paraName);
+                    }
+                    
+                    if (umlEditor.addMethod(classToAddMethod, methodName, paraList)) {
                         System.out.println("Method '" + methodName + "' added to class '" + classToAddMethod + "'.");
                     } else {
                         System.out.println("Failed to add method. Name may be invalid or duplicated, or class does not exist.");

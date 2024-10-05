@@ -1,6 +1,10 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +50,9 @@ public class UmlClassTest {
     @Test
     @DisplayName ("AddMethod: Add an method to the class")
     public void testAddMethod() {
-        assertTrue(umlClass.addMethod("Method1"));
+        ArrayList<String> lst = new ArrayList<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        assertTrue(umlClass.addMethod("Method1", lst));
     }
     
     //TODO
@@ -56,8 +62,11 @@ public class UmlClassTest {
     @Test
     @DisplayName ("AddMethod: Add a duplicate method, failure test")
     public void testAddMethodNotExist() {
-        umlClass.addMethod("Method1");
-        assertFalse(umlClass.addMethod("Method1"));
+        ArrayList<String> lst = new ArrayList<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        
+        umlClass.addMethod("Method1", lst);
+        assertFalse(umlClass.addMethod("Method1", lst));
     }
 
     //TODO
@@ -67,7 +76,10 @@ public class UmlClassTest {
     @Test
     @DisplayName ("DeleteMethod: Delete a method")
     public void testDeleteMethod() {
-        umlClass.addMethod("Method1");
+        ArrayList<String> lst = new ArrayList<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+
+        umlClass.addMethod("Method1", lst);
         assertTrue(umlClass.deleteMethod("Method1"));
     }
     
@@ -88,7 +100,10 @@ public class UmlClassTest {
     @Test
     @DisplayName ("RenameMethod: Rename an method")
     public void testRenameMethod() {
-        umlClass.addMethod("Method1");
+        ArrayList<String> lst = new ArrayList<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+
+        umlClass.addMethod("Method1", lst);
         assertTrue(umlClass.renameMethod("Method1", "Method2"));
     }
     
@@ -109,7 +124,11 @@ public class UmlClassTest {
     @Test
     @DisplayName ("ToString: Print out the object in the correct way with the correct information")
     public void testToString() {
-        umlClass.addMethod("Method1");
-        assertEquals("Class: ClassA\nMethods: [Method1]", umlClass.toString().trim());
+        ArrayList<String> lst = new ArrayList<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        
+        umlClass.addMethod("Method1", lst);
+        umlClass.addMethod("Method2", lst);
+        assertEquals("Class: ClassA\n\tMethod: Method1 (Para-A, Para-B, Para-C)\n\tMethod: Method2 (Para-A, Para-B, Para-C)", umlClass.toString().trim());
     }
 }

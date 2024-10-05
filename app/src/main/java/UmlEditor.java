@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -68,10 +69,10 @@ public class UmlEditor {
 
     //TODO
     // Adds a method to a specified class
-    public boolean addMethod(String className, String method) {
+    public boolean addMethod(String className, String method, ArrayList<String> paraList) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
-            return umlClass.addMethod(method);
+            return umlClass.addMethod(method, paraList);
         }
         return false;
     }
