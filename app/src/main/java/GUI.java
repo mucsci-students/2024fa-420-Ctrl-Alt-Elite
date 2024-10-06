@@ -6,6 +6,8 @@ import java.util.Random;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.File;
+import java.io.IOException;
 
 public class GUI extends JFrame {
     private UmlEditor umlEditor;
@@ -185,7 +187,6 @@ public class GUI extends JFrame {
             deleteSourceClassField.setText("");
             deleteDestinationClassField.setText("");
         });
-        
 
         panel.add(new JLabel("Source Class Name to Delete:"));
         panel.add(deleteSourceClassField);
@@ -212,6 +213,42 @@ public class GUI extends JFrame {
 
         panel.add(listClassesButton);
         panel.add(listRelationshipsButton);
+
+        // Save and Load Functionality
+        JButton saveButton = new JButton("Save UML Project");
+        saveButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int option = fileChooser.showSaveDialog(null);
+            if (option == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                try {
+                    JsonUtils.save(umlEditor, file.getAbsolutePath());
+                    outputArea.append("Project saved successfully to " + file.getAbsolutePath() + ".\n");
+                } catch (IOException ex) {
+                    outputArea.append("Failed to save project: " + ex.getMessage() + "\n");
+                }
+            }
+        });
+
+        JButton loadButton = new JButton("Load UML Project");
+        loadButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int option = fileChooser.showOpenDialog(null);
+            if (option == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                try {
+                    umlEditor = JsonUtils.load(file.getAbsolutePath());
+                    outputArea.append("Project loaded successfully from " + file.getAbsolutePath() + ".\n");
+                    drawingPanel.repaint(); // Repaint the panel to show loaded classes and relationships
+                } catch (IOException ex) {
+                    outputArea.append("Failed to load project: " + ex.getMessage() + "\n");
+                }
+            }
+        });
+
+        // Adding save and load buttons to the panel
+        panel.add(saveButton);
+        panel.add(loadButton);
 
         add(panel, BorderLayout.EAST);
     }
