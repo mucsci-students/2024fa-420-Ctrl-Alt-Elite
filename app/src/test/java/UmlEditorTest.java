@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;  // JUnit 5 Test anno
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -174,7 +176,6 @@ public class UmlEditorTest {
     
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO
     /**
      * Test adding a mehtod to a class.
      */
@@ -182,26 +183,24 @@ public class UmlEditorTest {
     @DisplayName ("AddMethod: Add a method to a class")
     public void testAddMethod() {
         umlEditor.addClass("ClassA");
-        ArrayList<String> lst = new ArrayList<>(
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
             Arrays.asList("Para-A", "Para-B", "Para-C"));
         assertTrue(umlEditor.addMethod("ClassA", "Method1", lst), 
         		() -> "Error with adding method.");
     }
     
-    //TODO
     /**
      * Test adding a method to a class that does not exist, should fail.
      */
     @Test
     @DisplayName ("AddMethod: Add a method to a class that does not exist, failure test")
     public void testAddMethodFalseClass() {
-    	ArrayList<String> lst = new ArrayList<>(
+    	LinkedHashSet<String> lst = new LinkedHashSet<>(
             Arrays.asList("Para-A", "Para-B", "Para-C"));
         assertFalse(umlEditor.addMethod("ClassB", "Method1", lst), 
     			() -> "Error with adding to non-existent class.");
     }
     
-    //TODO
     /**
      * Test adding duplicate method names, should fail.
      */
@@ -209,17 +208,26 @@ public class UmlEditorTest {
     @DisplayName ("AddMethod: Add an method with a duplicate name, failure test")
     public void testAddDuplicateMethod() {
         umlEditor.addClass("ClassA");
-        ArrayList<String> lst = new ArrayList<>(
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
             Arrays.asList("Para-A", "Para-B", "Para-C"));
         assertTrue(umlEditor.addMethod("ClassA", "Method1", lst), 
         		() -> "Error with adding method in duplicate method test.");
         assertFalse(umlEditor.addMethod("ClassA", "Method1", lst),
         		() -> "Error with trying to add duplicate method.");
     }
+
+    //TODO
+    /** 
+     * Test adding a method with 0 parameters.
+    */
+
+    //TODO
+    /**
+     * Test adding a method with invaild parameter input, should fail.
+     */
     
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO
     /**
      * Test deleting a method from a class.
      */
@@ -227,14 +235,13 @@ public class UmlEditorTest {
     @DisplayName ("DeleteMethod: Delete a method from a class")
     public void testDeleteMethod() {
         umlEditor.addClass("ClassA");
-        ArrayList<String> lst = new ArrayList<>(
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
             Arrays.asList("Para-A", "Para-B", "Para-C"));
         umlEditor.addMethod("ClassA", "Method1", lst);
         assertTrue(umlEditor.deleteMethod("ClassA", "Method1"), 
         		() -> "Error with deleting a method."); 
     }
     
-    //TODO
     /**
      * Test deleting a method that does not exist, should fail.
      */
@@ -246,12 +253,11 @@ public class UmlEditorTest {
     			() -> "Error with deleting a method that does not exist.");
     }
     
-    //TODO
     /**
      * Test deleting a method with a class that does not exist, should fail.
      */
     @Test
-    @DisplayName ("AddMethod: Delete a method in a class that does not exist, failure test")
+    @DisplayName ("DeleteMethod: Delete a method in a class that does not exist, failure test")
     public void testDeleteMethodFalseClass() {
     	assertFalse(umlEditor.deleteMethod("ClassA", "Method1"), 
     			() -> "Error with deleting from non-existent class.");
@@ -267,7 +273,7 @@ public class UmlEditorTest {
     @DisplayName ("RenameMethod: Rename and method")
     public void testRenameMethod() {
         umlEditor.addClass("ClassA");
-        ArrayList<String> lst = new ArrayList<>(
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
             Arrays.asList("Para-A", "Para-B", "Para-C"));
         umlEditor.addMethod("ClassA", "Method1", lst);
         assertTrue(umlEditor.renameMethod("ClassA", "Method1", "Method2"),
@@ -291,7 +297,7 @@ public class UmlEditorTest {
      * Test renaming a method with a class that does not exist, should fail.
      */
     @Test
-    @DisplayName ("AddMethod: Rename an method to a class that does not exist, failure test")
+    @DisplayName ("RenameMethod: Rename an method to a class that does not exist, failure test")
     public void testRenameMethodFalseClass() {
     	assertFalse(umlEditor.renameMethod("ClassA", "Method1", "Method2"), 
     			() -> "Error with renaming from non-existent class.");

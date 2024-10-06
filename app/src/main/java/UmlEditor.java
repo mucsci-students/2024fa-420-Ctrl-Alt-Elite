@@ -1,9 +1,10 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+//TODO comments
 public class UmlEditor {
     // A map to store UML classes by their name
     private Map<String, UmlClass> classes;
@@ -67,9 +68,8 @@ public class UmlEditor {
         return true;
     }
 
-    //TODO
     // Adds a method to a specified class
-    public boolean addMethod(String className, String method, ArrayList<String> paraList) {
+    public boolean addMethod(String className, String method, LinkedHashSet<String> paraList) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
             return umlClass.addMethod(method, paraList);
@@ -77,7 +77,6 @@ public class UmlEditor {
         return false;
     }
 
-    //TODO
     // Deletes a method from a specified class
     public boolean deleteMethod(String className, String method) {
         UmlClass umlClass = classes.get(className);
@@ -87,12 +86,27 @@ public class UmlEditor {
         return false;
     }
 
-    //TODO
     // Renames a mehtod in a specified class
     public boolean renameMethod(String className, String oldName, String newName) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
             return umlClass.renameMethod(oldName, newName);
+        }
+        return false;
+    }
+
+    public boolean removeParameter(String className, String methodName, String paraName) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.removeParameter(methodName, paraName);
+        }
+        return false; 
+    }
+
+    public boolean changeParameters(String className, String methodName, LinkedHashSet<String> parameters) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.changeParameters(methodName, parameters);
         }
         return false;
     }
@@ -107,7 +121,6 @@ public class UmlEditor {
         }
         return false;  // One or both classes do not exist
     }
-
 
     // Deletes a relationship between two classes
     public boolean deleteRelationship(String source, String destination) {

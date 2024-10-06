@@ -1,5 +1,5 @@
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Scanner;
 
 /**
@@ -82,11 +82,11 @@ public class Main {
                     }
                     scanner.nextLine();
                     
-                    ArrayList<String> paraList = new ArrayList<>();
+                    LinkedHashSet<String> paraList = new LinkedHashSet<>();
                     for (int i = 1; i <= paraNum; i++) {
                         System.out.println("Enter the name of parameter " + i + ": ");
                         String paraName = scanner.nextLine().trim();
-                        paraList.add(paraName);
+                        paraList.addLast(paraName);
                     }
                     
                     if (umlEditor.addMethod(classToAddMethod, methodName, paraList)) {
@@ -124,6 +124,69 @@ public class Main {
                             + newMethodName + "' in class '" + classToRenameMethod + "'.");
                     } else {
                         System.out.println("Failed to rename method. Name may be invalid or duplicated, or class does not exist.");
+                    }
+                    break;
+
+                    //TODO
+                case "RemoveParameter":
+                    //Removes a parameter, or many parameters, from a method
+                    System.out.println("Enter the class name of the method with the parameters to remove: ");
+                    String classToRemoveParameter = scanner.nextLine().trim();
+                    System.out.println("Enter the name of the method with the parameters to remove: ");
+                    String methodOfParameters = scanner.nextLine().trim();
+                    System.out.println("How many parameters would you like to remove(1, 2, 3, etc.): ");
+                    
+                    //TODO the command prompts again, says its invaild, and prompts again when the exceiton gets thrown
+                    int numToRemove = 0;
+                    try {
+                        numToRemove = scanner.nextInt();
+                    } catch (Exception e) {
+                        System.out.println("Parameter number to remove entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                        break;
+                    }
+                    scanner.nextLine();
+                    for (int i = 0; i < numToRemove; i++) {
+                        System.out.println("Enter the name of the parameter to remove: ");
+                        String paraName = scanner.nextLine().trim();
+                        
+                        if (umlEditor.removeParameter(classToRemoveParameter, methodOfParameters, paraName)) {
+                            System.out.println("Parameter '" + paraName + "' was removed from '" + methodOfParameters + "'.");
+                        } else {
+                            System.out.println("Failed to remove parameter. Name may be invalid, or class does not exist.");
+                            break;
+                        }
+                    }
+                    break;
+
+                case "ChangeParameter":
+                    //Replaces a list of parameters with a new list.
+                    System.out.println("Enter the class name of the method with the parameters to change: ");
+                    String classToChangeParameter = scanner.nextLine().trim();
+                    System.out.println("Enter the name of the method with the parameters to change: ");
+                    String methodToChangeParameters = scanner.nextLine().trim();
+
+                    //TODO the command prompts again, says its invaild, and prompts again when the exceiton gets thrown
+                    System.out.println("Enter the new number(0, 1, 2, etc.) of parameters for '" + methodToChangeParameters +"': ");
+                    int newParaNum = 0;
+                    try {
+                        newParaNum = scanner.nextInt();
+                    } catch (Exception e) {
+                        System.out.println("Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                        break;
+                    }
+                    scanner.nextLine();
+                    
+                    LinkedHashSet<String> newParaList = new LinkedHashSet<>();
+                    for (int i = 1; i <= newParaNum; i++) {
+                        System.out.println("Enter the name of parameter " + i + ": ");
+                        String paraName = scanner.nextLine().trim();
+                        newParaList.addLast(paraName);
+                    }
+                    
+                    if (umlEditor.changeParameters(classToChangeParameter, methodToChangeParameters, newParaList)) {
+                        System.out.println("Method '" + methodToChangeParameters + "' had its parameters changed.");
+                    } else {
+                        System.out.println("Failed to add method. Name may be invalid or duplicated, or class does not exist.");
                     }
                     break;
 

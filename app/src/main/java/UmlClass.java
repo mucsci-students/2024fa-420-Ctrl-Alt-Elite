@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 /**
  * Represents a UML class with a name and a list of methods.
@@ -42,16 +44,16 @@ public class UmlClass {
         /** The name of the method. */
         private String name;
         /** A list of parameters. */
-        private ArrayList<String> parameters;
+        private LinkedHashSet<String> parameters;
         
         /**
          * Creates a new method with a list of parameters.
          * 
          * @param name The name of the method as provided by the user.
          */
-        public Method(String name, ArrayList<String> parameters) {
+        public Method(String name, LinkedHashSet<String> parameters) {
             this.name = name;
-            this.parameters = new ArrayList<>(parameters);
+            this.parameters = new LinkedHashSet<>(parameters);
         }
 
         /**
@@ -77,7 +79,7 @@ public class UmlClass {
          * 
          * @return The list of parameters.
          */
-        public ArrayList<String> getParameters() {
+        public LinkedHashSet<String> getParameters() {
             return parameters;
         }
 
@@ -86,9 +88,19 @@ public class UmlClass {
          * 
          * @param parameters The new list of parameters.
          */
-        public void setParameters(ArrayList<String> parameters) {
+        public void setParameters(LinkedHashSet<String> parameters) {
             this.parameters = parameters;
         }
+
+        /**
+         * Removes a parameter from the list of parameters.
+         * 
+         * @param paraName The name of the parameter to remove.
+         */
+        public boolean removeParameter(String paraName) {
+            return parameters.remove(paraName);
+        }
+
 
         /**
          * Compares this Method with another object for equality.
@@ -150,6 +162,7 @@ public class UmlClass {
 		    return result;
 	    }
 
+        //TODO
         /**
          * Generates a string repersentaion of the Method object.
          */
@@ -158,11 +171,12 @@ public class UmlClass {
             String string = "\tMethod: " + name;
             string = string.concat(" (");
             if (!parameters.isEmpty()) {
-                for (int i = 0; i < parameters.size() - 1; i++) {
-                    string = string.concat(parameters.get(i));
+                Iterator<String> iter = parameters.iterator();
+                string = string.concat(iter.next());
+                for (int i = 1; i < parameters.size(); i++) {
                     string = string.concat(", ");
+                    string = string.concat(iter.next());
                 }
-                string = string.concat(parameters.getLast());
             }
             string = string.concat(")\n");
             return string;
@@ -177,7 +191,7 @@ public class UmlClass {
      * @param parameters The list of parameters for the method.
      * @return {@code true} if the method was added, {@code false} if the method already exists.
      */
-    public boolean addMethod(String methodName, ArrayList<String> parameters) {
+    public boolean addMethod(String methodName, LinkedHashSet<String> parameters) {
         // Loop through the methods to see if a method
         //  with methodName already exists.
         for (Method method : methods) {
@@ -234,7 +248,7 @@ public class UmlClass {
         }
 
         // Loop through the methods and find the method with 
-        //  the old name an replace it with the new name.
+        //  the old name and replace it with the new name.
         for (Method method : methods) {
             if (method.getName().equals(oldName)) {
                 method.setName(newName);
@@ -243,6 +257,53 @@ public class UmlClass {
 
         return true;
     }
+
+    //TODO need to test
+    /**
+     * Remove a parameter from a method.
+     * 
+     * @return {@code true} if the parameter was able to be removed, {@code false} if it could not be removed.
+     */
+    public boolean removeParameter(String methodName, String paraName) {
+        // If any of the parameters are invaild, return false.
+        if (paraName.isEmpty() || methodName.isEmpty()) {
+            return false;
+        }
+
+        for (Method method : methods) {
+            if (method.getName().equals(methodName)) {
+                return method.removeParameter(paraName);
+            }
+        }
+        
+        return false;
+    }
+
+    /**
+     * Replace the entire list of parameters with a new
+     *  list provided by the user.
+     * 
+     * @param methodName The name of the method that the new parameters are for.
+     * @param parmeters The new list of parameters for the method.
+     * @return {@code true} if the parameters were changed, {@code false} if the parameters were not changed.
+     */
+    public boolean changeParameters(String methodName, LinkedHashSet<String> parameters) {
+        if (methodName.isEmpty()) {
+            return false;
+        }
+        
+        for (Method method : methods) {
+            if (method.getName().equals(methodName)) {
+                method.setParameters(parameters);
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    //TODO add equals
+    //TODO add hashcode
     
     /**
      * Returns a string representation of the UML class, including its name and methods, 

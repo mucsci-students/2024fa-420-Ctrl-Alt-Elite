@@ -1,5 +1,6 @@
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -50,7 +51,7 @@ public class UmlClassTest {
     @Test
     @DisplayName ("AddMethod: Add an method to the class")
     public void testAddMethod() {
-        ArrayList<String> lst = new ArrayList<>(
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
             Arrays.asList("Para-A", "Para-B", "Para-C"));
         assertTrue(umlClass.addMethod("Method1", lst));
     }
@@ -62,7 +63,7 @@ public class UmlClassTest {
     @Test
     @DisplayName ("AddMethod: Add a duplicate method, failure test")
     public void testAddMethodNotExist() {
-        ArrayList<String> lst = new ArrayList<>(
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
             Arrays.asList("Para-A", "Para-B", "Para-C"));
         
         umlClass.addMethod("Method1", lst);
@@ -76,7 +77,7 @@ public class UmlClassTest {
     @Test
     @DisplayName ("DeleteMethod: Delete a method")
     public void testDeleteMethod() {
-        ArrayList<String> lst = new ArrayList<>(
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
             Arrays.asList("Para-A", "Para-B", "Para-C"));
 
         umlClass.addMethod("Method1", lst);
@@ -100,7 +101,7 @@ public class UmlClassTest {
     @Test
     @DisplayName ("RenameMethod: Rename an method")
     public void testRenameMethod() {
-        ArrayList<String> lst = new ArrayList<>(
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
             Arrays.asList("Para-A", "Para-B", "Para-C"));
 
         umlClass.addMethod("Method1", lst);
@@ -124,8 +125,10 @@ public class UmlClassTest {
     @Test
     @DisplayName ("ToString: Print out the object in the correct way with the correct information")
     public void testToString() {
-        ArrayList<String> lst = new ArrayList<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        LinkedHashSet<String> lst = new LinkedHashSet<>();
+        lst.add("Para-A");
+        lst.add("Para-B");
+        lst.add("Para-C");
         
         umlClass.addMethod("Method1", lst);
         umlClass.addMethod("Method2", lst);
