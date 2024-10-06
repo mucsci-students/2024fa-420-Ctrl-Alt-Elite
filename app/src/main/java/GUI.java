@@ -178,12 +178,14 @@ public class GUI extends JFrame {
             String destination = deleteDestinationClassField.getText();
             if (umlEditor.deleteRelationship(source, destination)) {
                 outputArea.append("Relationship deleted from '" + source + "' to '" + destination + "'.\n");
+                drawingPanel.repaint(); // Repaint to remove the line after the relationship is deleted
             } else {
                 outputArea.append("Failed to delete relationship from '" + source + "' to '" + destination + "'.\n");
             }
             deleteSourceClassField.setText("");
             deleteDestinationClassField.setText("");
         });
+        
 
         panel.add(new JLabel("Source Class Name to Delete:"));
         panel.add(deleteSourceClassField);
