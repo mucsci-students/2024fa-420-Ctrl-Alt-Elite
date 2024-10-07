@@ -291,6 +291,7 @@ public class Main {
         System.out.println("AddMethod - Add a method to a class");
         System.out.println("DeleteMethod - Delete a method from a class");
         System.out.println("RenameMethod - Rename a method in a class");
+        System.out.println("ChangeParameter - Change parameters in a class");
         System.out.println("AddRelationship - Add a relationship between classes");
         System.out.println("DeleteRelationship - Delete a relationship between classes");
         System.out.println("ListClasses - List all classes and their methods");
