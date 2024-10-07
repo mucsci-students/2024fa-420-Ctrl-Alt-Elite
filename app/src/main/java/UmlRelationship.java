@@ -36,31 +36,6 @@ public class UmlRelationship {
 	}
 
 	/**
-	 * Returns a string representation of the UML relationship.
-	 * 
-	 * @return a string in the format "Relationship from 'source' to 'destination'"
-	 */
-	@Override
-	public String toString() {
-		return "Relationship from '" + source + "' to '" + destination + "'";
-	}
-
-	/**
-	 * Generates a hash code for the UML relationship object.
-	 * The hash code is computed based on the source and destination strings.
-	 * 
-	 * @return an integer representing the hash code of the object
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((destination == null) ? 0 : destination.hashCode());
-		result = prime * result + ((source == null) ? 0 : source.hashCode());
-		return result;
-	}
-
-	/**
 	 * Compares this UML relationship with another object for equality.
 	 * Two UML relationships are considered equal if they have the same source
 	 * and destination classes.
@@ -104,5 +79,29 @@ public class UmlRelationship {
 		// If both source and destination are equal, the objects are equal
 		return true;
 	}
-	
+
+	/**
+	 * Generates a hash code for the UML relationship object.
+	 * The hash code is computed based on the source and destination strings.
+	 * 
+	 * @return an integer representing the hash code of the object
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((destination == null) ? 0 : destination.hashCode());
+		result = prime * result + ((source == null) ? 0 : source.hashCode());
+		return result;
+	}
+
+	/**
+	 * Returns a string representation of the UML relationship.
+	 * 
+	 * @return a string in the format "Relationship from 'source' to 'destination'"
+	 */
+	@Override
+	public String toString() {
+		return "Relationship from '" + source + "' to '" + destination + "'";
+	}
 }

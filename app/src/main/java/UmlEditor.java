@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,6 +37,7 @@ public class UmlEditor {
         return false;
     }
 
+    // Rename a class.
     public boolean renameClass(String oldName, String newName) {
         // Check for null or empty newName and if oldName exists
         if (oldName == null || newName == null || newName.isEmpty() || !classes.containsKey(oldName)) {
@@ -66,17 +68,15 @@ public class UmlEditor {
         return true;
     }
 
-    //TODO
     // Adds a method to a specified class
-    public boolean addMethod(String className, String method) {
+    public boolean addMethod(String className, String method, LinkedHashSet<String> paraList) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
-            return umlClass.addMethod(method);
+            return umlClass.addMethod(method, paraList);
         }
         return false;
     }
 
-    //TODO
     // Deletes a method from a specified class
     public boolean deleteMethod(String className, String method) {
         UmlClass umlClass = classes.get(className);
@@ -86,12 +86,29 @@ public class UmlEditor {
         return false;
     }
 
-    //TODO
-    // Renames a mehtod in a specified class
+    // Renames a method in a specified class
     public boolean renameMethod(String className, String oldName, String newName) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
             return umlClass.renameMethod(oldName, newName);
+        }
+        return false;
+    }
+
+    // Remove a parameter, or multiple, from a method.
+    public boolean removeParameter(String className, String methodName, String paraName) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.removeParameter(methodName, paraName);
+        }
+        return false; 
+    }
+
+    // Replace the list of parameters of a certain method with a new one.
+    public boolean changeParameters(String className, String methodName, LinkedHashSet<String> parameters) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.changeParameters(methodName, parameters);
         }
         return false;
     }
@@ -106,7 +123,6 @@ public class UmlEditor {
         }
         return false;  // One or both classes do not exist
     }
-
 
     // Deletes a relationship between two classes
     public boolean deleteRelationship(String source, String destination) {

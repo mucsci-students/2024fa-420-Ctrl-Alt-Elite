@@ -6,6 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+
 /**
  * A test class for the UmlEditor class
  */
@@ -28,7 +31,7 @@ public class UmlEditorTest {
      * Test that the constructor initializes the object properly.
      */
     @Test
-    @DisplayName ("Construcntor: Construct a UmlEditor Object ")
+    @DisplayName ("Constructor: Construct a UmlEditor Object ")
     public void testUmlEditor() {
     	assertTrue (((umlEditor.getClasses() != null) && (umlEditor.getRelationships() != null)), 
     			() -> "Could not construct the UmlEditor.");
@@ -45,7 +48,7 @@ public class UmlEditorTest {
         assertTrue(umlEditor.addClass("ClassA"), 
         		() -> "Could not add class.");
         assertNotNull(umlEditor.getClasses().get("ClassA"), 
-        		() -> "Could not retrive the class.");
+        		() -> "Could not retrieve the class.");
     }
     
     /**
@@ -67,7 +70,7 @@ public class UmlEditorTest {
     public void testAddClassDup() {
     	umlEditor.addClass("ClassA");
     	assertNotNull(umlEditor.getClasses().get("ClassA"), 
-    			() -> "Could not retrive the class.");
+    			() -> "Could not retrieve the class.");
     	assertFalse(umlEditor.addClass("ClassA"), 
     			() -> "Error with adding duplicate class.");
     }
@@ -165,35 +168,36 @@ public class UmlEditorTest {
     public void testRenameClassToNull() {
         umlEditor.addClass("ClassA");
         assertFalse(umlEditor.renameClass("ClassA", null), 
-        		() -> "Error with tyring to rename a class to null.");
+        		() -> "Error with trying to rename a class to null.");
     }
     
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO
     /**
-     * Test adding a mehtod to a class.
+     * Test adding a method to a class.
      */
     @Test
     @DisplayName ("AddMethod: Add a method to a class")
     public void testAddMethod() {
         umlEditor.addClass("ClassA");
-        assertTrue(umlEditor.addMethod("ClassA", "Method1"), 
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        assertTrue(umlEditor.addMethod("ClassA", "Method1", lst), 
         		() -> "Error with adding method.");
     }
     
-    //TODO
     /**
      * Test adding a method to a class that does not exist, should fail.
      */
     @Test
     @DisplayName ("AddMethod: Add a method to a class that does not exist, failure test")
     public void testAddMethodFalseClass() {
-    	assertFalse(umlEditor.addMethod("ClassB", "Method1"), 
+    	LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        assertFalse(umlEditor.addMethod("ClassB", "Method1", lst), 
     			() -> "Error with adding to non-existent class.");
     }
     
-    //TODO
     /**
      * Test adding duplicate method names, should fail.
      */
@@ -201,15 +205,26 @@ public class UmlEditorTest {
     @DisplayName ("AddMethod: Add an method with a duplicate name, failure test")
     public void testAddDuplicateMethod() {
         umlEditor.addClass("ClassA");
-        assertTrue(umlEditor.addMethod("ClassA", "Method1"), 
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        assertTrue(umlEditor.addMethod("ClassA", "Method1", lst), 
         		() -> "Error with adding method in duplicate method test.");
-        assertFalse(umlEditor.addMethod("ClassA", "Method1"),
+        assertFalse(umlEditor.addMethod("ClassA", "Method1", lst),
         		() -> "Error with trying to add duplicate method.");
     }
+
+    //TODO
+    /** 
+     * Test adding a method with 0 parameters.
+    */
+
+    //TODO
+    /**
+     * Test adding a method with invalid parameter input, should fail.
+     */
     
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO
     /**
      * Test deleting a method from a class.
      */
@@ -217,12 +232,13 @@ public class UmlEditorTest {
     @DisplayName ("DeleteMethod: Delete a method from a class")
     public void testDeleteMethod() {
         umlEditor.addClass("ClassA");
-        umlEditor.addMethod("ClassA", "Method1");
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        umlEditor.addMethod("ClassA", "Method1", lst);
         assertTrue(umlEditor.deleteMethod("ClassA", "Method1"), 
         		() -> "Error with deleting a method."); 
     }
     
-    //TODO
     /**
      * Test deleting a method that does not exist, should fail.
      */
@@ -234,12 +250,11 @@ public class UmlEditorTest {
     			() -> "Error with deleting a method that does not exist.");
     }
     
-    //TODO
     /**
      * Test deleting a method with a class that does not exist, should fail.
      */
     @Test
-    @DisplayName ("AddMethod: Delete a method to a class that does not exist, failure test")
+    @DisplayName ("DeleteMethod: Delete a method in a class that does not exist, failure test")
     public void testDeleteMethodFalseClass() {
     	assertFalse(umlEditor.deleteMethod("ClassA", "Method1"), 
     			() -> "Error with deleting from non-existent class.");
@@ -247,7 +262,6 @@ public class UmlEditorTest {
     
 /*----------------------------------------------------------------------------------------------------------------*/
     
-    //TODO
     /**
      * Test renaming a method.
      */
@@ -255,12 +269,13 @@ public class UmlEditorTest {
     @DisplayName ("RenameMethod: Rename and method")
     public void testRenameMethod() {
         umlEditor.addClass("ClassA");
-        umlEditor.addMethod("ClassA", "Method1");
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        umlEditor.addMethod("ClassA", "Method1", lst);
         assertTrue(umlEditor.renameMethod("ClassA", "Method1", "Method2"),
         		() -> "Error with renaming an method.");
     }
     
-    //TODO
     /**
      * Test renaming a method that does not exist, should fail
      */
@@ -272,12 +287,11 @@ public class UmlEditorTest {
     			() -> "Error with renaming a method that does not exist.");
     }
     
-    //TODO
     /**
      * Test renaming a method with a class that does not exist, should fail.
      */
     @Test
-    @DisplayName ("AddMethod: Rename an method to a class that does not exist, failure test")
+    @DisplayName ("RenameMethod: Rename an method to a class that does not exist, failure test")
     public void testRenameMethodFalseClass() {
     	assertFalse(umlEditor.renameMethod("ClassA", "Method1", "Method2"), 
     			() -> "Error with renaming from non-existent class.");
@@ -295,7 +309,7 @@ public class UmlEditorTest {
         umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
         assertTrue(umlEditor.addRelationship("ClassA", "ClassB"),
-        		() -> "Error with adding a relationsip between classes");
+        		() -> "Error with adding a relationship between classes");
     }
     
     /**
@@ -317,9 +331,9 @@ public class UmlEditorTest {
     public void testAddRelationshipNonExistentClasses() {
         umlEditor.addClass("ClassA");
         assertFalse(umlEditor.addRelationship("ClassA", "NonExistentClass"),
-        		() -> "Error with adding a relationship bewteen non-existent classes (Test 1).");
+        		() -> "Error with adding a relationship between non-existent classes (Test 1).");
         assertFalse(umlEditor.addRelationship("NonExistentClass", "ClassA"),
-        		() -> "Error with adding a relationship bewteen non-existent classes (Test 1).");
+        		() -> "Error with adding a relationship between non-existent classes (Test 1).");
     }
     
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -453,7 +467,7 @@ public class UmlEditorTest {
      */
     @Test
     @DisplayName ("ListRelationships: List relationships when there are none")
-    public void testListRelationshipsNotexist() {
+    public void testListRelationshipsNotExist() {
         System.out.println("Expected Output: (no output)");
         
         System.out.print("Output: ");

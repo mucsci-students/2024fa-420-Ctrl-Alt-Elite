@@ -1,11 +1,16 @@
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /**
  * A test class that checks the functionality of the save and load commands
@@ -42,7 +47,7 @@ public class JsonUtilsTest {
      * @throws IOException
      */
     @Test
-    @DisplayName ("Save and Load: Save data about the Uml Editor to a JSON file and loat it")
+    @DisplayName ("Save and Load: Save data about the Uml Editor to a JSON file and load it")
     public void testSaveAndLoad() throws IOException {
         // Save the UML editor data to a JSON file
         JsonUtils.save(umlEditor, TEST_FILENAME);
@@ -71,7 +76,7 @@ public class JsonUtilsTest {
     }
 
     /**
-     * Test saving and loading an empty UML edito.r
+     * Test saving and loading an empty UML editor
      * @throws IOException
      */
     @Test

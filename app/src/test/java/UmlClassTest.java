@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,7 +27,7 @@ public class UmlClassTest {
      * Test that getName returns the name of the class.
      */
     @Test
-    @DisplayName ("GetName: Retrive the name of the class")
+    @DisplayName ("GetName: Return the name of the class")
     public void testGetName() {
         assertEquals("ClassA", umlClass.getName());
     }
@@ -39,39 +42,43 @@ public class UmlClassTest {
         assertEquals("ClassB", umlClass.getName());
     }
     
-    //TODO
     /**
      * Test that a method can be successfully added.
      */
     @Test
     @DisplayName ("AddMethod: Add an method to the class")
     public void testAddMethod() {
-        assertTrue(umlClass.addMethod("Method1"));
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        assertTrue(umlClass.addMethod("Method1", lst));
     }
     
-    //TODO
     /**
      * Test a duplicate method being added, should fail.
      */
     @Test
     @DisplayName ("AddMethod: Add a duplicate method, failure test")
     public void testAddMethodNotExist() {
-        umlClass.addMethod("Method1");
-        assertFalse(umlClass.addMethod("Method1"));
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        
+        umlClass.addMethod("Method1", lst);
+        assertFalse(umlClass.addMethod("Method1", lst));
     }
 
-    //TODO
     /**
      * Test deleting a method.
      */
     @Test
     @DisplayName ("DeleteMethod: Delete a method")
     public void testDeleteMethod() {
-        umlClass.addMethod("Method1");
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+
+        umlClass.addMethod("Method1", lst);
         assertTrue(umlClass.deleteMethod("Method1"));
     }
     
-    //TODO
     /**
      * Test deleting a method that does not exist, should fail.
      */
@@ -81,18 +88,19 @@ public class UmlClassTest {
         assertFalse(umlClass.deleteMethod("Method1"));
     }
 
-    //TODO
     /**
      * Test renaming a method.
      */
     @Test
     @DisplayName ("RenameMethod: Rename an method")
     public void testRenameMethod() {
-        umlClass.addMethod("Method1");
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+
+        umlClass.addMethod("Method1", lst);
         assertTrue(umlClass.renameMethod("Method1", "Method2"));
     }
     
-    //TODO
     /**
      * Test renaming a method that does not exist, should fail.
      */
@@ -102,14 +110,19 @@ public class UmlClassTest {
         assertFalse(umlClass.renameMethod("Method1", "Method2"));
     }
 
-    //TODO
     /**
      * Test that toString returns what it should.
      */
     @Test
     @DisplayName ("ToString: Print out the object in the correct way with the correct information")
     public void testToString() {
-        umlClass.addMethod("Method1");
-        assertEquals("Class: ClassA\nMethods: [Method1]", umlClass.toString().trim());
+        LinkedHashSet<String> lst = new LinkedHashSet<>();
+        lst.add("Para-A");
+        lst.add("Para-B");
+        lst.add("Para-C");
+        
+        umlClass.addMethod("Method1", lst);
+        umlClass.addMethod("Method2", lst);
+        assertEquals("Class: ClassA\n\tMethod: Method1 (Para-A, Para-B, Para-C)\n\tMethod: Method2 (Para-A, Para-B, Para-C)", umlClass.toString().trim());
     }
 }
