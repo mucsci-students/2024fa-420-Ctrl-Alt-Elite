@@ -10,6 +10,16 @@ public class UmlEditor {
     // A set to store relationships between UML classes
     private Set<UmlRelationship> relationships;
 
+    
+    enum RelationshipType {
+        AGGREGATION,
+        COMPOSITION,
+        INHERITANCE,
+        REALIZATION
+    }
+
+    private RelationshipType type;
+
     // Constructor initializes the collections for classes and relationships
     public UmlEditor() {
         this.classes = new HashMap<>();
