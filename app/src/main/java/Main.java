@@ -62,6 +62,45 @@ public class Main {
                         System.out.println("Failed to rename class. Name may be invalid or duplicated.");
                     }
                     break;
+                
+                    case "add-field":
+                    System.out.println("Enter the name of the class to add the field to: ");
+                    String classToAddField = scanner.nextLine().trim();
+                    System.out.println("Enter the field name: ");
+                    String fieldName = scanner.nextLine().trim();
+                    if (umlEditor.addField(classToAddField, fieldName)) {
+                        System.out.println("Field '" + fieldName + "' added to class '" + classToAddField + "'.");
+                    } else {
+                        System.out.println("Failed to add field. Class may not exist or field is invalid.");
+                    }
+                    break;
+
+                case "delete-field":
+                    System.out.println("Enter the name of the class to delete the field from: ");
+                    String classToDeleteField = scanner.nextLine().trim();
+                    System.out.println("Enter the field name to delete: ");
+                    String fieldToDelete = scanner.nextLine().trim();
+                    if (umlEditor.deleteField(classToDeleteField, fieldToDelete)) {
+                        System.out.println("Field '" + fieldToDelete + "' deleted from class '" + classToDeleteField + "'.");
+                    } else {
+                        System.out.println("Failed to delete field. Class or field may not exist.");
+                    }
+                    break;
+
+                case "rename-field":
+                    System.out.println("Enter the name of the class to rename the field in: ");
+                    String classToRenameField = scanner.nextLine().trim();
+                    System.out.println("Enter the old field name: ");
+                    String oldFieldName = scanner.nextLine().trim();
+                    System.out.println("Enter the new field name: ");
+                    String newFieldName = scanner.nextLine().trim();
+                    if (umlEditor.renameField(classToRenameField, oldFieldName, newFieldName)) {
+                        System.out.println("Field '" + oldFieldName + "' renamed to '" + newFieldName + "' in class '" + classToRenameField + "'.");
+                    } else {
+                        System.out.println("Failed to rename field. Class or field may not exist.");
+                    }
+                    break;
+
 
                 case "add-method":
                     // Add a method to a class
@@ -283,6 +322,9 @@ public class Main {
         System.out.println("add-class - Add a class");
         System.out.println("delete-class - Delete a class");
         System.out.println("rename-class - Rename a class");
+        System.out.println("add-field - Add a field to a class");            
+        System.out.println("delete-field - Delete a field from a class");    
+        System.out.println("rename-field - Rename a field in a class"); 
         System.out.println("add-method - Add a method to a class");
         System.out.println("delete-method - Delete a method from a class");
         System.out.println("rename-method - Rename a method in a class");

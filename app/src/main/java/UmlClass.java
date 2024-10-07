@@ -7,7 +7,7 @@ import java.util.LinkedHashSet;
  */
 public class UmlClass {
     private String name;
-    private String feilds;
+    private LinkedHashSet<String> fields;
     private ArrayList<representation> methods;
 
     /**
@@ -18,7 +18,7 @@ public class UmlClass {
     public UmlClass(String name) {
         this.name = name;
         this.methods = new ArrayList<>();
-        this.feilds = feilds;
+        this.fields = new LinkedHashSet<>();
     }
 
     /**
@@ -38,6 +38,40 @@ public class UmlClass {
     public void setName(String name) {
         this.name = name;
     }
+
+    /**
+     * Adds a field to the class.
+     * 
+     * @param fieldName The name of the field to add.
+     * @return {@code true} if the field was added, {@code false} if the field already exists.
+     */
+    public boolean addField(String fieldName) {
+        return fields.add(fieldName);  // Returns false if the field is already present
+    }
+
+        /**
+     * Deletes a field from the class.
+     * 
+     * @param fieldName The name of the field to delete.
+     * @return {@code true} if the field was removed, {@code false} if the field was not found.
+     */
+    public boolean deleteField(String fieldName) {
+        return fields.remove(fieldName);
+    }
+
+    /**
+     * Renames a field in the class.
+     */
+    public boolean renameField(String oldName, String newName) {
+        if (fields.contains(oldName) && !fields.contains(newName)) {
+            fields.remove(oldName);
+            fields.add(newName);
+            return true;
+        }
+        return false;
+    }
+
+
 
     /**
      * Represents a method with a list of parameters.
