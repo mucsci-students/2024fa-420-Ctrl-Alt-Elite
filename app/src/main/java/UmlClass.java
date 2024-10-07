@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
  */
 public class UmlClass {
     private String name;
+    private String feilds;
     private ArrayList<representation> methods;
 
     /**
@@ -17,6 +18,7 @@ public class UmlClass {
     public UmlClass(String name) {
         this.name = name;
         this.methods = new ArrayList<>();
+        this.feilds = feilds;
     }
 
     /**
