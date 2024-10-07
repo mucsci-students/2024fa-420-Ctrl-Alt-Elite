@@ -1,11 +1,9 @@
 import java.util.Arrays;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +27,7 @@ public class UmlClassTest {
      * Test that getName returns the name of the class.
      */
     @Test
-    @DisplayName ("GetName: Retrive the name of the class")
+    @DisplayName ("GetName: Return the name of the class")
     public void testGetName() {
         assertEquals("ClassA", umlClass.getName());
     }
@@ -44,7 +42,6 @@ public class UmlClassTest {
         assertEquals("ClassB", umlClass.getName());
     }
     
-    //TODO
     /**
      * Test that a method can be successfully added.
      */
@@ -56,7 +53,6 @@ public class UmlClassTest {
         assertTrue(umlClass.addMethod("Method1", lst));
     }
     
-    //TODO
     /**
      * Test a duplicate method being added, should fail.
      */
@@ -70,7 +66,6 @@ public class UmlClassTest {
         assertFalse(umlClass.addMethod("Method1", lst));
     }
 
-    //TODO
     /**
      * Test deleting a method.
      */
@@ -84,7 +79,6 @@ public class UmlClassTest {
         assertTrue(umlClass.deleteMethod("Method1"));
     }
     
-    //TODO
     /**
      * Test deleting a method that does not exist, should fail.
      */
@@ -94,7 +88,6 @@ public class UmlClassTest {
         assertFalse(umlClass.deleteMethod("Method1"));
     }
 
-    //TODO
     /**
      * Test renaming a method.
      */
@@ -108,7 +101,6 @@ public class UmlClassTest {
         assertTrue(umlClass.renameMethod("Method1", "Method2"));
     }
     
-    //TODO
     /**
      * Test renaming a method that does not exist, should fail.
      */
@@ -118,7 +110,6 @@ public class UmlClassTest {
         assertFalse(umlClass.renameMethod("Method1", "Method2"));
     }
 
-    //TODO
     /**
      * Test that toString returns what it should.
      */

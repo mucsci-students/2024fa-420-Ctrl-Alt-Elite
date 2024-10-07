@@ -4,7 +4,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-//TODO comments
 public class UmlEditor {
     // A map to store UML classes by their name
     private Map<String, UmlClass> classes;
@@ -38,6 +37,7 @@ public class UmlEditor {
         return false;
     }
 
+    // Rename a class.
     public boolean renameClass(String oldName, String newName) {
         // Check for null or empty newName and if oldName exists
         if (oldName == null || newName == null || newName.isEmpty() || !classes.containsKey(oldName)) {
@@ -86,7 +86,7 @@ public class UmlEditor {
         return false;
     }
 
-    // Renames a mehtod in a specified class
+    // Renames a method in a specified class
     public boolean renameMethod(String className, String oldName, String newName) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
@@ -95,6 +95,7 @@ public class UmlEditor {
         return false;
     }
 
+    // Remove a parameter, or multiple, from a method.
     public boolean removeParameter(String className, String methodName, String paraName) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
@@ -103,6 +104,7 @@ public class UmlEditor {
         return false; 
     }
 
+    // Replace the list of parameters of a certain method with a new one.
     public boolean changeParameters(String className, String methodName, LinkedHashSet<String> parameters) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {

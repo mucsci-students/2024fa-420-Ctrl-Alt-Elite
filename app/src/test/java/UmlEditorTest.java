@@ -2,15 +2,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;  // JUnit 5 assertio
 import static org.junit.jupiter.api.Assertions.assertNotNull;  // JUnit 5 setup
 import static org.junit.jupiter.api.Assertions.assertNull; // JUnit DisplayName annotation
 import static org.junit.jupiter.api.Assertions.assertTrue;  // JUnit 5 Test annotation
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 
 /**
  * A test class for the UmlEditor class
@@ -34,7 +31,7 @@ public class UmlEditorTest {
      * Test that the constructor initializes the object properly.
      */
     @Test
-    @DisplayName ("Construcntor: Construct a UmlEditor Object ")
+    @DisplayName ("Constructor: Construct a UmlEditor Object ")
     public void testUmlEditor() {
     	assertTrue (((umlEditor.getClasses() != null) && (umlEditor.getRelationships() != null)), 
     			() -> "Could not construct the UmlEditor.");
@@ -51,7 +48,7 @@ public class UmlEditorTest {
         assertTrue(umlEditor.addClass("ClassA"), 
         		() -> "Could not add class.");
         assertNotNull(umlEditor.getClasses().get("ClassA"), 
-        		() -> "Could not retrive the class.");
+        		() -> "Could not retrieve the class.");
     }
     
     /**
@@ -73,7 +70,7 @@ public class UmlEditorTest {
     public void testAddClassDup() {
     	umlEditor.addClass("ClassA");
     	assertNotNull(umlEditor.getClasses().get("ClassA"), 
-    			() -> "Could not retrive the class.");
+    			() -> "Could not retrieve the class.");
     	assertFalse(umlEditor.addClass("ClassA"), 
     			() -> "Error with adding duplicate class.");
     }
@@ -171,13 +168,13 @@ public class UmlEditorTest {
     public void testRenameClassToNull() {
         umlEditor.addClass("ClassA");
         assertFalse(umlEditor.renameClass("ClassA", null), 
-        		() -> "Error with tyring to rename a class to null.");
+        		() -> "Error with trying to rename a class to null.");
     }
     
 /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
-     * Test adding a mehtod to a class.
+     * Test adding a method to a class.
      */
     @Test
     @DisplayName ("AddMethod: Add a method to a class")
@@ -223,7 +220,7 @@ public class UmlEditorTest {
 
     //TODO
     /**
-     * Test adding a method with invaild parameter input, should fail.
+     * Test adding a method with invalid parameter input, should fail.
      */
     
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -265,7 +262,6 @@ public class UmlEditorTest {
     
 /*----------------------------------------------------------------------------------------------------------------*/
     
-    //TODO
     /**
      * Test renaming a method.
      */
@@ -280,7 +276,6 @@ public class UmlEditorTest {
         		() -> "Error with renaming an method.");
     }
     
-    //TODO
     /**
      * Test renaming a method that does not exist, should fail
      */
@@ -292,7 +287,6 @@ public class UmlEditorTest {
     			() -> "Error with renaming a method that does not exist.");
     }
     
-    //TODO
     /**
      * Test renaming a method with a class that does not exist, should fail.
      */
@@ -315,7 +309,7 @@ public class UmlEditorTest {
         umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
         assertTrue(umlEditor.addRelationship("ClassA", "ClassB"),
-        		() -> "Error with adding a relationsip between classes");
+        		() -> "Error with adding a relationship between classes");
     }
     
     /**
@@ -337,9 +331,9 @@ public class UmlEditorTest {
     public void testAddRelationshipNonExistentClasses() {
         umlEditor.addClass("ClassA");
         assertFalse(umlEditor.addRelationship("ClassA", "NonExistentClass"),
-        		() -> "Error with adding a relationship bewteen non-existent classes (Test 1).");
+        		() -> "Error with adding a relationship between non-existent classes (Test 1).");
         assertFalse(umlEditor.addRelationship("NonExistentClass", "ClassA"),
-        		() -> "Error with adding a relationship bewteen non-existent classes (Test 1).");
+        		() -> "Error with adding a relationship between non-existent classes (Test 1).");
     }
     
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -473,7 +467,7 @@ public class UmlEditorTest {
      */
     @Test
     @DisplayName ("ListRelationships: List relationships when there are none")
-    public void testListRelationshipsNotexist() {
+    public void testListRelationshipsNotExist() {
         System.out.println("Expected Output: (no output)");
         
         System.out.print("Output: ");

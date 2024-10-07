@@ -7,7 +7,7 @@ import java.util.LinkedHashSet;
  */
 public class UmlClass {
     private String name;
-    private ArrayList<Method> methods;
+    private ArrayList<representation> methods;
 
     /**
      * Constructs a new UmlClass with the specified name.
@@ -38,9 +38,9 @@ public class UmlClass {
     }
 
     /**
-     * Repersents a method with a list of parameters.
+     * Represents a method with a list of parameters.
      */
-    public class Method {
+    public class representation {
         /** The name of the method. */
         private String name;
         /** A list of parameters. */
@@ -51,7 +51,7 @@ public class UmlClass {
          * 
          * @param name The name of the method as provided by the user.
          */
-        public Method(String name, LinkedHashSet<String> parameters) {
+        public representation(String name, LinkedHashSet<String> parameters) {
             this.name = name;
             this.parameters = new LinkedHashSet<>(parameters);
         }
@@ -123,7 +123,7 @@ public class UmlClass {
             }
             
             // Cast the object to UmlRelationship for comparison.
-            Method other = (Method) obj;
+            representation other = (representation) obj;
             
             // Compare the source fields for equality.
             if (name == null) {
@@ -162,9 +162,8 @@ public class UmlClass {
 		    return result;
 	    }
 
-        //TODO
         /**
-         * Generates a string repersentaion of the Method object.
+         * Generates a string representation of the representation object.
          */
         @Override
         public String toString() {
@@ -194,14 +193,14 @@ public class UmlClass {
     public boolean addMethod(String methodName, LinkedHashSet<String> parameters) {
         // Loop through the methods to see if a method
         //  with methodName already exists.
-        for (Method method : methods) {
+        for (representation method : methods) {
             if (method.getName().equals(methodName)) {
                 return false;
             }
         }
        
         // Add the new method.
-        Method newMethod = new Method(methodName, parameters);
+        representation newMethod = new representation(methodName, parameters);
         return methods.add(newMethod);
     }
     
@@ -215,7 +214,7 @@ public class UmlClass {
     public boolean deleteMethod(String methodName) {
         // Loop through the methods to find the method
         //  that's named "methodName" and remove it.
-        for (Method method : methods) {
+        for (representation method : methods) {
             if (method.getName().equals(methodName)) {
                 return methods.remove(method);
             }
@@ -241,7 +240,7 @@ public class UmlClass {
         
         // Loop through the methods and check if a method 
         //  with the new name is already present.
-        for (Method method : methods) {
+        for (representation method : methods) {
             if (method.getName().equals(newName)) {
                 return false;
             } 
@@ -249,7 +248,7 @@ public class UmlClass {
 
         // Loop through the methods and find the method with 
         //  the old name and replace it with the new name.
-        for (Method method : methods) {
+        for (representation method : methods) {
             if (method.getName().equals(oldName)) {
                 method.setName(newName);
             }
@@ -258,19 +257,19 @@ public class UmlClass {
         return true;
     }
 
-    //TODO need to test
+    //TODO need to test, parameters cannot share names
     /**
      * Remove a parameter from a method.
      * 
      * @return {@code true} if the parameter was able to be removed, {@code false} if it could not be removed.
      */
     public boolean removeParameter(String methodName, String paraName) {
-        // If any of the parameters are invaild, return false.
-        if (paraName.isEmpty() || methodName.isEmpty()) {
+        // If any of the parameters are invalid, return false.
+        if (methodName.isEmpty() || paraName.isEmpty()) {
             return false;
         }
 
-        for (Method method : methods) {
+        for (representation method : methods) {
             if (method.getName().equals(methodName)) {
                 return method.removeParameter(paraName);
             }
@@ -279,20 +278,25 @@ public class UmlClass {
         return false;
     }
 
+    //TODO parameters cannot share names
     /**
      * Replace the entire list of parameters with a new
      *  list provided by the user.
      * 
      * @param methodName The name of the method that the new parameters are for.
-     * @param parmeters The new list of parameters for the method.
+     * @param parameters The new list of parameters for the method.
      * @return {@code true} if the parameters were changed, {@code false} if the parameters were not changed.
      */
     public boolean changeParameters(String methodName, LinkedHashSet<String> parameters) {
+        // If the method name is invalid, return false.
+        // In this case, 'parameters' is allowed to be empty as that means
+        //  that the user wants the new list to have 0 parameters,
+        //  which is a valid option.
         if (methodName.isEmpty()) {
             return false;
         }
         
-        for (Method method : methods) {
+        for (representation method : methods) {
             if (method.getName().equals(methodName)) {
                 method.setParameters(parameters);
                 return true;
@@ -301,9 +305,6 @@ public class UmlClass {
         
         return false;
     }
-
-    //TODO add equals
-    //TODO add hashcode
     
     /**
      * Returns a string representation of the UML class, including its name and methods, 
@@ -315,7 +316,7 @@ public class UmlClass {
     public String toString() {
         String string = new String();
         string = string.concat("Class: " + name + "\n");
-        for (Method method : methods) {
+        for (representation method : methods) {
             string = string.concat(method.toString());
         }
 

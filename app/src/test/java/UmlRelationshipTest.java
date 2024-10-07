@@ -1,4 +1,5 @@
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ public class UmlRelationshipTest {
      * Test that getSource returns the source of the relationship.
      */
     @Test
-    @DisplayName ("GetSource: Retrive the source of the relationship")
+    @DisplayName ("GetSource: Retrieve the source of the relationship")
     public void testGetSource() {
         assertEquals("ClassA", relationship.getSource());
     }
@@ -42,7 +43,7 @@ public class UmlRelationshipTest {
      * Test that getDestination returns the destination of the relationship.
      */
     @Test
-    @DisplayName ("GetDestinatio: Retrive the destination of the relationship")
+    @DisplayName ("GetDestination: Retrieve the destination of the relationship")
     public void testGetDestination() {
         assertEquals("ClassB", relationship.getDestination());
     }
