@@ -109,7 +109,10 @@ public class Main {
                     String source = scanner.nextLine().trim();
                     System.out.println("Enter the destination class: ");
                     String destination = scanner.nextLine().trim();
-                    if (umlEditor.addRelationship(source, destination)) {
+                    System.out.println("Enter the type of relationship (Aggregation, Composition, Inheritance, or Realization): ");
+                    String inputType = scanner.nextLine().trim();
+                    RelationshipType type = RelationshipType.valueOf(inputType.toUpperCase());
+                    if (umlEditor.addRelationship(source, destination, type)) {
                         System.out.println("Relationship from '" + source + "' to '" + destination + "' has been added.");
                     } else {
                         System.out.println("Failed to add relationship. Source or destination may not exist.");
@@ -122,7 +125,10 @@ public class Main {
                     String deleteSource = scanner.nextLine().trim();
                     System.out.println("Enter the destination class: ");
                     String deleteDestination = scanner.nextLine().trim();
-                    if (umlEditor.deleteRelationship(deleteSource, deleteDestination)) {
+                    System.out.println("Enter the type of relationship (Aggregation, Composition, Inheritance, or Realization): ");
+                    String inputTyp = scanner.nextLine().trim();
+                    RelationshipType type1 = RelationshipType.valueOf(inputTyp.toUpperCase());
+                    if (umlEditor.deleteRelationship(deleteSource, deleteDestination, type1)) {
                         System.out.println("Relationship from '" + deleteSource + "' to '" + deleteDestination + "' has been deleted.");
                     } else {
                         System.out.println("Failed to delete relationship.");
