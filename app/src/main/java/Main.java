@@ -3,17 +3,21 @@ import java.util.LinkedHashSet;
 import java.util.Scanner;
 
 /**
- * The Main class provides a command-line interface for interacting with the UML editor.
- * Users can perform various operations such as adding, deleting, renaming classes, and methods,
- * as well as managing relationships between classes. Commands can also save and load data in JSON format.
+ * The Main class provides a command-line interface for interacting with the UML
+ * editor.
+ * Users can perform various operations such as adding, deleting, renaming
+ * classes, and methods,
+ * as well as managing relationships between classes. Commands can also save and
+ * load data in JSON format.
  */
 public class Main {
 
-    /** The UML editor instance to manage classes and relationships.*/
+    /** The UML editor instance to manage classes and relationships. */
     private static UmlEditor umlEditor = new UmlEditor();
 
     /**
-     * The main method starts the command-line interface for interacting with the UML editor.
+     * The main method starts the command-line interface for interacting with the
+     * UML editor.
      * It prompts the user for commands and performs the corresponding actions.
      *
      * @param args command line arguments (not used).
@@ -62,8 +66,8 @@ public class Main {
                         System.out.println("Failed to rename class. Name may be invalid or duplicated.");
                     }
                     break;
-                
-                    case "add-field":
+
+                case "add-field":
                     System.out.println("Enter the name of the class to add the field to: ");
                     String classToAddField = scanner.nextLine().trim();
                     System.out.println("Enter the field name: ");
@@ -81,7 +85,8 @@ public class Main {
                     System.out.println("Enter the field name to delete: ");
                     String fieldToDelete = scanner.nextLine().trim();
                     if (umlEditor.deleteField(classToDeleteField, fieldToDelete)) {
-                        System.out.println("Field '" + fieldToDelete + "' deleted from class '" + classToDeleteField + "'.");
+                        System.out.println(
+                                "Field '" + fieldToDelete + "' deleted from class '" + classToDeleteField + "'.");
                     } else {
                         System.out.println("Failed to delete field. Class or field may not exist.");
                     }
@@ -95,12 +100,12 @@ public class Main {
                     System.out.println("Enter the new field name: ");
                     String newFieldName = scanner.nextLine().trim();
                     if (umlEditor.renameField(classToRenameField, oldFieldName, newFieldName)) {
-                        System.out.println("Field '" + oldFieldName + "' renamed to '" + newFieldName + "' in class '" + classToRenameField + "'.");
+                        System.out.println("Field '" + oldFieldName + "' renamed to '" + newFieldName + "' in class '"
+                                + classToRenameField + "'.");
                     } else {
                         System.out.println("Failed to rename field. Class or field may not exist.");
                     }
                     break;
-
 
                 case "add-method":
                     // Add a method to a class
@@ -108,29 +113,32 @@ public class Main {
                     String classToAddMethod = scanner.nextLine().trim();
                     System.out.println("Enter the method name: ");
                     String methodName = scanner.nextLine().trim();
-                    
-                    //TODO the command prompts again, says its invalid, and prompts again when the exception gets thrown
+
+                    // TODO the command prompts again, says its invalid, and prompts again when the
+                    // exception gets thrown
                     System.out.println("Enter the number(0, 1, 2, etc.) of parameters for the method: ");
                     int paraNum = 0;
                     try {
                         paraNum = scanner.nextInt();
                     } catch (Exception e) {
-                        System.out.println("Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                        System.out.println(
+                                "Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
                         break;
                     }
                     scanner.nextLine();
-                    
+
                     LinkedHashSet<String> paraList = new LinkedHashSet<>();
                     for (int i = 1; i <= paraNum; i++) {
                         System.out.println("Enter the name of parameter " + i + ": ");
                         String paraName = scanner.nextLine().trim();
                         paraList.addLast(paraName);
                     }
-                    
+
                     if (umlEditor.addMethod(classToAddMethod, methodName, paraList)) {
                         System.out.println("Method '" + methodName + "' added to class '" + classToAddMethod + "'.");
                     } else {
-                        System.out.println("Failed to add method. Name may be invalid or duplicated, or class does not exist.");
+                        System.out.println(
+                                "Failed to add method. Name may be invalid or duplicated, or class does not exist.");
                     }
                     break;
 
@@ -141,7 +149,8 @@ public class Main {
                     System.out.println("Enter the name of the method to delete: ");
                     String methodToDelete = scanner.nextLine().trim();
                     if (umlEditor.deleteMethod(classToDeleteMethod, methodToDelete)) {
-                        System.out.println("Method '" + methodToDelete + "' has been deleted from class '" + classToDeleteMethod + "'.");
+                        System.out.println("Method '" + methodToDelete + "' has been deleted from class '"
+                                + classToDeleteMethod + "'.");
                     } else {
                         System.out.println("Failed to delete method. Name may be invalid or class does not exist.");
                     }
@@ -156,103 +165,138 @@ public class Main {
                     System.out.println("Enter the new method name: ");
                     String newMethodName = scanner.nextLine().trim();
                     if (umlEditor.renameMethod(classToRenameMethod, oldMethodName, newMethodName)) {
-                        System.out.println("Method '" + oldMethodName + "' has been renamed to '" 
-                            + newMethodName + "' in class '" + classToRenameMethod + "'.");
+                        System.out.println("Method '" + oldMethodName + "' has been renamed to '"
+                                + newMethodName + "' in class '" + classToRenameMethod + "'.");
                     } else {
-                        System.out.println("Failed to rename method. Name may be invalid or duplicated, or class does not exist.");
+                        System.out.println(
+                                "Failed to rename method. Name may be invalid or duplicated, or class does not exist.");
                     }
                     break;
 
-                    //TODO
+                // TODO
                 case "remove-parameter":
-                    //Removes a parameter, or many parameters, from a method
+                    // Removes a parameter, or many parameters, from a method
                     System.out.println("Enter the name of the class of the method with the parameters to remove: ");
                     String classToRemoveParameter = scanner.nextLine().trim();
                     System.out.println("Enter the name of the method with the parameters to remove: ");
                     String methodOfParameters = scanner.nextLine().trim();
                     System.out.println("How many parameters would you like to remove(1, 2, 3, etc.): ");
-                    
-                    //TODO the command prompts again, says its invalid, and prompts again when the exception gets thrown
+
+                    // TODO the command prompts again, says its invalid, and prompts again when the
+                    // exception gets thrown
                     int numToRemove = 0;
                     try {
                         numToRemove = scanner.nextInt();
                     } catch (Exception e) {
-                        System.out.println("Parameter number to remove entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                        System.out.println(
+                                "Parameter number to remove entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
                         break;
                     }
                     scanner.nextLine();
                     for (int i = 0; i < numToRemove; i++) {
                         System.out.println("Enter the name of the parameter to remove: ");
                         String paraName = scanner.nextLine().trim();
-                        
+
                         if (umlEditor.removeParameter(classToRemoveParameter, methodOfParameters, paraName)) {
-                            System.out.println("Parameter '" + paraName + "' was removed from '" + methodOfParameters + "'.");
+                            System.out.println(
+                                    "Parameter '" + paraName + "' was removed from '" + methodOfParameters + "'.");
                         } else {
-                            System.out.println("Failed to remove parameter. Name may be invalid, or class does not exist.");
+                            System.out.println(
+                                    "Failed to remove parameter. Name may be invalid, or class does not exist.");
                             break;
                         }
                     }
                     break;
 
-                    //TODO
+                // TODO
                 case "change-parameter":
-                    //Replaces a list of parameters with a new list.
+                    // Replaces a list of parameters with a new list.
                     System.out.println("Enter the name of the class of the method with the parameters to change: ");
                     String classToChangeParameter = scanner.nextLine().trim();
                     System.out.println("Enter the name of the method with the parameters to change: ");
                     String methodToChangeParameters = scanner.nextLine().trim();
 
-                    //TODO the command prompts again, says its invalid, and prompts again when the exception gets thrown
-                    System.out.println("Enter the new number(0, 1, 2, etc.) of parameters for '" + methodToChangeParameters +"': ");
+                    // TODO the command prompts again, says its invalid, and prompts again when the
+                    // exception gets thrown
+                    System.out.println("Enter the new number(0, 1, 2, etc.) of parameters for '"
+                            + methodToChangeParameters + "': ");
                     int newParaNum = 0;
                     try {
                         newParaNum = scanner.nextInt();
                     } catch (Exception e) {
-                        System.out.println("Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                        System.out.println(
+                                "Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
                         break;
                     }
                     scanner.nextLine();
-                    
+
                     LinkedHashSet<String> newParaList = new LinkedHashSet<>();
                     for (int i = 1; i <= newParaNum; i++) {
                         System.out.println("Enter the name of parameter " + i + ": ");
                         String paraName = scanner.nextLine().trim();
                         newParaList.addLast(paraName);
                     }
-                    
+
                     if (umlEditor.changeParameters(classToChangeParameter, methodToChangeParameters, newParaList)) {
                         System.out.println("Method '" + methodToChangeParameters + "' had its parameters changed.");
                     } else {
-                        System.out.println("Failed to add method. Name may be invalid or duplicated, or class does not exist.");
+                        System.out.println(
+                                "Failed to add method. Name may be invalid or duplicated, or class does not exist.");
                     }
                     break;
 
-                case "add-relationship":
+                    case "add-relationship":
                     // Adds a relationship between two classes
                     System.out.println("Enter the source class: ");
                     String source = scanner.nextLine().trim();
                     System.out.println("Enter the destination class: ");
                     String destination = scanner.nextLine().trim();
-                    if (umlEditor.addRelationship(source, destination)) {
+                    
+                    RelationshipType type = null;
+                    while (type == null) {
+                        System.out.println("Enter the type of relationship (Aggregation, Composition, Inheritance, or Realization): ");
+                        String inputType = scanner.nextLine().trim().toUpperCase();
+                        
+                        try {
+                            type = RelationshipType.valueOf(inputType);
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Invalid relationship type. Please enter one of the following: Aggregation, Composition, Inheritance, or Realization.");
+                        }
+                    }
+                    
+                    if (umlEditor.addRelationship(source, destination, type)) {
                         System.out.println("Relationship from '" + source + "' to '" + destination + "' has been added.");
                     } else {
                         System.out.println("Failed to add relationship. Source or destination may not exist.");
                     }
                     break;
-
+                
                 case "delete-relationship":
                     // Deletes a relationship between two classes
                     System.out.println("Enter the source class: ");
                     String deleteSource = scanner.nextLine().trim();
                     System.out.println("Enter the destination class: ");
                     String deleteDestination = scanner.nextLine().trim();
-                    if (umlEditor.deleteRelationship(deleteSource, deleteDestination)) {
+                    
+                    RelationshipType type1 = null;
+                    while (type1 == null) {
+                        System.out.println("Enter the type of relationship (Aggregation, Composition, Inheritance, or Realization): ");
+                        String inputTyp = scanner.nextLine().trim().toUpperCase();
+                        
+                        try {
+                            type1 = RelationshipType.valueOf(inputTyp);
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Invalid relationship type. Please enter one of the following: Aggregation, Composition, Inheritance, or Realization.");
+                        }
+                    }
+                    
+                    if (umlEditor.deleteRelationship(deleteSource, deleteDestination, type1)) {
                         System.out.println("Relationship from '" + deleteSource + "' to '" + deleteDestination + "' has been deleted.");
                     } else {
                         System.out.println("Failed to delete relationship.");
                     }
                     break;
-
+                
                 case "list-classes":
                     // Lists all classes and their methods
                     umlEditor.listClasses();
@@ -322,9 +366,9 @@ public class Main {
         System.out.println("add-class - Add a class");
         System.out.println("delete-class - Delete a class");
         System.out.println("rename-class - Rename a class");
-        System.out.println("add-field - Add a field to a class");            
-        System.out.println("delete-field - Delete a field from a class");    
-        System.out.println("rename-field - Rename a field in a class"); 
+        System.out.println("add-field - Add a field to a class");
+        System.out.println("delete-field - Delete a field from a class");
+        System.out.println("rename-field - Rename a field in a class");
         System.out.println("add-method - Add a method to a class");
         System.out.println("delete-method - Delete a method from a class");
         System.out.println("rename-method - Rename a method in a class");

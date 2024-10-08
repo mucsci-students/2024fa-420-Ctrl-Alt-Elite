@@ -37,7 +37,6 @@ public class UmlEditor {
         return false;
     }
 
-    // Rename a class.
     public boolean renameClass(String oldName, String newName) {
         // Check for null or empty newName and if oldName exists
         if (oldName == null || newName == null || newName.isEmpty() || !classes.containsKey(oldName)) {
@@ -57,9 +56,9 @@ public class UmlEditor {
         Set<UmlRelationship> updatedRelationships = new HashSet<>();
         for (UmlRelationship rel : relationships) {
             if (rel.getSource().equals(oldName)) {
-                updatedRelationships.add(new UmlRelationship(newName, rel.getDestination()));
+                updatedRelationships.add(new UmlRelationship(newName, rel.getDestination(), rel.getType()));
             } else if (rel.getDestination().equals(oldName)) {
-                updatedRelationships.add(new UmlRelationship(rel.getSource(), newName));
+                updatedRelationships.add(new UmlRelationship(rel.getSource(), newName, rel.getType()));
             } else {
                 updatedRelationships.add(rel);
             }
@@ -141,16 +140,19 @@ public class UmlEditor {
     }
 
     // Adds a relationship between two classes if both exist and are not the same
-    public boolean addRelationship(String source, String destination) {
+    public boolean addRelationship(String source, String destination, RelationshipType type) {
+        if (source.equals(destination)) {
+            return false;  // Can't relate a class to itself
+        }
         if (classes.containsKey(source) && classes.containsKey(destination)) {
-            return relationships.add(new UmlRelationship(source, destination));
+            return relationships.add(new UmlRelationship(source, destination, type));
         }
         return false;  // One or both classes do not exist
     }
 
     // Deletes a relationship between two classes
-    public boolean deleteRelationship(String source, String destination) {
-        return relationships.remove(new UmlRelationship(source, destination));
+    public boolean deleteRelationship(String source, String destination, RelationshipType type) {
+        return relationships.remove(new UmlRelationship(source, destination, type));
     }
 
     // Lists all UML classes
