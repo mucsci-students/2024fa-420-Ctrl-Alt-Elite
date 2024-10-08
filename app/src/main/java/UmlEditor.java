@@ -68,6 +68,33 @@ public class UmlEditor {
         return true;
     }
 
+
+    public boolean addField(String className, String fieldName) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.addField(fieldName);
+        }
+        return false;
+    }
+
+    // Delete a field from a class
+    public boolean deleteField(String className, String fieldName) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.deleteField(fieldName);
+        }
+        return false;
+    }
+
+    // Rename a field in a class
+    public boolean renameField(String className, String oldFieldName, String newFieldName) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.renameField(oldFieldName, newFieldName);
+        }
+        return false;
+    }
+
     // Adds a method to a specified class
     public boolean addMethod(String className, String method, LinkedHashSet<String> paraList) {
         UmlClass umlClass = classes.get(className);
@@ -115,9 +142,6 @@ public class UmlEditor {
 
     // Adds a relationship between two classes if both exist and are not the same
     public boolean addRelationship(String source, String destination) {
-        if (source.equals(destination)) {
-            return false;  // Can't relate a class to itself
-        }
         if (classes.containsKey(source) && classes.containsKey(destination)) {
             return relationships.add(new UmlRelationship(source, destination));
         }
