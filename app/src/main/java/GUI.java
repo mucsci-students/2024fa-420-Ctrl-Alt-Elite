@@ -9,13 +9,16 @@ import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.io.IOException;
 
+
 public class GUI extends JFrame {
     private UmlEditor umlEditor;
     private JTextArea outputArea;
     private DrawingPanel drawingPanel; // Panel for drawing
 
+
     // To keep track of class positions
     private Map<String, Point> classPositions;
+
 
     public GUI() {
         umlEditor = new UmlEditor();
@@ -25,16 +28,20 @@ public class GUI extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
+
         outputArea = new JTextArea();
         outputArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(outputArea);
         add(scrollPane, BorderLayout.WEST); // Moved to the left
 
+
         drawingPanel = new DrawingPanel(); // Create the drawing panel
         add(drawingPanel, BorderLayout.CENTER); // Add it to the center
 
+
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(0, 1));
+
 
         // Add Class
         JTextField classNameField = new JTextField();
@@ -50,9 +57,11 @@ public class GUI extends JFrame {
             classNameField.setText("");
         });
 
+
         panel.add(new JLabel("Class Name:"));
         panel.add(classNameField);
         panel.add(addClassButton);
+
 
         // Delete Class
         JTextField deleteClassField = new JTextField();
@@ -68,9 +77,11 @@ public class GUI extends JFrame {
             deleteClassField.setText("");
         });
 
+
         panel.add(new JLabel("Class Name to Delete:"));
         panel.add(deleteClassField);
         panel.add(deleteClassButton);
+
 
         // Rename Class
         JTextField oldClassNameField = new JTextField();
@@ -89,11 +100,13 @@ public class GUI extends JFrame {
             newClassNameField.setText("");
         });
 
+
         panel.add(new JLabel("Old Class Name:"));
         panel.add(oldClassNameField);
         panel.add(new JLabel("New Class Name:"));
         panel.add(newClassNameField);
         panel.add(renameClassButton);
+
 
         // Add Attribute
         JTextField addAttributeClassField = new JTextField();
@@ -102,7 +115,7 @@ public class GUI extends JFrame {
         addAttributeButton.addActionListener(e -> {
             String className = addAttributeClassField.getText();
             String attribute = attributeField.getText();
-            if (umlEditor.addAttribute(className, attribute)) {
+            if (umlEditor.addField(className, attribute)) {
                 outputArea.append("Attribute '" + attribute + "' added to class '" + className + "'.\n");
                 drawingPanel.repaint(); // Repaint to show the updated attributes
             } else {
@@ -112,11 +125,13 @@ public class GUI extends JFrame {
             attributeField.setText("");
         });
 
+
         panel.add(new JLabel("Class Name for Attribute:"));
         panel.add(addAttributeClassField);
         panel.add(new JLabel("Attribute Name:"));
         panel.add(attributeField);
         panel.add(addAttributeButton);
+
 
         // Delete Attribute
         JTextField deleteAttributeClassField = new JTextField();
@@ -125,7 +140,7 @@ public class GUI extends JFrame {
         deleteAttributeButton.addActionListener(e -> {
             String className = deleteAttributeClassField.getText();
             String attribute = deleteAttributeField.getText();
-            if (umlEditor.deleteAttribute(className, attribute)) {
+            if (umlEditor.deleteField(className, attribute)) {
                 outputArea.append("Attribute '" + attribute + "' deleted from class '" + className + "'.\n");
                 drawingPanel.repaint(); // Repaint to show the updated attributes
             } else {
@@ -135,25 +150,30 @@ public class GUI extends JFrame {
             deleteAttributeField.setText("");
         });
 
+
         panel.add(new JLabel("Class Name for Attribute to Delete:"));
         panel.add(deleteAttributeClassField);
         panel.add(new JLabel("Attribute Name to Delete:"));
         panel.add(deleteAttributeField);
         panel.add(deleteAttributeButton);
 
+
         // Add Relationship
         JTextField sourceClassField = new JTextField();
         JTextField destinationClassField = new JTextField();
         JButton addRelationshipButton = new JButton("Add Relationship");
 
+
         addRelationshipButton.addActionListener(e -> {
             String source = sourceClassField.getText().trim(); // Trim whitespace
             String destination = destinationClassField.getText().trim(); // Trim whitespace
+
 
             if (source.isEmpty() || destination.isEmpty()) {
                 outputArea.append("Source and destination class names cannot be empty.\n");
                 return; // Exit if either field is empty
             }
+
 
             if (umlEditor.addRelationship(source, destination)) {
                 outputArea.append("Relationship added from '" + source + "' to '" + destination + "'.\n");
@@ -165,11 +185,13 @@ public class GUI extends JFrame {
             destinationClassField.setText("");
         });
 
+
         panel.add(new JLabel("Source Class Name:"));
         panel.add(sourceClassField);
         panel.add(new JLabel("Destination Class Name:"));
         panel.add(destinationClassField);
         panel.add(addRelationshipButton);
+
 
         // Delete Relationship
         JTextField deleteSourceClassField = new JTextField();
@@ -188,11 +210,13 @@ public class GUI extends JFrame {
             deleteDestinationClassField.setText("");
         });
 
+
         panel.add(new JLabel("Source Class Name to Delete:"));
         panel.add(deleteSourceClassField);
         panel.add(new JLabel("Destination Class Name to Delete:"));
         panel.add(deleteDestinationClassField);
         panel.add(deleteRelationshipButton);
+
 
         // List Classes and Relationships
         JButton listClassesButton = new JButton("List Classes");
@@ -203,6 +227,7 @@ public class GUI extends JFrame {
             }
         });
 
+
         JButton listRelationshipsButton = new JButton("List Relationships");
         listRelationshipsButton.addActionListener(e -> {
             outputArea.setText("");
@@ -211,8 +236,10 @@ public class GUI extends JFrame {
             }
         });
 
+
         panel.add(listClassesButton);
         panel.add(listRelationshipsButton);
+
 
         // Save and Load Functionality
         JButton saveButton = new JButton("Save UML Project");
@@ -230,6 +257,7 @@ public class GUI extends JFrame {
             }
         });
 
+
         JButton loadButton = new JButton("Load UML Project");
         loadButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
@@ -246,16 +274,20 @@ public class GUI extends JFrame {
             }
         });
 
+
         // Adding save and load buttons to the panel
         panel.add(saveButton);
         panel.add(loadButton);
 
+
         add(panel, BorderLayout.EAST);
     }
+
 
     private void addClassRectangle(String className) {
         Random random = new Random();
         int x, y;
+
 
         // Generate random positions while avoiding overlap
         boolean overlap;
@@ -263,6 +295,7 @@ public class GUI extends JFrame {
             overlap = false;
             x = random.nextInt(drawingPanel.getWidth() - 120); // Adjust width to avoid overflow
             y = random.nextInt(drawingPanel.getHeight() - 70); // Adjust height to avoid overflow
+
 
             // Check for overlap with existing positions
             for (Point point : classPositions.values()) {
@@ -274,14 +307,17 @@ public class GUI extends JFrame {
             }
         } while (overlap);
 
+
         classPositions.put(className, new Point(x, y)); // Store position
         drawingPanel.repaint(); // Repaint the drawing panel to show the new rectangle
     }
+
 
     private void removeClassRectangle(String className) {
         classPositions.remove(className); // Remove the class position
         drawingPanel.repaint(); // Repaint to reflect changes
     }
+
 
     private void renameClassRectangle(String oldName, String newName) {
         Point position = classPositions.remove(oldName); // Remove old entry
@@ -291,9 +327,11 @@ public class GUI extends JFrame {
         }
     }
 
+
     private class DrawingPanel extends JPanel {
         private Point dragStartPoint;
         private String selectedClassName;
+
 
         public DrawingPanel() {
             // Add mouse listeners for dragging
@@ -314,12 +352,14 @@ public class GUI extends JFrame {
                     }
                 }
 
+
                 @Override
                 public void mouseReleased(MouseEvent e) {
                     selectedClassName = null; // Clear selection on mouse release
                     dragStartPoint = null; // Clear drag start point
                 }
             });
+
 
             addMouseMotionListener(new MouseMotionAdapter() {
                 @Override
@@ -341,14 +381,17 @@ public class GUI extends JFrame {
             });
         }
 
+
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+
 
             // Draw relationships
             for (UmlRelationship relationship : umlEditor.getRelationships()) {
                 Point sourcePosition = classPositions.get(relationship.getSource());
                 Point destinationPosition = classPositions.get(relationship.getDestination());
+
 
                 if (sourcePosition != null && destinationPosition != null) {
                     // Draw a line from source to destination
@@ -356,11 +399,13 @@ public class GUI extends JFrame {
                             destinationPosition.x + 50,
                             destinationPosition.y + getBoxHeight(relationship.getDestination()));
 
+
                     // Draw an arrowhead at the destination
                     drawArrow(g, destinationPosition.x + 50,
                             destinationPosition.y + getBoxHeight(relationship.getDestination()));
                 }
             }
+
 
             // Draw rectangles for each class
             for (Map.Entry<String, Point> entry : classPositions.entrySet()) {
@@ -369,14 +414,18 @@ public class GUI extends JFrame {
                 UmlClass umlClass = umlEditor.getClass(className);
                 int boxHeight = getBoxHeight(className); // Get dynamic box height
 
+
                 // Draw the rectangle for the class
                 g.drawRect(position.x, position.y, 100, boxHeight);
+
 
                 // Draw the class name
                 g.drawString(className, position.x + 10, position.y + 20);
 
+
                 // Draw a line to separate class name and attributes
                 g.drawLine(position.x, position.y + 30, position.x + 100, position.y + 30);
+
 
                 // Draw attributes
                 if (umlClass != null) {
@@ -389,6 +438,7 @@ public class GUI extends JFrame {
             }
         }
 
+
         // Method to draw an arrowhead
         private void drawArrow(Graphics g, int x, int y) {
             int arrowSize = 10; // Size of the arrowhead
@@ -397,6 +447,7 @@ public class GUI extends JFrame {
             g.fillPolygon(xPoints, yPoints, 3); // Draw filled polygon for arrowhead
         }
 
+
         // Helper method to get the box height based on the class name
         private int getBoxHeight(String className) {
             UmlClass umlClass = umlEditor.getClass(className);
@@ -404,7 +455,9 @@ public class GUI extends JFrame {
             return 50 + (attributeCount * 15); // Base height + dynamic attribute height
         }
 
+
     }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -413,3 +466,4 @@ public class GUI extends JFrame {
         });
     }
 }
+

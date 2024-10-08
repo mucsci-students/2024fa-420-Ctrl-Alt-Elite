@@ -1,8 +1,8 @@
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.Collections;
 
 public class UmlEditor {
     // A map to store UML classes by their name
@@ -56,9 +56,9 @@ public class UmlEditor {
         Set<UmlRelationship> updatedRelationships = new HashSet<>();
         for (UmlRelationship rel : relationships) {
             if (rel.getSource().equals(oldName)) {
-                updatedRelationships.add(new UmlRelationship(newName, rel.getDestination()));
+                updatedRelationships.add(new UmlRelationship(newName, rel.getDestination(), rel.getType()));
             } else if (rel.getDestination().equals(oldName)) {
-                updatedRelationships.add(new UmlRelationship(rel.getSource(), newName));
+                updatedRelationships.add(new UmlRelationship(rel.getSource(), newName, rel.getType()));
             } else {
                 updatedRelationships.add(rel);
             }
@@ -68,52 +68,91 @@ public class UmlEditor {
     }
 
 
-    // Adds an attribute to a specified class
-    public boolean addAttribute(String className, String attribute) {
+    public boolean addField(String className, String fieldName) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
-            return umlClass.addAttribute(attribute);
+            return umlClass.addField(fieldName);
         }
         return false;
     }
 
-    // Deletes an attribute from a specified class
-    public boolean deleteAttribute(String className, String attribute) {
+    // Delete a field from a class
+    public boolean deleteField(String className, String fieldName) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
-            return umlClass.deleteAttribute(attribute);
+            return umlClass.deleteField(fieldName);
         }
         return false;
     }
 
-    // Renames an attribute in a specified class
-    public boolean renameAttribute(String className, String oldName, String newName) {
+    // Rename a field in a class
+    public boolean renameField(String className, String oldFieldName, String newFieldName) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
-            return umlClass.renameAttribute(oldName, newName);
+            return umlClass.renameField(oldFieldName, newFieldName);
         }
         return false;
     }
 
-    /**
- * Adds a relationship between two classes if both exist.
- * Self-relationships (where a class has a relationship to itself) are allowed.
- * 
- * @param source the name of the source class
- * @param destination the name of the destination class
- * @return true if the relationship was added successfully, false otherwise
- */
-public boolean addRelationship(String source, String destination) {
-    if (classes.containsKey(source) && classes.containsKey(destination)) {
-        return relationships.add(new UmlRelationship(source, destination));
+    // Adds a method to a specified class
+    public boolean addMethod(String className, String method, LinkedHashSet<String> paraList) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.addMethod(method, paraList);
+        }
+        return false;
     }
-    return false;  // One or both classes do not exist
-}
 
+    // Deletes a method from a specified class
+    public boolean deleteMethod(String className, String method) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.deleteMethod(method);
+        }
+        return false;
+    }
+
+    // Renames a method in a specified class
+    public boolean renameMethod(String className, String oldName, String newName) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.renameMethod(oldName, newName);
+        }
+        return false;
+    }
+
+    // Remove a parameter, or multiple, from a method.
+    public boolean removeParameter(String className, String methodName, String paraName) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.removeParameter(methodName, paraName);
+        }
+        return false; 
+    }
+
+    // Replace the list of parameters of a certain method with a new one.
+    public boolean changeParameters(String className, String methodName, LinkedHashSet<String> parameters) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.changeParameters(methodName, parameters);
+        }
+        return false;
+    }
+
+    // Adds a relationship between two classes if both exist and are not the same
+    public boolean addRelationship(String source, String destination, RelationshipType type) {
+        if (source.equals(destination)) {
+            return false;  // Can't relate a class to itself
+        }
+        if (classes.containsKey(source) && classes.containsKey(destination)) {
+            return relationships.add(new UmlRelationship(source, destination, type));
+        }
+        return false;  // One or both classes do not exist
+    }
 
     // Deletes a relationship between two classes
-    public boolean deleteRelationship(String source, String destination) {
-        return relationships.remove(new UmlRelationship(source, destination));
+    public boolean deleteRelationship(String source, String destination, RelationshipType type) {
+        return relationships.remove(new UmlRelationship(source, destination, type));
     }
 
     // Lists all UML classes
@@ -155,17 +194,5 @@ public boolean addRelationship(String source, String destination) {
 
     public void setRelationships(Set<UmlRelationship> relationships) {
         this.relationships = relationships;
-    }
-
-    public UmlClass getClass(String name) {
-        return classes.get(name); // Retrieve the class by name
-    }
-
-    public Set<String> getClassAttributes(String className) {
-        UmlClass umlClass = classes.get(className);
-        if (umlClass != null) {
-            return umlClass.getAttributes();  // Assuming UmlClass has a getAttributes method
-        }
-        return Collections.emptySet();  // Return an empty list if the class doesn't exist
     }
 }
