@@ -142,9 +142,6 @@ public class UmlEditor {
 
     // Adds a relationship between two classes if both exist and are not the same
     public boolean addRelationship(String source, String destination) {
-        if (source.equals(destination)) {
-            return false;  // Can't relate a class to itself
-        }
         if (classes.containsKey(source) && classes.containsKey(destination)) {
             return relationships.add(new UmlRelationship(source, destination));
         }
