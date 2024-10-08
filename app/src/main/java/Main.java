@@ -26,6 +26,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
 
+        //TODO make it so input cannot have white space, trailing or otherwise
         // Main loop for processing commands from the user
         while (!exit) {
             System.out.print("Enter a command (Type 'help' for a list of commands): ");
@@ -173,7 +174,6 @@ public class Main {
                     }
                     break;
 
-                // TODO
                 case "remove-parameter":
                     // Removes a parameter, or many parameters, from a method
                     System.out.println("Enter the name of the class of the method with the parameters to remove: ");
@@ -208,7 +208,6 @@ public class Main {
                     }
                     break;
 
-                // TODO
                 case "change-parameter":
                     // Replaces a list of parameters with a new list.
                     System.out.println("Enter the name of the class of the method with the parameters to change: ");

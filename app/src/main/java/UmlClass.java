@@ -8,7 +8,7 @@ import java.util.LinkedHashSet;
 public class UmlClass {
     private String name;
     private LinkedHashSet<String> fields;
-    private ArrayList<representation> methods;
+    private ArrayList<Method> methods;
 
     /**
      * Constructs a new UmlClass with the specified name.
@@ -76,7 +76,7 @@ public class UmlClass {
     /**
      * Represents a method with a list of parameters.
      */
-    public class representation {
+    public class Method {
         /** The name of the method. */
         private String name;
         /** A list of parameters. */
@@ -87,7 +87,7 @@ public class UmlClass {
          * 
          * @param name The name of the method as provided by the user.
          */
-        public representation(String name, LinkedHashSet<String> parameters) {
+        public Method(String name, LinkedHashSet<String> parameters) {
             this.name = name;
             this.parameters = new LinkedHashSet<>(parameters);
         }
@@ -158,7 +158,7 @@ public class UmlClass {
             }
 
             // Cast the object to UmlRelationship for comparison.
-            representation other = (representation) obj;
+            Method other = (Method) obj;
 
             // Compare the source fields for equality.
             if (name == null) {
@@ -217,7 +217,7 @@ public class UmlClass {
         }
     }
 
-    // TODO methods cannot share names
+    // TODO methods can share names, but the parameters must be different
     /**
      * Adds a new method to the UML class.
      * 
@@ -229,18 +229,18 @@ public class UmlClass {
     public boolean addMethod(String methodName, LinkedHashSet<String> parameters) {
         // Loop through the methods to see if a method
         // with methodName already exists.
-        for (representation method : methods) {
+        for (Method method : methods) {
             if (method.getName().equals(methodName)) {
                 return false;
             }
         }
 
         // Add the new method.
-        representation newMethod = new representation(methodName, parameters);
+        Method newMethod = new Method(methodName, parameters);
         return methods.add(newMethod);
     }
 
-    // TODO methods cannot share names
+    // TODO methods can share names, but the parameters must be different
     /**
      * Deletes a method from the UML class.
      * 
@@ -251,7 +251,7 @@ public class UmlClass {
     public boolean deleteMethod(String methodName) {
         // Loop through the methods to find the method
         // that's named "methodName" and remove it.
-        for (representation method : methods) {
+        for (Method method : methods) {
             if (method.getName().equals(methodName)) {
                 return methods.remove(method);
             }
@@ -260,7 +260,7 @@ public class UmlClass {
         return false;
     }
 
-    // TODO methods cannot share names
+    // TODO methods can share names, but the parameters must be different
     /**
      * Renames an existing method in the UML class.
      * 
@@ -278,7 +278,7 @@ public class UmlClass {
 
         // Loop through the methods and check if a method
         // with the new name is already present.
-        for (representation method : methods) {
+        for (Method method : methods) {
             if (method.getName().equals(newName)) {
                 return false;
             }
@@ -286,7 +286,7 @@ public class UmlClass {
 
         // Loop through the methods and find the method with
         // the old name and replace it with the new name.
-        for (representation method : methods) {
+        for (Method method : methods) {
             if (method.getName().equals(oldName)) {
                 method.setName(newName);
             }
@@ -295,7 +295,8 @@ public class UmlClass {
         return true;
     }
 
-    // TODO need to test, parameters cannot share names
+    // TODO add tests for parameters
+    // TODO parameters cannot share names
     /**
      * Remove a parameter from a method.
      * 
@@ -308,7 +309,7 @@ public class UmlClass {
             return false;
         }
 
-        for (representation method : methods) {
+        for (Method method : methods) {
             if (method.getName().equals(methodName)) {
                 return method.removeParameter(paraName);
             }
@@ -317,6 +318,7 @@ public class UmlClass {
         return false;
     }
 
+    // TODO add tests for parameters
     // TODO parameters cannot share names
     /**
      * Replace the entire list of parameters with a new
@@ -336,7 +338,7 @@ public class UmlClass {
             return false;
         }
 
-        for (representation method : methods) {
+        for (Method method : methods) {
             if (method.getName().equals(methodName)) {
                 method.setParameters(parameters);
                 return true;
@@ -358,15 +360,15 @@ public class UmlClass {
         stringBuilder.append("Class: ").append(name).append("\n");
 
         // Add Fields section
-        stringBuilder.append("    Fields:\n");
+        stringBuilder.append("\tFields:\n");
         for (String field : fields) {
-            stringBuilder.append("        ").append(field).append("\n");
+            stringBuilder.append("\t\t").append(field).append("\n");
         }
 
         // Add Methods section
-        stringBuilder.append("    Methods:\n");
-        for (representation method : methods) {
-            stringBuilder.append("        ").append(method.getName()).append(" (");
+        stringBuilder.append("\tMethods:\n");
+        for (Method method : methods) {
+            stringBuilder.append("\t\t").append(method.getName()).append(" (");
 
             // Append parameters if they exist
             Iterator<String> iter = method.getParameters().iterator();

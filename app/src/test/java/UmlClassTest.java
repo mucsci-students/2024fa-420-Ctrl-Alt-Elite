@@ -41,6 +41,13 @@ public class UmlClassTest {
         umlClass.setName("ClassB");
         assertEquals("ClassB", umlClass.getName());
     }
+
+    //TODO addField tests
+
+    //TODO deleteField tests
+
+    //TODO renameField tests
+
     
     /**
      * Test that a method can be successfully added.
@@ -53,6 +60,8 @@ public class UmlClassTest {
         assertTrue(umlClass.addMethod("Method1", lst));
     }
     
+
+    //TODO need to redo
     /**
      * Test a duplicate method being added, should fail.
      */
@@ -65,6 +74,11 @@ public class UmlClassTest {
         umlClass.addMethod("Method1", lst);
         assertFalse(umlClass.addMethod("Method1", lst));
     }
+
+
+    //TODO add two methods with the same name
+
+    //TODO add two methods with the same name and parameters, should fail
 
     /**
      * Test deleting a method.
@@ -88,6 +102,9 @@ public class UmlClassTest {
         assertFalse(umlClass.deleteMethod("Method1"));
     }
 
+    //TODO test deleting 
+
+
     /**
      * Test renaming a method.
      */
@@ -110,12 +127,21 @@ public class UmlClassTest {
         assertFalse(umlClass.renameMethod("Method1", "Method2"));
     }
 
+    //TODO test renaming a method with the same parameters as another to the same name, should fail
+
+    //TODO test renaming a method to the same name as another but different parameter
+
+
     /**
      * Test that toString returns what it should.
      */
     @Test
     @DisplayName ("ToString: Print out the object in the correct way with the correct information")
     public void testToString() {
+        umlClass.addField("Field-A");
+        umlClass.addField("Field-B");
+        umlClass.addField("Field-C");
+
         LinkedHashSet<String> lst = new LinkedHashSet<>();
         lst.add("Para-A");
         lst.add("Para-B");
@@ -123,6 +149,6 @@ public class UmlClassTest {
         
         umlClass.addMethod("Method1", lst);
         umlClass.addMethod("Method2", lst);
-        assertEquals("Class: ClassA\n\tMethod: Method1 (Para-A, Para-B, Para-C)\n\tMethod: Method2 (Para-A, Para-B, Para-C)", umlClass.toString().trim());
+        assertEquals("Class: ClassA\n\tFields:\n\t\tField-A\n\t\tField-B\n\t\tField-C\n\tMethods:\n\t\tMethod1 (Para-A, Para-B, Para-C)\n\t\tMethod2 (Para-A, Para-B, Para-C)", umlClass.toString().trim());
     }
 }
