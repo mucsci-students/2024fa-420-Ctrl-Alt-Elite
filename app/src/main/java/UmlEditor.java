@@ -17,8 +17,7 @@ public class UmlEditor {
         this.relationships = new HashSet<>();
     }
 
-    // Adds a new class if it doesn't already exist and the name is not null or
-    // empty
+    // Adds a new class if it doesn't already exist and the name is not null or empty
     public boolean addClass(String name) {
         if (name == null || name.isEmpty() || classes.containsKey(name)) {
             return false; // Return false if name is null, empty, or class already exists
@@ -162,9 +161,29 @@ public class UmlEditor {
         }
         return removed;
     }
-    
-    
 
+    public boolean changeRelationshipType(String source, String destination, RelationshipType newType) {
+        UmlRelationship relationship = findRelationship(source, destination);
+        if (relationship != null) {
+            relationship.setType(newType);  // Correctly update the relationship type
+            System.out.println("Relationship between '" + source + "' and '" + destination + "' has been changed to '" + newType + "'.");
+            return true;
+        } else {
+            System.out.println("Relationship not found.");
+            return false;
+        }
+    }
+    
+    public UmlRelationship findRelationship(String source, String destination) {
+        for (UmlRelationship relationship : relationships) {
+            if (relationship.getSource().equals(source) && relationship.getDestination().equals(destination)) {
+                return relationship;
+            }
+        }
+        return null; // Relationship not found
+    }
+
+    
     // Lists all UML classes
     public void listClasses() {
         for (UmlClass umlClass : classes.values()) {

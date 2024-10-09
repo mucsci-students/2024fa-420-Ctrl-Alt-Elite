@@ -296,6 +296,31 @@ public class CLI {
                         System.out.println("Failed to delete relationship.");
                     }
                     break;
+
+                    case "change-relationship-type":
+                    System.out.println("Enter the source class: ");
+                    String sourceToChange = scanner.nextLine().trim();
+                    System.out.println("Enter the destination class: ");
+                    String destinationToChange = scanner.nextLine().trim();
+
+                    RelationshipType newType = null;
+                    while (newType == null) {
+                        System.out.println("Enter the new relationship type (Aggregation, Composition, Inheritance, or Realization): ");
+                        String newTypeInput = scanner.nextLine().trim().toUpperCase();
+                        
+                        try {
+                            newType = RelationshipType.valueOf(newTypeInput);
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Invalid relationship type. Please try again.");
+                        }
+                    }
+
+                    if (umlEditor.changeRelationshipType(sourceToChange, destinationToChange, newType)) {
+                        System.out.println("Relationship between '" + sourceToChange + "' and '" + destinationToChange + "' has been changed to '" + newType + "'.");
+                    } else {
+                        System.out.println("Failed to change relationship type. It may not exist.");
+                    }
+                    break;
                 
                 case "list-classes":
                     // Lists all classes and their methods
