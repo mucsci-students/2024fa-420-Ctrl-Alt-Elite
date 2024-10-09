@@ -8,6 +8,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.Arrays;
 
 public class GUI extends JFrame {
     private UmlEditor umlEditor;
@@ -226,6 +228,49 @@ public class GUI extends JFrame {
         panel.add(deleteRelationshipTypeComboBox); // Add relationship type selection
         panel.add(deleteRelationshipButton);
 
+        // Add Method
+        JTextField addMethodClassField = new JTextField();
+        JTextField methodField = new JTextField();
+        JTextField parametersField = new JTextField(); // New field for parameters
+        JButton addMethodButton = new JButton("Add Method");
+        addMethodButton.addActionListener(e -> {
+            String className = addMethodClassField.getText();
+            String methodName = methodField.getText();
+            String parametersInput = parametersField.getText(); // Get the parameters (optional)
+
+            // Convert the comma-separated parameters into a LinkedHashSet
+            LinkedHashSet<String> parametersSet = new LinkedHashSet<>();
+            if (!parametersInput.trim().isEmpty()) {
+                // Split by comma and trim spaces, then add to the set
+                Arrays.stream(parametersInput.split(","))
+                        .map(String::trim)
+                        .forEach(parametersSet::add);
+            }
+
+            // Call the addMethod method with the LinkedHashSet
+            if (umlEditor.addMethod(className, methodName, parametersSet)) {
+                outputArea.append("Method '" + methodName + "' with parameters '" + parametersInput
+                        + "' added to class '" + className + "'.\n");
+                drawingPanel.repaint(); // Repaint to show the updated methods
+            } else {
+                outputArea.append("Failed to add method '" + methodName + "' to class '" + className + "'.\n");
+            }
+
+            // Clear the input fields
+            addMethodClassField.setText("");
+            methodField.setText("");
+            parametersField.setText("");
+        });
+
+        // Add components to the panel for adding a method
+        panel.add(new JLabel("Class Name for Method:"));
+        panel.add(addMethodClassField);
+        panel.add(new JLabel("Method Name:"));
+        panel.add(methodField);
+        panel.add(new JLabel("Parameters (comma-separated):")); // Label for parameters
+        panel.add(parametersField);
+        panel.add(addMethodButton);
+
         // List Classes and Relationships
         JButton listClassesButton = new JButton("List Classes");
         listClassesButton.addActionListener(e -> {
@@ -383,14 +428,54 @@ public class GUI extends JFrame {
                 Point destinationPosition = classPositions.get(relationship.getDestination());
 
                 if (sourcePosition != null && destinationPosition != null) {
-                    // Draw a line from source to destination
-                    g.drawLine(sourcePosition.x + 50, sourcePosition.y + 25,
-                            destinationPosition.x + 50,
-                            destinationPosition.y + getBoxHeight(relationship.getDestination()));
+                    Graphics2D g2d = (Graphics2D) g;
 
-                    // Draw an arrowhead at the destination
-                    drawArrow(g, destinationPosition.x + 50,
-                            destinationPosition.y + getBoxHeight(relationship.getDestination()));
+                    // Determine color and line style based on relationship type
+                    switch (relationship.getType()) {
+                        case INHERITANCE:
+                            g2d.setColor(Color.BLUE); // Color for inheritance
+                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25,
+                                    destinationPosition.x + 50,
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()));
+                            drawArrow(g, destinationPosition.x + 50,
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination())); // Arrowhead
+                            break;
+
+                        case REALIZATION:
+                            g2d.setColor(Color.GREEN); // Color for realization
+                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25,
+                                    destinationPosition.x + 50,
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()));
+                            drawArrow(g, destinationPosition.x + 50,
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination())); // Arrowhead
+                            break;
+
+                        case AGGREGATION:
+                            g2d.setColor(Color.ORANGE); // Color for aggregation
+                            // Draw dashed line for aggregation
+                            float[] dashPattern = { 10f, 5f }; // Dashed line pattern
+                            g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f,
+                                    dashPattern, 0f));
+                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25,
+                                    destinationPosition.x + 50,
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()));
+                            g2d.setStroke(new BasicStroke()); // Reset stroke to solid
+                            drawArrow(g, destinationPosition.x + 50,
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination())); // Arrowhead
+                            break;
+
+                        case COMPOSITION:
+                            g2d.setColor(Color.RED); // Color for composition
+                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25,
+                                    destinationPosition.x + 50,
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()));
+                            drawArrow(g, destinationPosition.x + 50,
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination())); // Arrowhead
+                            break;
+                    }
+
+                    // Reset the color to black for class boxes
+                    g2d.setColor(Color.BLACK);
                 }
             }
 

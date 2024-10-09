@@ -21,6 +21,9 @@ public class UmlClass {
         this.fields = new LinkedHashSet<>();
     }
 
+    public ArrayList<representation> getMethods() {
+        return methods;  // This will return a list of representation objects
+    }
     /**
      * Gets the fields of the UML class.
      * 
