@@ -26,9 +26,12 @@ public class JsonUtilsTest {
     @BeforeEach
     public void setUp() {
         umlEditor = new UmlEditor();
+
         umlEditor.addClass("ClassA"); // Add a sample class
         umlEditor.addClass("ClassB"); // Add another sample class
-        umlEditor.addRelationship("ClassA", "ClassB"); // Add a relationship between the classes
+        RelationshipType type = RelationshipType.AGGREGATION;
+
+        umlEditor.addRelationship("ClassA", "ClassB", type); // Add a relationship between the classes
     }
 
     /**
@@ -44,6 +47,7 @@ public class JsonUtilsTest {
 
     /**
      * Test saving and loading UML editor data.
+     * 
      * @throws IOException
      */
     @Test
@@ -77,6 +81,7 @@ public class JsonUtilsTest {
 
     /**
      * Test saving and loading an empty UML editor
+     * 
      * @throws IOException
      */
     @Test

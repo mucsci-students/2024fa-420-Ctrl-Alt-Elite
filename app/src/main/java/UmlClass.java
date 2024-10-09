@@ -7,8 +7,8 @@ import java.util.LinkedHashSet;
  */
 public class UmlClass {
     private String name;
-    private LinkedHashSet<String> fields;
-    private ArrayList<representation> methods;
+    private final LinkedHashSet<String> fields;
+    private final ArrayList<Method> methods;
 
     /**
      * Constructs a new UmlClass with the specified name.
@@ -63,6 +63,10 @@ public class UmlClass {
 
     /**
      * Renames a field in the class.
+     * 
+     * @param oldName The old name of the class.
+     * @param newName The new name of the class.
+     * @return {@code true} if the field was renamed, {@code false} if the field could not me renamed.
      */
     public boolean renameField(String oldName, String newName) {
         if (fields.contains(oldName) && !fields.contains(newName)) {
@@ -76,7 +80,7 @@ public class UmlClass {
     /**
      * Represents a method with a list of parameters.
      */
-    public class representation {
+    public class Method {
         /** The name of the method. */
         private String name;
         /** A list of parameters. */
@@ -86,8 +90,9 @@ public class UmlClass {
          * Creates a new method with a list of parameters.
          * 
          * @param name The name of the method as provided by the user.
+         * @param parameters The parameters that belong to the method.
          */
-        public representation(String name, LinkedHashSet<String> parameters) {
+        public Method(String name, LinkedHashSet<String> parameters) {
             this.name = name;
             this.parameters = new LinkedHashSet<>(parameters);
         }
@@ -132,6 +137,8 @@ public class UmlClass {
          * Removes a parameter from the list of parameters.
          * 
          * @param paraName The name of the parameter to remove.
+         * @return {@code true} if the parameter was removed, {@code false} if the parameter
+         *  could not be removed.
          */
         public boolean removeParameter(String paraName) {
             return parameters.remove(paraName);
@@ -157,10 +164,10 @@ public class UmlClass {
                 return false;
             }
 
-            // Cast the object to UmlRelationship for comparison.
-            representation other = (representation) obj;
+            // Cast the object to Method for comparison.
+            Method other = (Method) obj;
 
-            // Compare the source fields for equality.
+            // Compare the name field for equality.
             if (name == null) {
                 if (other.name != null) {
                     return false;
@@ -169,7 +176,7 @@ public class UmlClass {
                 return false;
             }
 
-            // Compare the destination fields for equality.
+            // Compare the parameters field for equality.
             if (parameters == null) {
                 if (other.parameters != null) {
                     return false;
@@ -178,7 +185,7 @@ public class UmlClass {
                 return false;
             }
 
-            // If both source and destination are equal, the objects are equal.
+            // If both name and parameters are equal, the objects are equal.
             return true;
         }
 
@@ -199,6 +206,8 @@ public class UmlClass {
 
         /**
          * Generates a string representation of the representation object.
+         * 
+         * @return A string representation of the Method class.
          */
         @Override
         public String toString() {
@@ -217,7 +226,6 @@ public class UmlClass {
         }
     }
 
-    // TODO methods cannot share names
     /**
      * Adds a new method to the UML class.
      * 
@@ -227,32 +235,36 @@ public class UmlClass {
      *         already exists.
      */
     public boolean addMethod(String methodName, LinkedHashSet<String> parameters) {
-        // Loop through the methods to see if a method
-        // with methodName already exists.
-        for (representation method : methods) {
-            if (method.getName().equals(methodName)) {
+        // The method must have a name
+        if(methodName.isEmpty()) {
+            return false;
+        }
+        
+        // Loop through the methods to see if a method that equals
+        //  the method we are trying to create already exists.
+        for (Method method : methods) {
+            if (method.getName().equals(methodName) && method.getParameters().equals(parameters)) {
                 return false;
             }
         }
 
         // Add the new method.
-        representation newMethod = new representation(methodName, parameters);
+        Method newMethod = new Method(methodName, parameters);
         return methods.add(newMethod);
     }
 
-    // TODO methods cannot share names
     /**
      * Deletes a method from the UML class.
      * 
      * @param methodName The name of the method to delete.
+     * @param parameters The parameters belong to the method.
      * @return {@code true} if the method was removed, {@code false} if the method
      *         was not found.
      */
-    public boolean deleteMethod(String methodName) {
-        // Loop through the methods to find the method
-        // that's named "methodName" and remove it.
-        for (representation method : methods) {
-            if (method.getName().equals(methodName)) {
+    public boolean deleteMethod(String methodName, LinkedHashSet<String> parameters) {
+        // Loop through the methods to find and remove the given method.
+        for (Method method : methods) {
+            if (method.getName().equals(methodName) && method.getParameters().equals(parameters)) {
                 return methods.remove(method);
             }
         }
@@ -260,45 +272,46 @@ public class UmlClass {
         return false;
     }
 
-    // TODO methods cannot share names
     /**
      * Renames an existing method in the UML class.
      * 
      * @param oldName The current name of the method to rename.
+     * @param parameters The parameters belonging to the method.
      * @param newName The new name of the method.
      * @return {@code true} if the method was successfully renamed, {@code false} if
-     *         the old name was not found
-     *         or if the new name already exists.
+     *          the new name already exists or if the 'oldname' method was not found
      */
-    public boolean renameMethod(String oldName, String newName) {
-        // If there are no methods to rename, return false
-        if (oldName == null || newName == null || methods.isEmpty()) {
+    public boolean renameMethod(String oldName, LinkedHashSet<String> parameters, String newName) {
+        // If the names are empty, or if there are no methods, return false.
+        if (oldName.isEmpty() || newName.isEmpty() || methods.isEmpty()) {
             return false;
         }
 
-        // Loop through the methods and check if a method
-        // with the new name is already present.
-        for (representation method : methods) {
-            if (method.getName().equals(newName)) {
+        // Loop through the methods to see if a method that equals
+        //  the method we are trying to create already exists.
+        for (Method method : methods) {
+            if (method.getName().equals(newName) && method.getParameters().equals(parameters)) {
                 return false;
             }
         }
 
         // Loop through the methods and find the method with
         // the old name and replace it with the new name.
-        for (representation method : methods) {
-            if (method.getName().equals(oldName)) {
+        for (Method method : methods) {
+            if (method.getName().equals(oldName) && method.getParameters().equals(parameters)) {
                 method.setName(newName);
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
-    // TODO need to test, parameters cannot share names
     /**
      * Remove a parameter from a method.
      * 
+     * @param methodName The name of the parameter to remove.
+     * @param paraName The name of the parameter to remove.
      * @return {@code true} if the parameter was able to be removed, {@code false}
      *         if it could not be removed.
      */
@@ -308,7 +321,7 @@ public class UmlClass {
             return false;
         }
 
-        for (representation method : methods) {
+        for (Method method : methods) {
             if (method.getName().equals(methodName)) {
                 return method.removeParameter(paraName);
             }
@@ -317,7 +330,6 @@ public class UmlClass {
         return false;
     }
 
-    // TODO parameters cannot share names
     /**
      * Replace the entire list of parameters with a new
      * list provided by the user.
@@ -329,14 +341,11 @@ public class UmlClass {
      */
     public boolean changeParameters(String methodName, LinkedHashSet<String> parameters) {
         // If the method name is invalid, return false.
-        // In this case, 'parameters' is allowed to be empty as that means
-        // that the user wants the new list to have 0 parameters,
-        // which is a valid option.
         if (methodName.isEmpty()) {
             return false;
         }
 
-        for (representation method : methods) {
+        for (Method method : methods) {
             if (method.getName().equals(methodName)) {
                 method.setParameters(parameters);
                 return true;
@@ -350,7 +359,7 @@ public class UmlClass {
      * Returns a string representation of the UML class, including its name,
      * indented fields, and methods along with their parameters.
      * 
-     * @return a string containing the class name, fields, and methods
+     * @return A string containing the class name, fields, and methods.
      */
     @Override
     public String toString() {
@@ -358,15 +367,15 @@ public class UmlClass {
         stringBuilder.append("Class: ").append(name).append("\n");
 
         // Add Fields section
-        stringBuilder.append("    Fields:\n");
+        stringBuilder.append("\tFields:\n");
         for (String field : fields) {
-            stringBuilder.append("        ").append(field).append("\n");
+            stringBuilder.append("\t\t").append(field).append("\n");
         }
 
         // Add Methods section
-        stringBuilder.append("    Methods:\n");
-        for (representation method : methods) {
-            stringBuilder.append("        ").append(method.getName()).append(" (");
+        stringBuilder.append("\tMethods:\n");
+        for (Method method : methods) {
+            stringBuilder.append("\t\t").append(method.getName()).append(" (");
 
             // Append parameters if they exist
             Iterator<String> iter = method.getParameters().iterator();

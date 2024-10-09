@@ -26,6 +26,8 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
 
+        //TODO make it so input cannot have white space, trailing or otherwise
+        //TODO bug with nextInt 
         // Main loop for processing commands from the user
         while (!exit) {
             System.out.print("Enter a command (Type 'help' for a list of commands): ");
@@ -106,7 +108,8 @@ public class Main {
                         System.out.println("Failed to rename field. Class or field may not exist.");
                     }
                     break;
-
+                
+                //TODO flag as invalid if two parameters are entered with the same name
                 case "add-method":
                     // Add a method to a class
                     System.out.println("Enter the name of the class to add the method to: ");
@@ -114,15 +117,13 @@ public class Main {
                     System.out.println("Enter the method name: ");
                     String methodName = scanner.nextLine().trim();
 
-                    // TODO the command prompts again, says its invalid, and prompts again when the
-                    // exception gets thrown
                     System.out.println("Enter the number(0, 1, 2, etc.) of parameters for the method: ");
-                    int paraNum = 0;
+                    int paraNum;
                     try {
                         paraNum = scanner.nextInt();
                     } catch (Exception e) {
                         System.out.println(
-                                "Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                            "Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
                         break;
                     }
                     scanner.nextLine();
@@ -131,24 +132,47 @@ public class Main {
                     for (int i = 1; i <= paraNum; i++) {
                         System.out.println("Enter the name of parameter " + i + ": ");
                         String paraName = scanner.nextLine().trim();
-                        paraList.addLast(paraName);
+                        if (!paraList.add(paraName)) {
+                           
+                            System.out.println("Parameter name invalid, please try again.");
+                            i--;
+                        }
                     }
 
                     if (umlEditor.addMethod(classToAddMethod, methodName, paraList)) {
                         System.out.println("Method '" + methodName + "' added to class '" + classToAddMethod + "'.");
                     } else {
                         System.out.println(
-                                "Failed to add method. Name may be invalid or duplicated, or class does not exist.");
+                                "Failed to add method. Name or parameters may be invalid or duplicated, or class does not exist.");
                     }
                     break;
-
+                
                 case "delete-method":
                     // Deletes an method from a class
                     System.out.println("Enter the name of the class to delete the method from: ");
                     String classToDeleteMethod = scanner.nextLine().trim();
                     System.out.println("Enter the name of the method to delete: ");
                     String methodToDelete = scanner.nextLine().trim();
-                    if (umlEditor.deleteMethod(classToDeleteMethod, methodToDelete)) {
+                    
+                    System.out.println("Enter the number(0, 1, 2, etc.) of parameters that belong to the method: ");
+                    int paraListNum;
+                    try {
+                        paraListNum = scanner.nextInt();
+                    } catch (Exception e) {
+                        System.out.println(
+                            "Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                        break;
+                    }
+                    scanner.nextLine();
+
+                    LinkedHashSet<String> parameterList = new LinkedHashSet<>();
+                    for (int i = 1; i <= paraListNum; i++) {
+                        System.out.println("Enter the name of parameter " + i + ": ");
+                        String paraName = scanner.nextLine().trim();
+                        parameterList.addLast(paraName);
+                    }
+                    
+                    if (umlEditor.deleteMethod(classToDeleteMethod, methodToDelete, parameterList)) {
                         System.out.println("Method '" + methodToDelete + "' has been deleted from class '"
                                 + classToDeleteMethod + "'.");
                     } else {
@@ -162,9 +186,29 @@ public class Main {
                     String classToRenameMethod = scanner.nextLine().trim();
                     System.out.println("Enter the current method name: ");
                     String oldMethodName = scanner.nextLine().trim();
+                    
+                    System.out.println("Enter the number(0, 1, 2, etc.) of parameters that belong to the method: ");
+                    int paraListNumber;
+                    try {
+                        paraListNumber = scanner.nextInt();
+                    } catch (Exception e) {
+                        System.out.println(
+                            "Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                        break;
+                    }
+                    scanner.nextLine();
+
+                    LinkedHashSet<String> parameters = new LinkedHashSet<>();
+                    for (int i = 1; i <= paraListNumber; i++) {
+                        System.out.println("Enter the name of parameter " + i + ": ");
+                        String paraName = scanner.nextLine().trim();
+                        parameters.addLast(paraName);
+                    }
+
                     System.out.println("Enter the new method name: ");
                     String newMethodName = scanner.nextLine().trim();
-                    if (umlEditor.renameMethod(classToRenameMethod, oldMethodName, newMethodName)) {
+                    
+                    if (umlEditor.renameMethod(classToRenameMethod, oldMethodName, parameters, newMethodName)) {
                         System.out.println("Method '" + oldMethodName + "' has been renamed to '"
                                 + newMethodName + "' in class '" + classToRenameMethod + "'.");
                     } else {
@@ -173,7 +217,6 @@ public class Main {
                     }
                     break;
 
-                // TODO
                 case "remove-parameter":
                     // Removes a parameter, or many parameters, from a method
                     System.out.println("Enter the name of the class of the method with the parameters to remove: ");
@@ -182,14 +225,12 @@ public class Main {
                     String methodOfParameters = scanner.nextLine().trim();
                     System.out.println("How many parameters would you like to remove(1, 2, 3, etc.): ");
 
-                    // TODO the command prompts again, says its invalid, and prompts again when the
-                    // exception gets thrown
-                    int numToRemove = 0;
+                    int numToRemove;
                     try {
                         numToRemove = scanner.nextInt();
                     } catch (Exception e) {
                         System.out.println(
-                                "Parameter number to remove entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                            "Parameter number to remove entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
                         break;
                     }
                     scanner.nextLine();
@@ -208,7 +249,7 @@ public class Main {
                     }
                     break;
 
-                // TODO
+                //TODO flag as invalid if two parameters are entered with the same name
                 case "change-parameter":
                     // Replaces a list of parameters with a new list.
                     System.out.println("Enter the name of the class of the method with the parameters to change: ");
@@ -216,16 +257,14 @@ public class Main {
                     System.out.println("Enter the name of the method with the parameters to change: ");
                     String methodToChangeParameters = scanner.nextLine().trim();
 
-                    // TODO the command prompts again, says its invalid, and prompts again when the
-                    // exception gets thrown
                     System.out.println("Enter the new number(0, 1, 2, etc.) of parameters for '"
                             + methodToChangeParameters + "': ");
-                    int newParaNum = 0;
+                    int newParaNum;
                     try {
                         newParaNum = scanner.nextInt();
                     } catch (Exception e) {
                         System.out.println(
-                                "Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                            "Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
                         break;
                     }
                     scanner.nextLine();
@@ -241,7 +280,7 @@ public class Main {
                         System.out.println("Method '" + methodToChangeParameters + "' had its parameters changed.");
                     } else {
                         System.out.println(
-                                "Failed to add method. Name may be invalid or duplicated, or class does not exist.");
+                                "Failed to add method. Name or parameters may be invalid or duplicated, or class does not exist.");
                     }
                     break;
 
