@@ -22,6 +22,15 @@ public class UmlClass {
     }
 
     /**
+     * Gets the fields of the UML class.
+     * 
+     * @return A collection of the fields in the UML class.
+     */
+    public LinkedHashSet<String> getFields() {
+        return new LinkedHashSet<>(fields); // Return a copy to prevent modification
+    }
+
+    /**
      * Gets the name of the UML class.
      * 
      * @return The name of the class.
