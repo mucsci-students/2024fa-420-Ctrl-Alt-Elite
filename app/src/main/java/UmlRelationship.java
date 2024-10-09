@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -16,21 +17,22 @@ enum RelationshipType {
 class UmlRelationship {
     // Source entity (could be a class or any other entity) in the relationship.
     private String source;
-    
+
     // Destination entity in the relationship.
     private String destination;
-    
+
     // Type of relationship (AGGREGATION, COMPOSITION, etc.).
     private RelationshipType type;
-    
+
     // List to store all the relationships created.
-    private static List<UmlRelationship> relationships = new ArrayList<>();  
+    private static List<UmlRelationship> relationships = new ArrayList<>();
 
     /**
      * Constructor to create a new Relationship.
-     * @param source - the source entity (e.g., class name).
+     *
+     * @param source      - the source entity (e.g., class name).
      * @param destination - the destination entity (e.g., class name).
-     * @param type - the type of the relationship.
+     * @param type        - the type of the relationship.
      */
     public UmlRelationship(String source, String destination, RelationshipType type) {
         this.source = source;
@@ -40,6 +42,7 @@ class UmlRelationship {
 
     /**
      * Get the source entity.
+     *
      * @return the source entity (e.g., class name).
      */
     public String getSource() {
@@ -48,6 +51,7 @@ class UmlRelationship {
 
     /**
      * Get the destination entity.
+     *
      * @return the destination entity (e.g., class name).
      */
     public String getDestination() {
@@ -56,6 +60,7 @@ class UmlRelationship {
 
     /**
      * Get the type of the relationship.
+     *
      * @return the relationship type.
      */
     public RelationshipType getType() {
@@ -64,6 +69,7 @@ class UmlRelationship {
 
     /**
      * Set a new relationship type.
+     *
      * @param newType - the new type of the relationship.
      */
     public void setType(RelationshipType newType) {
@@ -72,6 +78,7 @@ class UmlRelationship {
 
     /**
      * Provides a string representation of the relationship.
+     *
      * @return the string representation of the relationship.
      */
     @Override
@@ -81,50 +88,52 @@ class UmlRelationship {
 
     /**
      * Adds a new relationship to the list of relationships.
-     * @param source - the source entity.
+     *
+     * @param source      - the source entity.
      * @param destination - the destination entity.
-     * @param type - the type of the relationship.
+     * @param type        - the type of the relationship.
      */
     public static void addRelationship(String source, String destination, RelationshipType type) {
         // Create a new relationship and add it to the list.
         UmlRelationship relationship = new UmlRelationship(source, destination, type);
-        relationships.add(relationship);  
+        relationships.add(relationship);
         System.out.println("Relationship added: " + relationship);
     }
 
-    /**
-     * Deletes an existing relationship from the list.
-     * It looks for a relationship matching the given source, destination, and type.
-     * @param source - the source entity.
-     * @param destination - the destination entity.
-     * @param type - the type of the relationship.
-     */
     public static void deleteRelationship(String source, String destination, RelationshipType type) {
-        // Iterate over the relationships to find a match.
-        for (UmlRelationship relationship : relationships) {
+        // Use an iterator to safely remove elements while iterating.
+        Iterator<UmlRelationship> iterator = relationships.iterator();
+        boolean found = false; // Flag to check if we found the relationship.
+
+        while (iterator.hasNext()) {
+            UmlRelationship relationship = iterator.next();
             if (relationship.getSource().equals(source) &&
-                relationship.getDestination().equals(destination) &&
-                relationship.getType().equals(type)) {
-                relationships.remove(relationship);  // Remove the relationship if found.
+                    relationship.getDestination().equals(destination) &&
+                    relationship.getType() == type) { // Use '==' for enum comparison
+                iterator.remove(); // Remove the relationship safely.
                 System.out.println("Relationship deleted: " + relationship);
-                return;
+                found = true;
+                break; // Exit the loop once we find and remove the relationship.
             }
         }
         // If no matching relationship is found.
-        System.out.println("Relationship not found.");
+        if (!found) {
+            System.out.println("Relationship not found.");
+        }
     }
 
     /**
      * Changes the type of an existing relationship.
-     * @param source - the source entity.
+     *
+     * @param source      - the source entity.
      * @param destination - the destination entity.
-     * @param newType - the new type to change the relationship to.
+     * @param newType     - the new type to change the relationship to.
      */
     public static void changeRelationshipType(String source, String destination, RelationshipType newType) {
         // Iterate over the relationships to find a match.
         for (UmlRelationship relationship : relationships) {
             if (relationship.getSource().equals(source) &&
-                relationship.getDestination().equals(destination)) {
+                    relationship.getDestination().equals(destination)) {
                 // Change the type of the relationship if found.
                 relationship.setType(newType);
                 System.out.println("Relationship type changed to: " + relationship);
@@ -137,12 +146,22 @@ class UmlRelationship {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-
+        if (this == obj)
+            return true;
+        if (!(obj instanceof UmlRelationship))
+            return false;
         UmlRelationship other = (UmlRelationship) obj;
-        return source.equals(other.source) &&
-               destination.equals(other.destination) &&
-               type == other.type;
+        return this.source.equals(other.source) &&
+                this.destination.equals(other.destination) &&
+                this.type == other.type;
     }
+
+    @Override
+    public int hashCode() {
+        int result = source.hashCode();
+        result = 31 * result + destination.hashCode();
+        result = 31 * result + type.hashCode();
+        return result;
+    }
+
 }
