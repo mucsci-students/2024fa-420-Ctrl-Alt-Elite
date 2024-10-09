@@ -104,19 +104,19 @@ public class UmlEditor {
     }
 
     // Deletes a method from a specified class
-    public boolean deleteMethod(String className, String method) {
+    public boolean deleteMethod(String className, String method, LinkedHashSet<String> paraList) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
-            return umlClass.deleteMethod(method);
+            return umlClass.deleteMethod(method, paraList);
         }
         return false;
     }
 
     // Renames a method in a specified class
-    public boolean renameMethod(String className, String oldName, String newName) {
+    public boolean renameMethod(String className, String oldName, LinkedHashSet<String> paraList, String newName) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
-            return umlClass.renameMethod(oldName, newName);
+            return umlClass.renameMethod(oldName, paraList, newName);
         }
         return false;
     }

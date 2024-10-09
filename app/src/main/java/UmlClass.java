@@ -7,8 +7,8 @@ import java.util.LinkedHashSet;
  */
 public class UmlClass {
     private String name;
-    private LinkedHashSet<String> fields;
-    private ArrayList<Method> methods;
+    private final LinkedHashSet<String> fields;
+    private final ArrayList<Method> methods;
 
     /**
      * Constructs a new UmlClass with the specified name.
@@ -217,7 +217,6 @@ public class UmlClass {
         }
     }
 
-    // TODO methods can share names, but the parameters must be different
     /**
      * Adds a new method to the UML class.
      * 
@@ -227,10 +226,15 @@ public class UmlClass {
      *         already exists.
      */
     public boolean addMethod(String methodName, LinkedHashSet<String> parameters) {
-        // Loop through the methods to see if a method
-        // with methodName already exists.
+        // The method must have a name
+        if(methodName.isEmpty()) {
+            return false;
+        }
+        
+        // Loop through the methods to see if a method that equals
+        //  the method we are trying to create already exists.
         for (Method method : methods) {
-            if (method.getName().equals(methodName)) {
+            if (method.getName().equals(methodName) && method.getParameters().equals(parameters)) {
                 return false;
             }
         }
@@ -240,7 +244,6 @@ public class UmlClass {
         return methods.add(newMethod);
     }
 
-    // TODO methods can share names, but the parameters must be different
     /**
      * Deletes a method from the UML class.
      * 
@@ -248,11 +251,10 @@ public class UmlClass {
      * @return {@code true} if the method was removed, {@code false} if the method
      *         was not found.
      */
-    public boolean deleteMethod(String methodName) {
-        // Loop through the methods to find the method
-        // that's named "methodName" and remove it.
+    public boolean deleteMethod(String methodName, LinkedHashSet<String> parameters) {
+        // Loop through the methods to find and remove the given method.
         for (Method method : methods) {
-            if (method.getName().equals(methodName)) {
+            if (method.getName().equals(methodName) && method.getParameters().equals(parameters)) {
                 return methods.remove(method);
             }
         }
@@ -260,26 +262,24 @@ public class UmlClass {
         return false;
     }
 
-    // TODO methods can share names, but the parameters must be different
     /**
      * Renames an existing method in the UML class.
      * 
      * @param oldName The current name of the method to rename.
      * @param newName The new name of the method.
      * @return {@code true} if the method was successfully renamed, {@code false} if
-     *         the old name was not found
-     *         or if the new name already exists.
+     *          the new name already exists or if the 'oldname' method was not found
      */
-    public boolean renameMethod(String oldName, String newName) {
-        // If there are no methods to rename, return false
-        if (oldName == null || newName == null || methods.isEmpty()) {
+    public boolean renameMethod(String oldName, LinkedHashSet<String> oldParameters, String newName) {
+        // If the names are empty, or if there are no methods, return false.
+        if (oldName.isEmpty() || newName.isEmpty() || methods.isEmpty()) {
             return false;
         }
 
-        // Loop through the methods and check if a method
-        // with the new name is already present.
+        // Loop through the methods to see if a method that equals
+        //  the method we are trying to create already exists.
         for (Method method : methods) {
-            if (method.getName().equals(newName)) {
+            if (method.getName().equals(newName) && method.getParameters().equals(oldParameters)) {
                 return false;
             }
         }
@@ -287,16 +287,15 @@ public class UmlClass {
         // Loop through the methods and find the method with
         // the old name and replace it with the new name.
         for (Method method : methods) {
-            if (method.getName().equals(oldName)) {
+            if (method.getName().equals(oldName) && method.getParameters().equals(oldParameters)) {
                 method.setName(newName);
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
-    // TODO add tests for parameters
-    // TODO parameters cannot share names
     /**
      * Remove a parameter from a method.
      * 
@@ -318,8 +317,6 @@ public class UmlClass {
         return false;
     }
 
-    // TODO add tests for parameters
-    // TODO parameters cannot share names
     /**
      * Replace the entire list of parameters with a new
      * list provided by the user.
@@ -331,9 +328,6 @@ public class UmlClass {
      */
     public boolean changeParameters(String methodName, LinkedHashSet<String> parameters) {
         // If the method name is invalid, return false.
-        // In this case, 'parameters' is allowed to be empty as that means
-        // that the user wants the new list to have 0 parameters,
-        // which is a valid option.
         if (methodName.isEmpty()) {
             return false;
         }

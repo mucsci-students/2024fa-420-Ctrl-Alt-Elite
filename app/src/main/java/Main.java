@@ -115,15 +115,13 @@ public class Main {
                     System.out.println("Enter the method name: ");
                     String methodName = scanner.nextLine().trim();
 
-                    // TODO the command prompts again, says its invalid, and prompts again when the
-                    // exception gets thrown
                     System.out.println("Enter the number(0, 1, 2, etc.) of parameters for the method: ");
-                    int paraNum = 0;
+                    int paraNum;
                     try {
                         paraNum = scanner.nextInt();
                     } catch (Exception e) {
                         System.out.println(
-                                "Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                            "Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
                         break;
                     }
                     scanner.nextLine();
@@ -139,7 +137,7 @@ public class Main {
                         System.out.println("Method '" + methodName + "' added to class '" + classToAddMethod + "'.");
                     } else {
                         System.out.println(
-                                "Failed to add method. Name may be invalid or duplicated, or class does not exist.");
+                                "Failed to add method. Name or parameters may be invalid or duplicated, or class does not exist.");
                     }
                     break;
 
@@ -182,14 +180,12 @@ public class Main {
                     String methodOfParameters = scanner.nextLine().trim();
                     System.out.println("How many parameters would you like to remove(1, 2, 3, etc.): ");
 
-                    // TODO the command prompts again, says its invalid, and prompts again when the
-                    // exception gets thrown
-                    int numToRemove = 0;
+                    int numToRemove;
                     try {
                         numToRemove = scanner.nextInt();
                     } catch (Exception e) {
                         System.out.println(
-                                "Parameter number to remove entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                            "Parameter number to remove entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
                         break;
                     }
                     scanner.nextLine();
@@ -208,6 +204,7 @@ public class Main {
                     }
                     break;
 
+                //TODO flag as invalid if two parameters are entered with the same name
                 case "change-parameter":
                     // Replaces a list of parameters with a new list.
                     System.out.println("Enter the name of the class of the method with the parameters to change: ");
@@ -215,16 +212,14 @@ public class Main {
                     System.out.println("Enter the name of the method with the parameters to change: ");
                     String methodToChangeParameters = scanner.nextLine().trim();
 
-                    // TODO the command prompts again, says its invalid, and prompts again when the
-                    // exception gets thrown
                     System.out.println("Enter the new number(0, 1, 2, etc.) of parameters for '"
                             + methodToChangeParameters + "': ");
-                    int newParaNum = 0;
+                    int newParaNum;
                     try {
                         newParaNum = scanner.nextInt();
                     } catch (Exception e) {
                         System.out.println(
-                                "Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                            "Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
                         break;
                     }
                     scanner.nextLine();
@@ -240,7 +235,7 @@ public class Main {
                         System.out.println("Method '" + methodToChangeParameters + "' had its parameters changed.");
                     } else {
                         System.out.println(
-                                "Failed to add method. Name may be invalid or duplicated, or class does not exist.");
+                                "Failed to add method. Name or parameters may be invalid or duplicated, or class does not exist.");
                     }
                     break;
 
