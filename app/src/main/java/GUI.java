@@ -146,42 +146,69 @@ public class GUI extends JFrame {
         // Add Relationship
         JTextField sourceClassField = new JTextField();
         JTextField destinationClassField = new JTextField();
+        JComboBox<RelationshipType> relationshipTypeComboBox = new JComboBox<>(RelationshipType.values()); // Combo box
+                                                                                                           // for
+                                                                                                           // relationship
+                                                                                                           // type
         JButton addRelationshipButton = new JButton("Add Relationship");
 
         addRelationshipButton.addActionListener(e -> {
             String source = sourceClassField.getText().trim(); // Trim whitespace
             String destination = destinationClassField.getText().trim(); // Trim whitespace
+            RelationshipType type = (RelationshipType) relationshipTypeComboBox.getSelectedItem(); // Get selected
+                                                                                                   // relationship type
 
             if (source.isEmpty() || destination.isEmpty()) {
                 outputArea.append("Source and destination class names cannot be empty.\n");
                 return; // Exit if either field is empty
             }
 
-            if (umlEditor.addRelationship(source, destination)) {
-                outputArea.append("Relationship added from '" + source + "' to '" + destination + "'.\n");
+            try {
+                umlEditor.addRelationship(source, destination, type); // Call the method with relationship type
+                outputArea
+                        .append("Relationship added from '" + source + "' to '" + destination + "' as " + type + ".\n");
                 drawingPanel.repaint(); // Repaint to show the updated relationships
-            } else {
-                outputArea.append("Failed to add relationship from '" + source + "' to '" + destination + "'.\n");
+            } catch (IllegalArgumentException ex) {
+                outputArea.append("Failed to add relationship: " + ex.getMessage() + ".\n");
             }
             sourceClassField.setText("");
             destinationClassField.setText("");
         });
 
+        // Adding components to the panel
         panel.add(new JLabel("Source Class Name:"));
         panel.add(sourceClassField);
         panel.add(new JLabel("Destination Class Name:"));
         panel.add(destinationClassField);
+        panel.add(new JLabel("Relationship Type:"));
+        panel.add(relationshipTypeComboBox); // Add relationship type selection
         panel.add(addRelationshipButton);
 
         // Delete Relationship
         JTextField deleteSourceClassField = new JTextField();
         JTextField deleteDestinationClassField = new JTextField();
+        JComboBox<RelationshipType> deleteRelationshipTypeComboBox = new JComboBox<>(RelationshipType.values()); // Combo
+                                                                                                                 // box
+                                                                                                                 // for
+                                                                                                                 // relationship
+                                                                                                                 // type
         JButton deleteRelationshipButton = new JButton("Delete Relationship");
+
         deleteRelationshipButton.addActionListener(e -> {
-            String source = deleteSourceClassField.getText();
-            String destination = deleteDestinationClassField.getText();
-            if (umlEditor.deleteRelationship(source, destination)) {
-                outputArea.append("Relationship deleted from '" + source + "' to '" + destination + "'.\n");
+            String source = deleteSourceClassField.getText().trim();
+            String destination = deleteDestinationClassField.getText().trim();
+            RelationshipType type = (RelationshipType) deleteRelationshipTypeComboBox.getSelectedItem(); // Get selected
+                                                                                                         // relationship
+                                                                                                         // type
+
+            if (source.isEmpty() || destination.isEmpty()) {
+                outputArea.append("Source and destination class names cannot be empty.\n");
+                return; // Exit if either field is empty
+            }
+
+            if (umlEditor.deleteRelationship(source, destination, type)) { // Update this to include relationship type
+                outputArea.append(
+                        "Relationship deleted from '" + source + "' to '" + destination + "' as " + type + ".\n");
                 drawingPanel.repaint(); // Repaint to remove the line after the relationship is deleted
             } else {
                 outputArea.append("Failed to delete relationship from '" + source + "' to '" + destination + "'.\n");
@@ -190,10 +217,13 @@ public class GUI extends JFrame {
             deleteDestinationClassField.setText("");
         });
 
+        // Adding components to the panel
         panel.add(new JLabel("Source Class Name to Delete:"));
         panel.add(deleteSourceClassField);
         panel.add(new JLabel("Destination Class Name to Delete:"));
         panel.add(deleteDestinationClassField);
+        panel.add(new JLabel("Relationship Type:"));
+        panel.add(deleteRelationshipTypeComboBox); // Add relationship type selection
         panel.add(deleteRelationshipButton);
 
         // List Classes and Relationships

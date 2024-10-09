@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Enum to define types of relationships.
  * These include AGGREGATION, COMPOSITION, INHERITANCE, and REALIZATION.
@@ -136,4 +135,14 @@ class UmlRelationship {
         System.out.println("Relationship not found.");
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        UmlRelationship other = (UmlRelationship) obj;
+        return source.equals(other.source) &&
+               destination.equals(other.destination) &&
+               type == other.type;
+    }
 }

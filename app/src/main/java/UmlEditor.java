@@ -150,10 +150,20 @@ public class UmlEditor {
         return false; // One or both classes do not exist
     }
 
-    // Deletes a relationship between two classes
     public boolean deleteRelationship(String source, String destination, RelationshipType type) {
-        return relationships.remove(new UmlRelationship(source, destination, type));
+        UmlRelationship relationshipToDelete = new UmlRelationship(source, destination, type);
+        boolean removed = relationships.remove(relationshipToDelete);
+        if (removed) {
+            System.out.println("Successfully deleted: " + relationshipToDelete);
+        } else {
+            System.out.println("Failed to delete: " + relationshipToDelete + " (not found)");
+            // Debug: List current relationships
+            System.out.println("Current relationships: " + relationships);
+        }
+        return removed;
     }
+    
+    
 
     // Lists all UML classes
     public void listClasses() {
