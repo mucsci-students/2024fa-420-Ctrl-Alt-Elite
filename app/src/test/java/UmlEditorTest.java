@@ -311,18 +311,22 @@ public class UmlEditorTest {
     public void testAddRelationship() {
         umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
-        assertTrue(umlEditor.addRelationship("ClassA", "ClassB"),
+        RelationshipType type = RelationshipType.AGGREGATION;
+
+        assertTrue(umlEditor.addRelationship("ClassA", "ClassB", type),
         		() -> "Error with adding a relationship between classes");
     }
     
     /**
-     * Test adding a relationship between the same class, should fail.
+     * Test adding a relationship between the same class
      */
     @Test
-    @DisplayName ("AddRelationship: Add a relationship between a class and itself, failure test")
+    @DisplayName ("AddRelationship: Add a relationship between a class and itself")
     public void testAddRelationshipBetweenSameClass() {
         umlEditor.addClass("ClassA");
-        assertFalse(umlEditor.addRelationship("ClassA", "ClassA"),
+        RelationshipType type = RelationshipType.AGGREGATION;
+
+        assertTrue(umlEditor.addRelationship("ClassA", "ClassA", type),
         		() -> "Error with adding a relationship between a class and itself.");
     }
 
@@ -333,9 +337,11 @@ public class UmlEditorTest {
     @DisplayName ("AddRelationship: Add a relationship between non-existent classes, failure test")
     public void testAddRelationshipNonExistentClasses() {
         umlEditor.addClass("ClassA");
-        assertFalse(umlEditor.addRelationship("ClassA", "NonExistentClass"),
+        RelationshipType type = RelationshipType.AGGREGATION;
+
+        assertFalse(umlEditor.addRelationship("ClassA", "NonExistentClass", type),
         		() -> "Error with adding a relationship between non-existent classes (Test 1).");
-        assertFalse(umlEditor.addRelationship("NonExistentClass", "ClassA"),
+        assertFalse(umlEditor.addRelationship("NonExistentClass", "ClassA", type),
         		() -> "Error with adding a relationship between non-existent classes (Test 1).");
     }
     
@@ -349,8 +355,10 @@ public class UmlEditorTest {
     public void testDeleteRelationship() {
         umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
-        umlEditor.addRelationship("ClassA", "ClassB");
-        assertTrue(umlEditor.deleteRelationship("ClassA", "ClassB"),
+        RelationshipType type = RelationshipType.AGGREGATION;
+
+        umlEditor.addRelationship("ClassA", "ClassB", type);
+        assertTrue(umlEditor.deleteRelationship("ClassA", "ClassB", type),
         		() -> "Error with deleting a relationship.");
     }
     
@@ -362,7 +370,9 @@ public class UmlEditorTest {
     public void testDeleteRelationshipNotExist() {
     	umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
-    	assertFalse(umlEditor.deleteRelationship("ClassA", "ClassB"),
+    	RelationshipType type = RelationshipType.AGGREGATION;
+
+        assertFalse(umlEditor.deleteRelationship("ClassA", "ClassB", type),
         		() -> "Error with deleting a relationship that does not exist.");
     }
     
@@ -373,9 +383,11 @@ public class UmlEditorTest {
     @DisplayName ("DeleteRelationship: Delete a relationship between two classes that do not exist, failure test")
     public void testDeleteRelationshipNonExistentClasses() {
         umlEditor.addClass("ClassA");
-        assertFalse(umlEditor.deleteRelationship("ClassA", "NonExistentClass"),
+        RelationshipType type = RelationshipType.AGGREGATION;
+        
+        assertFalse(umlEditor.deleteRelationship("ClassA", "NonExistentClass", type),
         		() -> "Error with deleting a relationship from non-existent classes (Test 1).");
-        assertFalse(umlEditor.deleteRelationship("NonExistentClass", "ClassA"),
+        assertFalse(umlEditor.deleteRelationship("NonExistentClass", "ClassA", type),
         		() -> "Error with deleting a relationship from non-existent classes (Test 2).");
     }
     
@@ -387,7 +399,9 @@ public class UmlEditorTest {
     @Test
     @DisplayName ("ListClasses: List all classes")
     public void testListClasses() {
-    	System.out.println("Expected Output: ");
+    	System.out.println("ListClasses: List all classes");
+
+        System.out.println("Expected Output: ");
     	System.out.println("Class: ClassA");
         System.out.println("Methods: []");
         System.out.println("Class: ClassB");
@@ -407,7 +421,9 @@ public class UmlEditorTest {
     @Test
     @DisplayName ("ListClasses: Display no classes when there are none")
     public void testListClassesNoClasses() {
-    	System.out.println("Expected Output: (no output)");
+    	System.out.println("ListClasses: Display no classes when there are none");
+
+        System.out.println("Expected Output: (no output)");
         
     	System.out.println("Output: ");
         umlEditor.listClasses();
@@ -422,7 +438,9 @@ public class UmlEditorTest {
     @Test
     @DisplayName ("ListClass: List a class")
     public void testListClass() {
-    	System.out.println("Expected Output: ");
+    	System.out.println("ListClass: List a class");
+
+        System.out.println("Expected Output: ");
         System.out.println("Class: ClassA");
         System.out.println("Methods: []");
     	
@@ -439,7 +457,9 @@ public class UmlEditorTest {
     @Test
     @DisplayName ("ListClass: Display a non-existent class, failure test")
     public void testListClassNotExist() {
-    	System.out.println("Expected Output: Class \'ClassB\' does not exist.");
+    	System.out.println("ListClass: Display a non-existent class, failure test");
+
+        System.out.println("Expected Output: Class \'ClassB\' does not exist.");
     	
     	System.out.print("Output: ");
     	umlEditor.listClass("ClassB"); 
@@ -454,11 +474,14 @@ public class UmlEditorTest {
     @Test
     @DisplayName ("ListRelationships: List the relationships between classes")
     public void testListRelationships() {
-    	System.out.println("Expected Output: Relationship from \'ClassA\' to \'ClassB\'");
+    	System.out.println("ListRelationships: List the relationships between classes");
+        
+        System.out.println("Expected Output: Relationship from \'ClassA\' to \'ClassB\'");
     	
     	umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
-        umlEditor.addRelationship("ClassA", "ClassB");
+        RelationshipType type = RelationshipType.AGGREGATION;
+        umlEditor.addRelationship("ClassA", "ClassB", type);
         
         System.out.print("Output: ");
         umlEditor.listRelationships(); 

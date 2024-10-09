@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+//TODO add comments
 public class UmlEditor {
     // A map to store UML classes by their name
     private Map<String, UmlClass> classes;

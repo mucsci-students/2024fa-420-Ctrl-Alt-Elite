@@ -132,7 +132,7 @@ public class UmlClassTest {
     }
 
     /**
-     * Test that Method's toString returns what it should.
+     * Test that representation's toString returns what it should.
      */
     @Test
     @DisplayName ("MethodToString: Print out the object in the correct way with the correct information")
@@ -317,7 +317,7 @@ public class UmlClassTest {
     }
 
     // TODO add tests for parameters
-    
+
 
     /**
      * Test that toString returns what it should.

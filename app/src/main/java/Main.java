@@ -27,6 +27,7 @@ public class Main {
         boolean exit = false;
 
         //TODO make it so input cannot have white space, trailing or otherwise
+        //TODO bug with nextInt 
         // Main loop for processing commands from the user
         while (!exit) {
             System.out.print("Enter a command (Type 'help' for a list of commands): ");
@@ -107,7 +108,8 @@ public class Main {
                         System.out.println("Failed to rename field. Class or field may not exist.");
                     }
                     break;
-
+                
+                //TODO flag as invalid if two parameters are entered with the same name
                 case "add-method":
                     // Add a method to a class
                     System.out.println("Enter the name of the class to add the method to: ");
@@ -140,14 +142,33 @@ public class Main {
                                 "Failed to add method. Name or parameters may be invalid or duplicated, or class does not exist.");
                     }
                     break;
-
+                
                 case "delete-method":
                     // Deletes an method from a class
                     System.out.println("Enter the name of the class to delete the method from: ");
                     String classToDeleteMethod = scanner.nextLine().trim();
                     System.out.println("Enter the name of the method to delete: ");
                     String methodToDelete = scanner.nextLine().trim();
-                    if (umlEditor.deleteMethod(classToDeleteMethod, methodToDelete)) {
+                    
+                    System.out.println("Enter the number(0, 1, 2, etc.) of parameters that belong to the method: ");
+                    int paraListNum;
+                    try {
+                        paraListNum = scanner.nextInt();
+                    } catch (Exception e) {
+                        System.out.println(
+                            "Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                        break;
+                    }
+                    scanner.nextLine();
+
+                    LinkedHashSet<String> parameterList = new LinkedHashSet<>();
+                    for (int i = 1; i <= paraListNum; i++) {
+                        System.out.println("Enter the name of parameter " + i + ": ");
+                        String paraName = scanner.nextLine().trim();
+                        parameterList.addLast(paraName);
+                    }
+                    
+                    if (umlEditor.deleteMethod(classToDeleteMethod, methodToDelete, parameterList)) {
                         System.out.println("Method '" + methodToDelete + "' has been deleted from class '"
                                 + classToDeleteMethod + "'.");
                     } else {
@@ -161,9 +182,29 @@ public class Main {
                     String classToRenameMethod = scanner.nextLine().trim();
                     System.out.println("Enter the current method name: ");
                     String oldMethodName = scanner.nextLine().trim();
+                    
+                    System.out.println("Enter the number(0, 1, 2, etc.) of parameters that belong to the method: ");
+                    int paraListNumber;
+                    try {
+                        paraListNumber = scanner.nextInt();
+                    } catch (Exception e) {
+                        System.out.println(
+                            "Parameter number entered improperly. Please enter a numeral for the parameter count(0, 1, 2, etc.).");
+                        break;
+                    }
+                    scanner.nextLine();
+
+                    LinkedHashSet<String> parameters = new LinkedHashSet<>();
+                    for (int i = 1; i <= paraListNumber; i++) {
+                        System.out.println("Enter the name of parameter " + i + ": ");
+                        String paraName = scanner.nextLine().trim();
+                        parameters.addLast(paraName);
+                    }
+
                     System.out.println("Enter the new method name: ");
                     String newMethodName = scanner.nextLine().trim();
-                    if (umlEditor.renameMethod(classToRenameMethod, oldMethodName, newMethodName)) {
+                    
+                    if (umlEditor.renameMethod(classToRenameMethod, oldMethodName, parameters, newMethodName)) {
                         System.out.println("Method '" + oldMethodName + "' has been renamed to '"
                                 + newMethodName + "' in class '" + classToRenameMethod + "'.");
                     } else {
