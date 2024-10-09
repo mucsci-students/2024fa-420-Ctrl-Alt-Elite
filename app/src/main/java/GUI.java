@@ -422,6 +422,10 @@ public class GUI extends JFrame {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
+            // Create a map to keep track of how many relationships exist between class
+            // pairs
+            Map<String, Integer> relationshipCount = new HashMap<>();
+
             // Draw relationships
             for (UmlRelationship relationship : umlEditor.getRelationships()) {
                 Point sourcePosition = classPositions.get(relationship.getSource());
@@ -430,24 +434,35 @@ public class GUI extends JFrame {
                 if (sourcePosition != null && destinationPosition != null) {
                     Graphics2D g2d = (Graphics2D) g;
 
+                    // Generate a unique key for the relationship between the source and destination
+                    // classes
+                    String relationshipKey = relationship.getSource() + "-" + relationship.getDestination();
+
+                    // Increment the count for this specific relationship key
+                    int lineOffset = relationshipCount.getOrDefault(relationshipKey, 0);
+                    relationshipCount.put(relationshipKey, lineOffset + 1);
+
+                    // Calculate vertical offset for the line to avoid overlap
+                    int offset = lineOffset * 5; // Adjust this value for spacing
+
                     // Determine color and line style based on relationship type
                     switch (relationship.getType()) {
                         case INHERITANCE:
                             g2d.setColor(Color.BLUE); // Color for inheritance
-                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25,
+                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25 + offset,
                                     destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()));
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset);
                             drawArrow(g, destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination())); // Arrowhead
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset); // Arrowhead
                             break;
 
                         case REALIZATION:
                             g2d.setColor(Color.GREEN); // Color for realization
-                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25,
+                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25 + offset,
                                     destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()));
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset);
                             drawArrow(g, destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination())); // Arrowhead
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset); // Arrowhead
                             break;
 
                         case AGGREGATION:
@@ -456,21 +471,21 @@ public class GUI extends JFrame {
                             float[] dashPattern = { 10f, 5f }; // Dashed line pattern
                             g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f,
                                     dashPattern, 0f));
-                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25,
+                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25 + offset,
                                     destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()));
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset);
                             g2d.setStroke(new BasicStroke()); // Reset stroke to solid
                             drawArrow(g, destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination())); // Arrowhead
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset); // Arrowhead
                             break;
 
                         case COMPOSITION:
                             g2d.setColor(Color.RED); // Color for composition
-                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25,
+                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25 + offset,
                                     destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()));
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset);
                             drawArrow(g, destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination())); // Arrowhead
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset); // Arrowhead
                             break;
                     }
 
