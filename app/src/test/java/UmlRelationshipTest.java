@@ -53,11 +53,11 @@ public class UmlRelationshipTest {
 
     //TODO setType
 
-    //TODO add rel
+    //TODO add relationship
 
-    //TODO delete rel
+    //TODO delete relationship
 
-    //TODO change rel type
+    //TODO change relationship type
     
     /**
      * Test that two relationships that are the same equal each other.

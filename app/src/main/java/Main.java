@@ -132,7 +132,11 @@ public class Main {
                     for (int i = 1; i <= paraNum; i++) {
                         System.out.println("Enter the name of parameter " + i + ": ");
                         String paraName = scanner.nextLine().trim();
-                        paraList.addLast(paraName);
+                        if (!paraList.add(paraName)) {
+                           
+                            System.out.println("Parameter name invalid, please try again.");
+                            i--;
+                        }
                     }
 
                     if (umlEditor.addMethod(classToAddMethod, methodName, paraList)) {
