@@ -123,26 +123,29 @@ class UmlRelationship {
     }
 
     /**
-     * Changes the type of an existing relationship.
-     *
-     * @param source      - the source entity.
-     * @param destination - the destination entity.
-     * @param newType     - the new type to change the relationship to.
-     */
-    public static void changeRelationshipType(String source, String destination, RelationshipType newType) {
-        // Iterate over the relationships to find a match.
-        for (UmlRelationship relationship : relationships) {
-            if (relationship.getSource().equals(source) &&
-                    relationship.getDestination().equals(destination)) {
-                // Change the type of the relationship if found.
-                relationship.setType(newType);
-                System.out.println("Relationship type changed to: " + relationship);
-                return;
-            }
+ * Changes the type of an existing relationship.
+ *
+ * @param source      - the source entity.
+ * @param destination - the destination entity.
+ * @param oldType     - the current type of the relationship to change.
+ * @param newType     - the new type to change the relationship to.
+ */
+public static void changeRelationshipType(String source, String destination, RelationshipType oldType, RelationshipType newType) {
+    // Iterate over the relationships to find a match.
+    for (UmlRelationship relationship : relationships) {
+        if (relationship.getSource().equals(source) &&
+                relationship.getDestination().equals(destination) &&
+                relationship.getType().equals(oldType)) {
+            // Change the type of the relationship if found.
+            relationship.setType(newType);
+            System.out.println("Relationship type changed from " + oldType + " to " + newType);
+            return;
         }
-        // If no matching relationship is found.
-        System.out.println("Relationship not found.");
     }
+    // If no matching relationship is found.
+    System.out.println("Relationship with the specified type not found.");
+}
+
 
     @Override
     public boolean equals(Object obj) {

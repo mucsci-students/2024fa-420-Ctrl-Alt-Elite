@@ -1,4 +1,5 @@
 import javax.swing.*;
+
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -231,36 +232,50 @@ public class GUI extends JFrame {
         // Change Relationship Type
         JTextField changeSourceClassField = new JTextField();
         JTextField changeDestinationClassField = new JTextField();
-        JComboBox<RelationshipType> changeRelationshipTypeComboBox = new JComboBox<>(RelationshipType.values()); // Combo
-                                                                                                                 // box
-                                                                                                                 // for
-                                                                                                                 // relationship
-                                                                                                                 // type
+        JComboBox<RelationshipType> changeOldRelationshipTypeComboBox = new JComboBox<>(RelationshipType.values()); // Combo
+                                                                                                                    // box
+                                                                                                                    // for
+                                                                                                                    // old
+                                                                                                                    // relationship
+                                                                                                                    // type
+        JComboBox<RelationshipType> changeNewRelationshipTypeComboBox = new JComboBox<>(RelationshipType.values()); // Combo
+                                                                                                                    // box
+                                                                                                                    // for
+                                                                                                                    // new
+                                                                                                                    // relationship
+                                                                                                                    // type
         JButton changeRelationshipButton = new JButton("Change Relationship Type");
 
         changeRelationshipButton.addActionListener(e -> {
             String source = changeSourceClassField.getText().trim();
             String destination = changeDestinationClassField.getText().trim();
-            RelationshipType newType = (RelationshipType) changeRelationshipTypeComboBox.getSelectedItem(); // Get
-                                                                                                            // selected
-                                                                                                            // relationship
-                                                                                                            // type
+            RelationshipType oldType = (RelationshipType) changeOldRelationshipTypeComboBox.getSelectedItem(); // Get
+                                                                                                               // selected
+                                                                                                               // old
+                                                                                                               // relationship
+                                                                                                               // type
+            RelationshipType newType = (RelationshipType) changeNewRelationshipTypeComboBox.getSelectedItem(); // Get
+                                                                                                               // selected
+                                                                                                               // new
+                                                                                                               // relationship
+                                                                                                               // type
 
             if (source.isEmpty() || destination.isEmpty()) {
                 outputArea.append("Source and destination class names cannot be empty.\n");
                 return; // Exit if either field is empty
             }
 
-            if (umlEditor.changeRelationshipType(source, destination, newType)) { // Call the change relationship type
-                                                                                  // method
-                outputArea.append("Relationship type changed between '" + source + "' and '" + destination + "' to "
-                        + newType + ".\n");
+            // Call the change relationship type method with oldType and newType
+            if (umlEditor.changeRelationshipType(source, destination, oldType, newType)) {
+                outputArea.append("Relationship type changed between '" + source + "' and '" + destination + "' from "
+                        + oldType + " to " + newType + ".\n");
                 drawingPanel.repaint(); // Repaint to reflect the updated relationship type
             } else {
                 outputArea.append(
                         "Failed to change relationship type between '" + source + "' and '" + destination + "'.\n");
             }
 
+            // Clear input fields
             changeSourceClassField.setText("");
             changeDestinationClassField.setText("");
         });
@@ -270,8 +285,10 @@ public class GUI extends JFrame {
         panel.add(changeSourceClassField);
         panel.add(new JLabel("Destination Class Name:"));
         panel.add(changeDestinationClassField);
+        panel.add(new JLabel("Old Relationship Type:"));
+        panel.add(changeOldRelationshipTypeComboBox); // Add old relationship type selection
         panel.add(new JLabel("New Relationship Type:"));
-        panel.add(changeRelationshipTypeComboBox); // Add new relationship type selection
+        panel.add(changeNewRelationshipTypeComboBox); // Add new relationship type selection
         panel.add(changeRelationshipButton);
 
         // Add Method
@@ -325,8 +342,11 @@ public class GUI extends JFrame {
             String className = deleteMethodClassField.getText();
             String methodName = deleteMethodField.getText();
 
-            // Call the deleteMethod method with the class name and method name
-            if (umlEditor.deleteMethod(className, methodName)) {
+            // Create an empty LinkedHashSet for parameters (if needed)
+            LinkedHashSet<String> parameters = new LinkedHashSet<>();
+
+            // Call the deleteMethod method with the class name, method name, and parameters
+            if (umlEditor.deleteMethod(className, methodName, parameters)) {
                 outputArea.append("Method '" + methodName + "' deleted from class '" + className + "'.\n");
                 drawingPanel.repaint(); // Repaint to show the updated methods
             } else {
@@ -593,13 +613,15 @@ public class GUI extends JFrame {
                     }
 
                     // Draw methods
-                    int methodY = attributeY + 10; // Start position for methods (after attributes)
-                    for (UmlClass.representation method : umlClass.getMethods()) {
-                        String methodSignature = method.getName() + "(" + String.join(", ", method.getParameters())
-                                + ")";
-                        g.drawString(methodSignature, position.x + 10, methodY);
-                        methodY += 15; // Move down for the next method
-                    }
+                    // int methodY = attributeY + 10; // Start position for methods (after
+                    // attributes)
+                    // for (Method method : umlClass.getMethods()) {
+                    // String methodSignature = method.getName() + "(" + String.join(", ",
+                    // method.getParameters())
+                    // + ")";
+                    // g.drawString(methodSignature, position.x + 10, methodY);
+                    // methodY += 15; // Move down for the next method
+                    // }
                 }
             }
         }
