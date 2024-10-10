@@ -228,6 +228,52 @@ public class GUI extends JFrame {
         panel.add(deleteRelationshipTypeComboBox); // Add relationship type selection
         panel.add(deleteRelationshipButton);
 
+        // Change Relationship Type
+        JTextField changeSourceClassField = new JTextField();
+        JTextField changeDestinationClassField = new JTextField();
+        JComboBox<RelationshipType> changeRelationshipTypeComboBox = new JComboBox<>(RelationshipType.values()); // Combo
+                                                                                                                 // box
+                                                                                                                 // for
+                                                                                                                 // relationship
+                                                                                                                 // type
+        JButton changeRelationshipButton = new JButton("Change Relationship Type");
+
+        changeRelationshipButton.addActionListener(e -> {
+            String source = changeSourceClassField.getText().trim();
+            String destination = changeDestinationClassField.getText().trim();
+            RelationshipType newType = (RelationshipType) changeRelationshipTypeComboBox.getSelectedItem(); // Get
+                                                                                                            // selected
+                                                                                                            // relationship
+                                                                                                            // type
+
+            if (source.isEmpty() || destination.isEmpty()) {
+                outputArea.append("Source and destination class names cannot be empty.\n");
+                return; // Exit if either field is empty
+            }
+
+            if (umlEditor.changeRelationshipType(source, destination, newType)) { // Call the change relationship type
+                                                                                  // method
+                outputArea.append("Relationship type changed between '" + source + "' and '" + destination + "' to "
+                        + newType + ".\n");
+                drawingPanel.repaint(); // Repaint to reflect the updated relationship type
+            } else {
+                outputArea.append(
+                        "Failed to change relationship type between '" + source + "' and '" + destination + "'.\n");
+            }
+
+            changeSourceClassField.setText("");
+            changeDestinationClassField.setText("");
+        });
+
+        // Adding components to the panel
+        panel.add(new JLabel("Source Class Name:"));
+        panel.add(changeSourceClassField);
+        panel.add(new JLabel("Destination Class Name:"));
+        panel.add(changeDestinationClassField);
+        panel.add(new JLabel("New Relationship Type:"));
+        panel.add(changeRelationshipTypeComboBox); // Add new relationship type selection
+        panel.add(changeRelationshipButton);
+
         // Add Method
         JTextField addMethodClassField = new JTextField();
         JTextField methodField = new JTextField();
@@ -270,6 +316,34 @@ public class GUI extends JFrame {
         panel.add(new JLabel("Parameters (comma-separated):")); // Label for parameters
         panel.add(parametersField);
         panel.add(addMethodButton);
+
+        // Delete Method
+        JTextField deleteMethodClassField = new JTextField();
+        JTextField deleteMethodField = new JTextField();
+        JButton deleteMethodButton = new JButton("Delete Method");
+        deleteMethodButton.addActionListener(e -> {
+            String className = deleteMethodClassField.getText();
+            String methodName = deleteMethodField.getText();
+
+            // Call the deleteMethod method with the class name and method name
+            if (umlEditor.deleteMethod(className, methodName)) {
+                outputArea.append("Method '" + methodName + "' deleted from class '" + className + "'.\n");
+                drawingPanel.repaint(); // Repaint to show the updated methods
+            } else {
+                outputArea.append("Failed to delete method '" + methodName + "' from class '" + className + "'.\n");
+            }
+
+            // Clear the input fields
+            deleteMethodClassField.setText("");
+            deleteMethodField.setText("");
+        });
+
+        // Add components to the panel for deleting a method
+        panel.add(new JLabel("Class Name for Deletion:"));
+        panel.add(deleteMethodClassField);
+        panel.add(new JLabel("Method Name to Delete:"));
+        panel.add(deleteMethodField);
+        panel.add(deleteMethodButton);
 
         // List Classes and Relationships
         JButton listClassesButton = new JButton("List Classes");
@@ -517,6 +591,15 @@ public class GUI extends JFrame {
                         g.drawString(attribute, position.x + 10, attributeY);
                         attributeY += 15; // Move down for the next attribute
                     }
+
+                    // Draw methods
+                    int methodY = attributeY + 10; // Start position for methods (after attributes)
+                    for (UmlClass.representation method : umlClass.getMethods()) {
+                        String methodSignature = method.getName() + "(" + String.join(", ", method.getParameters())
+                                + ")";
+                        g.drawString(methodSignature, position.x + 10, methodY);
+                        methodY += 15; // Move down for the next method
+                    }
                 }
             }
         }
@@ -533,7 +616,8 @@ public class GUI extends JFrame {
         private int getBoxHeight(String className) {
             UmlClass umlClass = umlEditor.getClass(className);
             int attributeCount = (umlClass != null) ? umlClass.getFields().size() : 0;
-            return 50 + (attributeCount * 15); // Base height + dynamic attribute height
+            int methodCount = (umlClass != null) ? umlClass.getMethods().size() : 0; // Get the number of methods
+            return 50 + (attributeCount * 15) + (methodCount * 15); // Base height + dynamic attribute and method height
         }
 
     }
