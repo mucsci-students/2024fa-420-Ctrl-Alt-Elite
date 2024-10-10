@@ -401,6 +401,7 @@ public class CLI {
         System.out.println("change-parameter - Replace all parameters for a method");
         System.out.println("add-relationship - Add a relationship between classes");
         System.out.println("delete-relationship - Delete a relationship between classes");
+        System.out.println("change-relationship-type - Change the type of relationship between classes");
         System.out.println("list-classes - List all classes and their methods");
         System.out.println("list-class - List the contents of a specified class");
         System.out.println("list-relationships - List all relationships");
