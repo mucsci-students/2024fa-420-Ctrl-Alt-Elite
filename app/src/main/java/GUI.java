@@ -613,15 +613,11 @@ public class GUI extends JFrame {
                     }
 
                     // Draw methods
-                    // int methodY = attributeY + 10; // Start position for methods (after
-                    // attributes)
-                    // for (Method method : umlClass.getMethods()) {
-                    // String methodSignature = method.getName() + "(" + String.join(", ",
-                    // method.getParameters())
-                    // + ")";
-                    // g.drawString(methodSignature, position.x + 10, methodY);
-                    // methodY += 15; // Move down for the next method
-                    // }
+                    int methodY = attributeY + 10; // Start position for methods (after attributes)
+                    for (String methodSignature : umlClass.getMethods()) {
+                        g.drawString(methodSignature, position.x + 10, methodY);
+                        methodY += 15; // Move down for the next method
+                    }
                 }
             }
         }
