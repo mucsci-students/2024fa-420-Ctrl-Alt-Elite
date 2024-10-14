@@ -1,6 +1,11 @@
+package View;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Scanner;
+
+import Controller.UmlEditor;
+import Model.JsonUtils;
+import Model.RelationshipType;
 
 /**
  * The Main class provides a command-line interface for interacting with the UML

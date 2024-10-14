@@ -1,4 +1,11 @@
+package View;
 import javax.swing.*;
+
+import Controller.UmlEditor;
+import Model.JsonUtils;
+import Model.RelationshipType;
+import Model.UmlClass;
+import Model.UmlRelationship;
 
 import java.awt.*;
 import java.util.HashMap;

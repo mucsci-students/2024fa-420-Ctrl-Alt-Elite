@@ -1,19 +1,9 @@
+package Model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Enum to define types of relationships.
- * These include AGGREGATION, COMPOSITION, INHERITANCE, and REALIZATION.
- */
-enum RelationshipType {
-    AGGREGATION,
-    COMPOSITION,
-    INHERITANCE,
-    REALIZATION
-}
-
 // Class representing a Relationship between two entities (e.g., classes).
-class UmlRelationship {
+public class UmlRelationship {
     // Source entity (could be a class or any other entity) in the relationship.
     private String source;
     
