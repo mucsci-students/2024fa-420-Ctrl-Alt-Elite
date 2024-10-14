@@ -39,7 +39,7 @@ public class UmlClass {
         this.name = name;
     }
 
-   /**
+    /**
      * Gets the fields of the UML class.
      * 
      * @return A collection of the fields in the UML class.
@@ -49,33 +49,32 @@ public class UmlClass {
     }
 
     /**
- * Gets the list of methods of the UML class in a readable format.
- * 
- * @return A list of strings representing the methods and their parameters.
- */
-public ArrayList<String> getMethods() {
-    ArrayList<String> methodsList = new ArrayList<>();
-    
-    for (Method method : methods) {
-        StringBuilder methodString = new StringBuilder();
-        methodString.append(method.getName()).append("(");
-        
-        // Add method parameters
-        Iterator<String> paramIterator = method.getParameters().iterator();
-        if (paramIterator.hasNext()) {
-            methodString.append(paramIterator.next());
-        }
-        while (paramIterator.hasNext()) {
-            methodString.append(", ").append(paramIterator.next());
-        }
-        
-        methodString.append(")");
-        methodsList.add(methodString.toString());
-    }
-    
-    return methodsList;
-}
+     * Gets the list of methods of the UML class in a readable format.
+     * 
+     * @return A list of strings representing the methods and their parameters.
+     */
+    public ArrayList<String> getMethods() {
+        ArrayList<String> methodsList = new ArrayList<>();
 
+        for (Method method : methods) {
+            StringBuilder methodString = new StringBuilder();
+            methodString.append(method.getName()).append("(");
+
+            // Add method parameters
+            Iterator<String> paramIterator = method.getParameters().iterator();
+            if (paramIterator.hasNext()) {
+                methodString.append(paramIterator.next());
+            }
+            while (paramIterator.hasNext()) {
+                methodString.append(", ").append(paramIterator.next());
+            }
+
+            methodString.append(")");
+            methodsList.add(methodString.toString());
+        }
+
+        return methodsList;
+    }
 
     /**
      * Adds a field to the class.
@@ -146,13 +145,13 @@ public ArrayList<String> getMethods() {
         }
 
         /**
-     * Gets the fields of the UML class.
-     * 
-     * @return A collection of the fields in the UML class.
-     */
-    public LinkedHashSet<String> getFields() {
-        return new LinkedHashSet<>(fields); // Return a copy to prevent modification
-    }
+         * Gets the fields of the UML class.
+         * 
+         * @return A collection of the fields in the UML class.
+         */
+        public LinkedHashSet<String> getFields() {
+            return new LinkedHashSet<>(fields); // Return a copy to prevent modification
+        }
 
         /**
          * Changes the name of the method.
