@@ -75,8 +75,6 @@ public class GUI extends JFrame {
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(0, 1));
-        JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridLayout(0, 1));
 
         // Add Class
         JTextField classNameField = new JTextField();
