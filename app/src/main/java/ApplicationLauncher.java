@@ -1,5 +1,4 @@
-
-import java.util.*;
+import java.util.Scanner;
 
 import View.CLI;
 import View.GUI;
@@ -23,7 +22,7 @@ public class ApplicationLauncher {
             default:
                 System.out.println("Invalid choice. Please enter 1 or 2.");
                 break;
-        }   
+        }
         scanner.close();
     }
 }

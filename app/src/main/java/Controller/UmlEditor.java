@@ -5,11 +5,13 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import Model.RelationshipType;
 import Model.UmlClass;
 import Model.UmlRelationship;
-import Model.RelationshipType;
 
 public class UmlEditor {
+    
+    //TODO move to model
     /** A map to store UML classes by their name */
     private Map<String, UmlClass> classes;
 
@@ -34,13 +36,6 @@ public class UmlEditor {
         return classes.get(name);
     }
 
-    /**
-     * Adds a new class if it doesn't already exist and the name is not null or
-     * empty.
-     * 
-     * @param name The name of the new class.
-     * @return {@code true} if the class was added, {@code false} otherwise.
-     */
     /**
      * Adds a new class if it doesn't already exist and the name is not null or empty.
      * 
@@ -289,29 +284,27 @@ public class UmlEditor {
     
     
     // Existing method that checks only source and destination
-public UmlRelationship findRelationship(String source, String destination) {
-    for (UmlRelationship relationship : relationships) {
-        if (relationship.getSource().equals(source) &&
-            relationship.getDestination().equals(destination)) {
-            return relationship; // Return the found relationship
+    public UmlRelationship findRelationship(String source, String destination) {
+        for (UmlRelationship relationship : relationships) {
+            if (relationship.getSource().equals(source) &&
+                relationship.getDestination().equals(destination)) {
+                return relationship; // Return the found relationship
+            }
         }
+        return null; // Return null if no relationship is found
     }
-    return null; // Return null if no relationship is found
-}
 
-// New overloaded method that checks source, destination, and type
-public UmlRelationship findRelationship(String source, String destination, RelationshipType type) {
-    for (UmlRelationship relationship : relationships) {
-        if (relationship.getSource().equals(source) &&
-            relationship.getDestination().equals(destination) &&
-            relationship.getType() == type) { // Check for relationship type
-            return relationship; // Return the found relationship
+    // New overloaded method that checks source, destination, and type
+    public UmlRelationship findRelationship(String source, String destination, RelationshipType type) {
+        for (UmlRelationship relationship : relationships) {
+            if (relationship.getSource().equals(source) &&
+                relationship.getDestination().equals(destination) &&
+                relationship.getType() == type) { // Check for relationship type
+                return relationship; // Return the found relationship
+            }
         }
+        return null; // Return null if no relationship is found
     }
-    return null; // Return null if no relationship is found
-}
-
-    
 
     /**
      * Lists all UML classes.
@@ -381,12 +374,12 @@ public UmlRelationship findRelationship(String source, String destination, Relat
         this.relationships = relationships;
     }
 
- // Retrieves the fields of a specified UML class by name
- public Set<String> getFields(String className) {
-    UmlClass umlClass = classes.get(className);
-    if (umlClass != null) {
-        return umlClass.getFields(); // Assuming getFields() returns a Set<String> of field names
+    // Retrieves the fields of a specified UML class by name
+    public Set<String> getFields(String className) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.getFields(); // Assuming getFields() returns a Set<String> of field names
+        }
+        return null; // Return null if the class does not exist
     }
-    return null; // Return null if the class does not exist
-}
 }
