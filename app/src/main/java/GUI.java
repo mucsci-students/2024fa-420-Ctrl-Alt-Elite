@@ -547,16 +547,23 @@ public class GUI extends JFrame {
                                     destinationPosition.x + 50,
                                     destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset);
                             drawArrow(g, destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset); // Arrowhead
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset,
+                                    "inheritance"); // Pass "inheritance" for arrowhead style
                             break;
 
-                        case REALIZATION:
+                            case REALIZATION:
                             g2d.setColor(Color.GREEN); // Color for realization
+                            // Draw dotted line for realization
+                            float[] dottedPattern = { 2f, 5f }; // Dotted line pattern
+                            g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f,
+                                    dottedPattern, 0f));
                             g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25 + offset,
                                     destinationPosition.x + 50,
                                     destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset);
+                            g2d.setStroke(new BasicStroke()); // Reset stroke to solid
                             drawArrow(g, destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset); // Arrowhead
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset,
+                                    "realization"); // Pass "realization" for arrowhead style
                             break;
 
                         case AGGREGATION:
@@ -570,7 +577,8 @@ public class GUI extends JFrame {
                                     destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset);
                             g2d.setStroke(new BasicStroke()); // Reset stroke to solid
                             drawArrow(g, destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset); // Arrowhead
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset,
+                                    "aggregation"); // Pass "aggregation" for arrowhead style
                             break;
 
                         case COMPOSITION:
@@ -579,7 +587,8 @@ public class GUI extends JFrame {
                                     destinationPosition.x + 50,
                                     destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset);
                             drawArrow(g, destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset); // Arrowhead
+                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset,
+                                    "composition"); // Pass "composition" for arrowhead style
                             break;
                     }
 
@@ -622,12 +631,46 @@ public class GUI extends JFrame {
             }
         }
 
-        // Method to draw an arrowhead
-        private void drawArrow(Graphics g, int x, int y) {
+        // Method to draw an arrowhead for different relationship types
+        private void drawArrow(Graphics g, int x, int y, String relationshipType) {
             int arrowSize = 10; // Size of the arrowhead
-            int[] xPoints = { x, x - arrowSize, x + arrowSize };
-            int[] yPoints = { y, y - arrowSize, y - arrowSize };
-            g.fillPolygon(xPoints, yPoints, 3); // Draw filled polygon for arrowhead
+
+            switch (relationshipType.toLowerCase()) {
+                case "inheritance":
+                    // Open triangle arrowhead for inheritance
+                    int[] inhXPoints = { x, x - arrowSize, x + arrowSize };
+                    int[] inhYPoints = { y, y - arrowSize, y - arrowSize };
+                    g.drawPolygon(inhXPoints, inhYPoints, 3); // Draw only the outline
+                    break;
+
+                case "realization":
+                    // Open triangle arrowhead for realization, similar to inheritance
+                    int[] realXPoints = { x, x - arrowSize, x + arrowSize };
+                    int[] realYPoints = { y, y - arrowSize, y - arrowSize };
+                    g.drawPolygon(realXPoints, realYPoints, 3); // Draw only the outline
+                    break;
+
+                case "aggregation":
+                    // Hollow diamond for aggregation
+                    int[] aggXPoints = { x, x - arrowSize, x, x + arrowSize };
+                    int[] aggYPoints = { y, y - arrowSize, y - (2 * arrowSize), y - arrowSize };
+                    g.drawPolygon(aggXPoints, aggYPoints, 4); // Draw diamond shape
+                    break;
+
+                case "composition":
+                    // Filled diamond for composition
+                    int[] compXPoints = { x, x - arrowSize, x, x + arrowSize };
+                    int[] compYPoints = { y, y - arrowSize, y - (2 * arrowSize), y - arrowSize };
+                    g.fillPolygon(compXPoints, compYPoints, 4); // Fill diamond shape
+                    break;
+
+                default:
+                    // Simple filled triangle arrowhead for unrecognized relationships (association)
+                    int[] defaultXPoints = { x, x - arrowSize, x + arrowSize };
+                    int[] defaultYPoints = { y, y - arrowSize, y - arrowSize };
+                    g.fillPolygon(defaultXPoints, defaultYPoints, 3);
+                    break;
+            }
         }
 
         // Helper method to get the box height based on the class name
