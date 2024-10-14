@@ -7,7 +7,7 @@ import java.util.Set;
 public class UmlEditor {
     /** A map to store UML classes by their name */
     private Map<String, UmlClass> classes;
-
+    
     /** A set to store relationships between UML classes */
     private Set<UmlRelationship> relationships;
 
@@ -32,6 +32,12 @@ public class UmlEditor {
     /**
      * Adds a new class if it doesn't already exist and the name is not null or
      * empty.
+     * 
+     * @param name The name of the new class.
+     * @return {@code true} if the class was added, {@code false} otherwise.
+     */
+    /**
+     * Adds a new class if it doesn't already exist and the name is not null or empty.
      * 
      * @param name The name of the new class.
      * @return {@code true} if the class was added, {@code false} otherwise.
@@ -61,8 +67,8 @@ public class UmlEditor {
     }
 
     /**
-     * Rename a class to a new name if it doesn't already exist
-     * and the name is not null or empty.
+     * Rename a class to a new name if it doesn't already exist 
+     *  and the name is not null or empty.
      * 
      * @param oldName The class's old name.
      * @param newName The class's new name.
@@ -131,7 +137,7 @@ public class UmlEditor {
     /**
      * Rename a field in a class.
      * 
-     * @param className    The name of the class in which the field will be renamed.
+     * @param className The name of the class in which the field will be renamed.
      * @param oldFieldName The old name of the field.
      * @param newFieldName The new name of the field.
      * @return {@code true} if the field was renamed, {@code false} otherwise.
@@ -143,13 +149,13 @@ public class UmlEditor {
         }
         return false;
     }
-
+    
     /**
      * Adds a method to a specified class.
      * 
-     * @param className  The name of the class in which the method will be added.
+     * @param className The name of the class in which the method will be added.
      * @param methodName The name of the method.
-     * @param paraList   The list of parameters that belong to the method.
+     * @param paraList The list of parameters that belong to the method.
      * @return {@code true} if the method was added, {@code false} otherwise.
      */
     public boolean addMethod(String className, String methodName, LinkedHashSet<String> paraList) {
@@ -163,9 +169,9 @@ public class UmlEditor {
     /**
      * Deletes a method from a specified class.
      * 
-     * @param className  The name of the class in which the method will be deleted.
+     * @param className The name of the class in which the method will be deleted.
      * @param methodName The name of the method.
-     * @param paraList   The list of parameters that belong to the method.
+     * @param paraList The list of parameters that belong to the method.
      * @return {@code true} if the method was deleted, {@code false} otherwise.
      */
     public boolean deleteMethod(String className, String methodName, LinkedHashSet<String> paraList) {
@@ -180,9 +186,9 @@ public class UmlEditor {
      * Renames a method in a specified class.
      * 
      * @param className The name of the class in which the method will be renamed.
-     * @param oldName   The old name of the method.
-     * @param paraList  The list of parameters that belong to the method.
-     * @param newName   The new name of the method.
+     * @param oldName The old name of the method.
+     * @param paraList The list of parameters that belong to the method.
+     * @param newName The new name of the method.
      * @return {@code true} if the method was renamed, {@code false} otherwise.
      */
     public boolean renameMethod(String className, String oldName, LinkedHashSet<String> paraList, String newName) {
@@ -196,26 +202,26 @@ public class UmlEditor {
     /**
      * Remove a parameter, or multiple, from a method.
      * 
-     * @param className  The name of the class in which the method belongs.
+     * @param className The name of the class in which the method belongs.
      * @param methodName The name of the method in which the parameters belong.
-     * @param paraName   The name of the parameter to remove.
-     * @return {@code true} if the parameter was removed, {@code false} otherwise.
+     * @param paraName The name of the parameter to remove.
+     * @return {@code true} if the parameter was removed, {@code false} otherwise. 
      */
     public boolean removeParameter(String className, String methodName, String paraName) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
             return umlClass.removeParameter(methodName, paraName);
         }
-        return false;
+        return false; 
     }
 
     /**
      * Replace the list of parameters of a certain method with a new one.
      * 
-     * @param className  The name of the class in which the parameters belong.
+     * @param className The name of the class in which the parameters belong.
      * @param methodName The name of the method in which the parameters belong.
      * @param parameters The new list of parameters for the method.
-     * @return {@code true} if the parameters were changed, {@code false} otherwise.
+     * @return {@code true} if the parameters were changed, {@code false} otherwise. 
      */
     public boolean changeParameters(String className, String methodName, LinkedHashSet<String> parameters) {
         UmlClass umlClass = classes.get(className);
@@ -228,10 +234,10 @@ public class UmlEditor {
     /**
      * Adds a relationship between two classes, if both exist and are not the same.
      * 
-     * @param source      The source of the relationship.
+     * @param source The source of the relationship.
      * @param destination The destination of the relationship.
-     * @param type        The type of relationship.
-     * @return {@code true} if the relationship was added, {@code false} otherwise.
+     * @param type The type of relationship.
+     * @return {@code true} if the relationship was added, {@code false} otherwise. 
      */
     public boolean addRelationship(String source, String destination, RelationshipType type) {
         if (classes.containsKey(source) && classes.containsKey(destination)) {
@@ -243,66 +249,14 @@ public class UmlEditor {
     /**
      * Deletes a relationship between two classes.
      * 
-     * @param source      The source of the relationship.
+     * @param source The source of the relationship.
      * @param destination The destination of the relationship.
-     * @param type        The type of relationship.
-     * @return {@code true} if the relationship was deleted, {@code false}
-     *         otherwise.
+     * @param type The type of relationship.
+     * @return {@code true} if the relationship was deleted, {@code false} otherwise. 
      */
     public boolean deleteRelationship(String source, String destination, RelationshipType type) {
         return relationships.remove(new UmlRelationship(source, destination, type));
     }
-
-    public boolean changeRelationshipType(String source, String destination, RelationshipType currentType, RelationshipType newType) {
-        // Find the relationship with the current type
-        UmlRelationship relationship = findRelationship(source, destination, currentType);
-    
-        // Check if the relationship exists
-        if (relationship == null) {
-            System.out.println("Relationship not found between '" + source + "' and '" + destination + "'.");
-            return false; // Relationship not found
-        }
-    
-        // Check if the new type already exists for the same relationship
-        if (findRelationship(source, destination, newType) != null) {
-            System.out.println("A relationship of type '" + newType + "' already exists between '" + source + "' and '" + destination + "'.");
-            return false; // Prevent changing to an existing type
-        }
-    
-        // Change the relationship type
-        relationship.setType(newType); // Update the relationship type
-        System.out.println("Relationship between '" + source + "' and '" + destination + "' has been changed from '"
-                + currentType + "' to '" + newType + "'.");
-        return true; // Change successful
-    }
-    
-    
-    
-
-    // Existing method that checks only source and destination
-public UmlRelationship findRelationship(String source, String destination) {
-    for (UmlRelationship relationship : relationships) {
-        if (relationship.getSource().equals(source) &&
-            relationship.getDestination().equals(destination)) {
-            return relationship; // Return the found relationship
-        }
-    }
-    return null; // Return null if no relationship is found
-}
-
-// New overloaded method that checks source, destination, and type
-public UmlRelationship findRelationship(String source, String destination, RelationshipType type) {
-    for (UmlRelationship relationship : relationships) {
-        if (relationship.getSource().equals(source) &&
-            relationship.getDestination().equals(destination) &&
-            relationship.getType() == type) { // Check for relationship type
-            return relationship; // Return the found relationship
-        }
-    }
-    return null; // Return null if no relationship is found
-}
-
-    
 
     /**
      * Lists all UML classes.
