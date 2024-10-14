@@ -53,14 +53,88 @@ public class UmlClassTest {
 /*----------------------------------------------------------------------------------------------------------------*/
 
     //TODO addField tests
+/**
+     * Test that a field can be successfully added.
+     */
+    @Test
+    @DisplayName("AddField: Add a field to the class")
+    public void testAddField() {
+        assertTrue(umlClass.addField("Field1"));
+    }
+
+    /**
+     * Test adding a field that already exists, should fail.
+     */
+    @Test
+    @DisplayName("AddField: Add a duplicate field, failure test")
+    public void testAddFieldDuplicate() {
+        umlClass.addField("Field1");
+        assertFalse(umlClass.addField("Field1"));
+    }
+
+    /**
+     * Test adding a field with an empty name, should fail.
+     */
+    @Test
+    @DisplayName("AddField: Add a field with an empty name, failure test")
+    public void testAddFieldEmptyName() {
+        assertFalse(umlClass.addField(""));
+    }
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
     //TODO deleteField tests
+/**
+     * Test that a field can be successfully deleted.
+     */
+    @Test
+    @DisplayName("DeleteField: Delete a field from the class")
+    public void testDeleteField() {
+        umlClass.addField("Field1");
+        assertTrue(umlClass.deleteField("Field1"));
+    }
+
+    /**
+     * Test deleting a field that does not exist, should fail.
+     */
+    @Test
+    @DisplayName("DeleteField: Delete a field that does not exist, failure test")
+    public void testDeleteFieldNotExist() {
+        assertFalse(umlClass.deleteField("Field1"));
+    }
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
     //TODO renameField tests
+/**
+     * Test renaming a field.
+     */
+    @Test
+    @DisplayName("RenameField: Rename a field in the class")
+    public void testRenameField() {
+        umlClass.addField("Field1");
+        assertTrue(umlClass.renameField("Field1", "Field2"));
+    }
+
+    /**
+     * Test renaming a field that does not exist, should fail.
+     */
+    @Test
+    @DisplayName("RenameField: Rename a field that does not exist, failure test")
+    public void testRenameFieldNotExist() {
+        assertFalse(umlClass.renameField("Field1", "Field2"));
+    }
+
+    /**
+     * Test renaming a field to an empty name, should fail.
+     */
+    @Test
+    @DisplayName("RenameField: Rename a field to an empty name, failure test")
+    public void testRenameFieldEmptyName() {
+        umlClass.addField("Field1");
+        assertFalse(umlClass.renameField("Field1", ""));
+    }
+
     
 /*----------------------------------------------------------------------------------------------------------------*/
 
