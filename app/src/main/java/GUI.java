@@ -1,5 +1,4 @@
 import javax.swing.*;
-
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Arrays;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GUI extends JFrame {
     private UmlEditor umlEditor;
@@ -19,6 +20,8 @@ public class GUI extends JFrame {
 
     // To keep track of class positions
     private Map<String, Point> classPositions;
+    private JPanel collapsiblePanel; // Panel for the output area
+    private JButton toggleButton; // Button to collapse/expand
 
     public GUI() {
         umlEditor = new UmlEditor();
@@ -28,16 +31,52 @@ public class GUI extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        outputArea = new JTextArea();
-        outputArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(outputArea);
-        add(scrollPane, BorderLayout.WEST); // Moved to the left
-
         drawingPanel = new DrawingPanel(); // Create the drawing panel
         add(drawingPanel, BorderLayout.CENTER); // Add it to the center
 
+        // Initialize the output area and scroll pane
+        outputArea = new JTextArea();
+        outputArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(outputArea);
+
+        // Create a collapsible panel for the output area
+        collapsiblePanel = new JPanel();
+        collapsiblePanel.setLayout(new BorderLayout());
+
+        // Create the toggle button
+        toggleButton = new JButton("Collapse Output");
+        toggleButton.addActionListener(new ActionListener() {
+            private boolean isCollapsed = false;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (isCollapsed) {
+                    // Expand the output area
+                    collapsiblePanel.add(scrollPane, BorderLayout.CENTER);
+                    toggleButton.setText("Collapse Output");
+                    isCollapsed = false;
+                } else {
+                    // Collapse the output area
+                    collapsiblePanel.remove(scrollPane);
+                    toggleButton.setText("Expand Output");
+                    isCollapsed = true;
+                }
+                collapsiblePanel.revalidate(); // Refresh the panel to show changes
+                collapsiblePanel.repaint(); // Repaint the panel
+            }
+        });
+
+        // Add the button and scroll pane to the collapsible panel
+        collapsiblePanel.add(toggleButton, BorderLayout.NORTH);
+        collapsiblePanel.add(scrollPane, BorderLayout.CENTER);
+
+        // Add the collapsible panel to the frame
+        add(collapsiblePanel, BorderLayout.WEST);
+
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(0, 1));
+        JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridLayout(0, 1));
 
         // Add Class
         JTextField classNameField = new JTextField();
@@ -149,10 +188,7 @@ public class GUI extends JFrame {
         // Add Relationship
         JTextField sourceClassField = new JTextField();
         JTextField destinationClassField = new JTextField();
-        JComboBox<RelationshipType> relationshipTypeComboBox = new JComboBox<>(RelationshipType.values()); // Combo box
-                                                                                                           // for
-                                                                                                           // relationship
-                                                                                                           // type
+        JComboBox<RelationshipType> relationshipTypeComboBox = new JComboBox<>(RelationshipType.values());
         JButton addRelationshipButton = new JButton("Add Relationship");
 
         addRelationshipButton.addActionListener(e -> {
@@ -160,7 +196,6 @@ public class GUI extends JFrame {
             String destination = destinationClassField.getText().trim(); // Trim whitespace
             RelationshipType type = (RelationshipType) relationshipTypeComboBox.getSelectedItem(); // Get selected
                                                                                                    // relationship type
-
             if (source.isEmpty() || destination.isEmpty()) {
                 outputArea.append("Source and destination class names cannot be empty.\n");
                 return; // Exit if either field is empty
@@ -190,20 +225,14 @@ public class GUI extends JFrame {
         // Delete Relationship
         JTextField deleteSourceClassField = new JTextField();
         JTextField deleteDestinationClassField = new JTextField();
-        JComboBox<RelationshipType> deleteRelationshipTypeComboBox = new JComboBox<>(RelationshipType.values()); // Combo
-                                                                                                                 // box
-                                                                                                                 // for
-                                                                                                                 // relationship
-                                                                                                                 // type
+        JComboBox<RelationshipType> deleteRelationshipTypeComboBox = new JComboBox<>(RelationshipType.values());
         JButton deleteRelationshipButton = new JButton("Delete Relationship");
-
         deleteRelationshipButton.addActionListener(e -> {
             String source = deleteSourceClassField.getText().trim();
             String destination = deleteDestinationClassField.getText().trim();
             RelationshipType type = (RelationshipType) deleteRelationshipTypeComboBox.getSelectedItem(); // Get selected
                                                                                                          // relationship
                                                                                                          // type
-
             if (source.isEmpty() || destination.isEmpty()) {
                 outputArea.append("Source and destination class names cannot be empty.\n");
                 return; // Exit if either field is empty
@@ -232,34 +261,15 @@ public class GUI extends JFrame {
         // Change Relationship Type
         JTextField changeSourceClassField = new JTextField();
         JTextField changeDestinationClassField = new JTextField();
-        JComboBox<RelationshipType> changeOldRelationshipTypeComboBox = new JComboBox<>(RelationshipType.values()); // Combo
-                                                                                                                    // box
-                                                                                                                    // for
-                                                                                                                    // old
-                                                                                                                    // relationship
-                                                                                                                    // type
-        JComboBox<RelationshipType> changeNewRelationshipTypeComboBox = new JComboBox<>(RelationshipType.values()); // Combo
-                                                                                                                    // box
-                                                                                                                    // for
-                                                                                                                    // new
-                                                                                                                    // relationship
-                                                                                                                    // type
+        JComboBox<RelationshipType> changeOldRelationshipTypeComboBox = new JComboBox<>(RelationshipType.values());
+        JComboBox<RelationshipType> changeNewRelationshipTypeComboBox = new JComboBox<>(RelationshipType.values());
         JButton changeRelationshipButton = new JButton("Change Relationship Type");
 
         changeRelationshipButton.addActionListener(e -> {
             String source = changeSourceClassField.getText().trim();
             String destination = changeDestinationClassField.getText().trim();
-            RelationshipType oldType = (RelationshipType) changeOldRelationshipTypeComboBox.getSelectedItem(); // Get
-                                                                                                               // selected
-                                                                                                               // old
-                                                                                                               // relationship
-                                                                                                               // type
-            RelationshipType newType = (RelationshipType) changeNewRelationshipTypeComboBox.getSelectedItem(); // Get
-                                                                                                               // selected
-                                                                                                               // new
-                                                                                                               // relationship
-                                                                                                               // type
-
+            RelationshipType oldType = (RelationshipType) changeOldRelationshipTypeComboBox.getSelectedItem();
+            RelationshipType newType = (RelationshipType) changeNewRelationshipTypeComboBox.getSelectedItem();
             if (source.isEmpty() || destination.isEmpty()) {
                 outputArea.append("Source and destination class names cannot be empty.\n");
                 return; // Exit if either field is empty
@@ -551,7 +561,7 @@ public class GUI extends JFrame {
                                     "inheritance"); // Pass "inheritance" for arrowhead style
                             break;
 
-                            case REALIZATION:
+                        case REALIZATION:
                             g2d.setColor(Color.GREEN); // Color for realization
                             // Draw dotted line for realization
                             float[] dottedPattern = { 2f, 5f }; // Dotted line pattern
