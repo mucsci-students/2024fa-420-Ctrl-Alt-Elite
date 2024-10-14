@@ -20,6 +20,23 @@ public class UmlEditor {
     }
 
     /**
+     * Retrieves a UML class by name.
+     * 
+     * @param name The name of the UML class to retrieve.
+     * @return The UML class if found, {@code null} otherwise.
+     */
+    public UmlClass getClass(String name) {
+        return classes.get(name);
+    }
+
+    /**
+     * Adds a new class if it doesn't already exist and the name is not null or
+     * empty.
+     * 
+     * @param name The name of the new class.
+     * @return {@code true} if the class was added, {@code false} otherwise.
+     */
+    /**
      * Adds a new class if it doesn't already exist and the name is not null or empty.
      * 
      * @param name The name of the new class.
@@ -27,7 +44,7 @@ public class UmlEditor {
      */
     public boolean addClass(String name) {
         if (name == null || name.isEmpty() || classes.containsKey(name)) {
-            return false;  // Return false if name is null, empty, or class already exists
+            return false; // Return false if name is null, empty, or class already exists
         }
         classes.put(name, new UmlClass(name));
         return true;
@@ -60,18 +77,18 @@ public class UmlEditor {
     public boolean renameClass(String oldName, String newName) {
         // Check for null or empty newName and if oldName exists
         if (oldName == null || newName == null || newName.isEmpty() || !classes.containsKey(oldName)) {
-            return false;  // Invalid conditions
+            return false; // Invalid conditions
         }
-        
+
         // Check if the new name already exists
         if (classes.containsKey(newName)) {
-            return false;  // New name already exists
+            return false; // New name already exists
         }
-        
+
         UmlClass umlClass = classes.remove(oldName);
         umlClass.setName(newName);
         classes.put(newName, umlClass);
-        
+
         // Update relationships with the new class name
         Set<UmlRelationship> updatedRelationships = new HashSet<>();
         for (UmlRelationship rel : relationships) {
@@ -226,7 +243,7 @@ public class UmlEditor {
         if (classes.containsKey(source) && classes.containsKey(destination)) {
             return relationships.add(new UmlRelationship(source, destination, type));
         }
-        return false;  // One or both classes do not exist
+        return false; // One or both classes do not exist
     }
 
     /**
@@ -308,4 +325,13 @@ public class UmlEditor {
     public void setRelationships(Set<UmlRelationship> relationships) {
         this.relationships = relationships;
     }
+
+ // Retrieves the fields of a specified UML class by name
+ public Set<String> getFields(String className) {
+    UmlClass umlClass = classes.get(className);
+    if (umlClass != null) {
+        return umlClass.getFields(); // Assuming getFields() returns a Set<String> of field names
+    }
+    return null; // Return null if the class does not exist
+}
 }
