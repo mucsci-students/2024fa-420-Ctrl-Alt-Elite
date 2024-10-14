@@ -39,6 +39,44 @@ public class UmlClass {
         this.name = name;
     }
 
+   /**
+     * Gets the fields of the UML class.
+     * 
+     * @return A collection of the fields in the UML class.
+     */
+    public LinkedHashSet<String> getFields() {
+        return new LinkedHashSet<>(fields); // Return a copy to prevent modification
+    }
+
+    /**
+ * Gets the list of methods of the UML class in a readable format.
+ * 
+ * @return A list of strings representing the methods and their parameters.
+ */
+public ArrayList<String> getMethods() {
+    ArrayList<String> methodsList = new ArrayList<>();
+    
+    for (Method method : methods) {
+        StringBuilder methodString = new StringBuilder();
+        methodString.append(method.getName()).append("(");
+        
+        // Add method parameters
+        Iterator<String> paramIterator = method.getParameters().iterator();
+        if (paramIterator.hasNext()) {
+            methodString.append(paramIterator.next());
+        }
+        while (paramIterator.hasNext()) {
+            methodString.append(", ").append(paramIterator.next());
+        }
+        
+        methodString.append(")");
+        methodsList.add(methodString.toString());
+    }
+    
+    return methodsList;
+}
+
+
     /**
      * Adds a field to the class.
      * 
@@ -66,7 +104,8 @@ public class UmlClass {
      * 
      * @param oldName The old name of the class.
      * @param newName The new name of the class.
-     * @return {@code true} if the field was renamed, {@code false} if the field could not me renamed.
+     * @return {@code true} if the field was renamed, {@code false} if the field
+     *         could not me renamed.
      */
     public boolean renameField(String oldName, String newName) {
         if (fields.contains(oldName) && !fields.contains(newName)) {
@@ -89,7 +128,7 @@ public class UmlClass {
         /**
          * Creates a new method with a list of parameters.
          * 
-         * @param name The name of the method as provided by the user.
+         * @param name       The name of the method as provided by the user.
          * @param parameters The parameters that belong to the method.
          */
         public Method(String name, LinkedHashSet<String> parameters) {
@@ -105,6 +144,15 @@ public class UmlClass {
         public String getName() {
             return name;
         }
+
+        /**
+     * Gets the fields of the UML class.
+     * 
+     * @return A collection of the fields in the UML class.
+     */
+    public LinkedHashSet<String> getFields() {
+        return new LinkedHashSet<>(fields); // Return a copy to prevent modification
+    }
 
         /**
          * Changes the name of the method.
@@ -137,8 +185,9 @@ public class UmlClass {
          * Removes a parameter from the list of parameters.
          * 
          * @param paraName The name of the parameter to remove.
-         * @return {@code true} if the parameter was removed, {@code false} if the parameter
-         *  could not be removed.
+         * @return {@code true} if the parameter was removed, {@code false} if the
+         *         parameter
+         *         could not be removed.
          */
         public boolean removeParameter(String paraName) {
             return parameters.remove(paraName);
@@ -236,12 +285,12 @@ public class UmlClass {
      */
     public boolean addMethod(String methodName, LinkedHashSet<String> parameters) {
         // The method must have a name
-        if(methodName.isEmpty()) {
+        if (methodName.isEmpty()) {
             return false;
         }
-        
+
         // Loop through the methods to see if a method that equals
-        //  the method we are trying to create already exists.
+        // the method we are trying to create already exists.
         for (Method method : methods) {
             if (method.getName().equals(methodName) && method.getParameters().equals(parameters)) {
                 return false;
@@ -275,11 +324,11 @@ public class UmlClass {
     /**
      * Renames an existing method in the UML class.
      * 
-     * @param oldName The current name of the method to rename.
+     * @param oldName    The current name of the method to rename.
      * @param parameters The parameters belonging to the method.
-     * @param newName The new name of the method.
+     * @param newName    The new name of the method.
      * @return {@code true} if the method was successfully renamed, {@code false} if
-     *          the new name already exists or if the 'oldname' method was not found
+     *         the new name already exists or if the 'oldname' method was not found
      */
     public boolean renameMethod(String oldName, LinkedHashSet<String> parameters, String newName) {
         // If the names are empty, or if there are no methods, return false.
@@ -288,7 +337,7 @@ public class UmlClass {
         }
 
         // Loop through the methods to see if a method that equals
-        //  the method we are trying to create already exists.
+        // the method we are trying to create already exists.
         for (Method method : methods) {
             if (method.getName().equals(newName) && method.getParameters().equals(parameters)) {
                 return false;
@@ -311,7 +360,7 @@ public class UmlClass {
      * Remove a parameter from a method.
      * 
      * @param methodName The name of the parameter to remove.
-     * @param paraName The name of the parameter to remove.
+     * @param paraName   The name of the parameter to remove.
      * @return {@code true} if the parameter was able to be removed, {@code false}
      *         if it could not be removed.
      */
