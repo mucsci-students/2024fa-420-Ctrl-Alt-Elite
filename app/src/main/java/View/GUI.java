@@ -1,29 +1,48 @@
 package View;
-import javax.swing.*;
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedHashSet;
 import java.util.Arrays;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Random;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import Controller.UmlEditor;
 import Model.JsonUtils;
 import Model.RelationshipType;
 import Model.UmlClass;
+import Model.UmlEditorModel;
 import Model.UmlRelationship;
 
 public class GUI extends JFrame {
     private UmlEditor umlEditor;
     private JTextArea outputArea;
     private DrawingPanel drawingPanel; // Panel for drawing
+    private UmlEditorModel model;
 
     // To keep track of class positions
     private Map<String, Point> classPositions;
@@ -384,7 +403,7 @@ public class GUI extends JFrame {
         JButton listClassesButton = new JButton("List Classes");
         listClassesButton.addActionListener(e -> {
             outputArea.setText("");
-            for (UmlClass umlClass : umlEditor.getClasses().values()) {
+            for (UmlClass umlClass : model.getClasses().values()) {
                 outputArea.append(umlClass + "\n");
             }
         });
@@ -392,7 +411,7 @@ public class GUI extends JFrame {
         JButton listRelationshipsButton = new JButton("List Relationships");
         listRelationshipsButton.addActionListener(e -> {
             outputArea.setText("");
-            for (UmlRelationship relationship : umlEditor.getRelationships()) {
+            for (UmlRelationship relationship : model.getRelationships()) {
                 outputArea.append(relationship + "\n");
             }
         });
@@ -408,7 +427,7 @@ public class GUI extends JFrame {
             if (option == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 try {
-                    JsonUtils.save(umlEditor, file.getAbsolutePath());
+                    JsonUtils.save(model, file.getAbsolutePath());
                     outputArea.append("Project saved successfully to " + file.getAbsolutePath() + ".\n");
                 } catch (IOException ex) {
                     outputArea.append("Failed to save project: " + ex.getMessage() + "\n");
@@ -423,7 +442,7 @@ public class GUI extends JFrame {
             if (option == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 try {
-                    umlEditor = JsonUtils.load(file.getAbsolutePath());
+                    model = JsonUtils.load(file.getAbsolutePath());
                     outputArea.append("Project loaded successfully from " + file.getAbsolutePath() + ".\n");
                     drawingPanel.repaint(); // Repaint the panel to show loaded classes and relationships
                 } catch (IOException ex) {
@@ -536,7 +555,7 @@ public class GUI extends JFrame {
             Map<String, Integer> relationshipCount = new HashMap<>();
 
             // Draw relationships
-            for (UmlRelationship relationship : umlEditor.getRelationships()) {
+            for (UmlRelationship relationship : model.getRelationships()) {
                 Point sourcePosition = classPositions.get(relationship.getSource());
                 Point destinationPosition = classPositions.get(relationship.getDestination());
 

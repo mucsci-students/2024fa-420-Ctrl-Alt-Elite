@@ -1,8 +1,4 @@
 package Model;
-import java.util.ArrayList;
-import java.util.List;
-
-// Class representing a Relationship between two entities (e.g., classes).
 public class UmlRelationship {
     // Source entity (could be a class or any other entity) in the relationship.
     private String source;
@@ -13,8 +9,6 @@ public class UmlRelationship {
     // Type of relationship (AGGREGATION, COMPOSITION, etc.).
     private RelationshipType type;
     
-    // List to store all the relationships created.
-    private static List<UmlRelationship> relationships = new ArrayList<>();  
 
     /**
      * Constructor to create a new Relationship.
@@ -63,80 +57,6 @@ public class UmlRelationship {
      */
     public void setType(RelationshipType newType) {
         this.type = newType;
-    }
-
-    /**
-     * Adds a new relationship to the list of relationships.
-     * 
-     * @param source The source entity.
-     * @param destination The destination entity.
-     * @param type The type of the relationship.
-     * @return {@code true} if the relationship was added, {@code false} if the relationship was not added.
-     */
-    public static boolean  addRelationship(String source, String destination, RelationshipType type) {
-        // If any of the parameters are empty, return false.
-        if (source.isEmpty() || destination.isEmpty() || type == null) {
-            return false;
-        }
-        
-        // Create a new relationship and add it to the list.
-        UmlRelationship relationship = new UmlRelationship(source, destination, type);
-        return relationships.add(relationship);
-    }
-
-    /**
-     * Deletes an existing relationship from the list.
-     * It looks for a relationship matching the given source, destination, and type.
-     * 
-     * @param source The source entity.
-     * @param destination The destination entity.
-     * @param type The type of the relationship.
-     * @return {@code true} if the relationship could be deleted, 
-     *          {@code false} if the relationship could not be deleted. 
-     */
-    public static boolean deleteRelationship(String source, String destination, RelationshipType type) {
-        // If any of the parameters are empty, return false.
-        if (source.isEmpty() || destination.isEmpty() || type == null) {
-            return false;
-        }
-        
-        // Iterate over the relationships to find a match.
-        for (UmlRelationship relationship : relationships) {
-            if (relationship.getSource().equals(source) &&
-                    relationship.getDestination().equals(destination) &&
-                    relationship.getType().equals(type)) {
-                return relationships.remove(relationship); // Remove the relationship if found.
-            }
-        }
-        // If no matching relationship is found.
-        return false;
-    }
-
-    /**
-     * Changes the type of an existing relationship.
-     * 
-     * @param source The source entity.
-     * @param destination The destination entity.
-     * @param newType The new type to change the relationship to.
-     * @return {@code true} if the relationship was changed, {@code false} if the relationship could not be changed.
-     */
-    public static boolean changeRelationshipType(String source, String destination, RelationshipType newType) {
-        // If any of the parameters are empty, return false.
-        if (source.isEmpty() || destination.isEmpty() || newType == null) {
-            return false;
-        }
-        
-        // Iterate over the relationships to find a match.
-        for (UmlRelationship relationship : relationships) {
-            if (relationship.getSource().equals(source) &&
-                relationship.getDestination().equals(destination)) {
-                // Change the type of the relationship if found.
-                relationship.setType(newType);
-                return true;
-            }
-        }
-        // If no matching relationship is found.
-        return false;
     }
 
     /**
