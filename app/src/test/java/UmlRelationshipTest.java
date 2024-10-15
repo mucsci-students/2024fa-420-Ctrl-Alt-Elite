@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import Model.UmlRelationship;
 import Model.RelationshipType;
+import Model.UmlRelationship;
 
 /**
  * A test class that checks the functionality of UmlRelationship.
@@ -14,13 +14,14 @@ public class UmlRelationshipTest {
 	
 	/** A UmlRelationship object that will be tested on. */
 	private UmlRelationship relationship;
+
+    private final RelationshipType type = RelationshipType.AGGREGATION;
 	
 	/**
      * Creates an instance of a UmlRelationship object to be used in tests.
      */
     @BeforeEach
     public void setUp() {
-    	RelationshipType type = RelationshipType.AGGREGATION;
         relationship = new UmlRelationship("ClassA", "ClassB", type);
     }
 	
@@ -32,6 +33,7 @@ public class UmlRelationshipTest {
     public void testUmlRelationship() {
         assertEquals("ClassA", relationship.getSource());
         assertEquals("ClassB", relationship.getDestination());
+        assertEquals(type, relationship.getType());
     }
 
     /**
@@ -52,15 +54,26 @@ public class UmlRelationshipTest {
         assertEquals("ClassB", relationship.getDestination());
     }
 
-    //TODO getType
+    /**
+     * Test that getType returns the type of the relationship.
+     */
+    @Test
+    @DisplayName ("GetType: Retrieve the type of the relationship")
+    public void testGetType() {
+        assertEquals(type, relationship.getType());
+    }
 
-    //TODO setType
-
-    //TODO add relationship
-
-    //TODO delete relationship
-
-    //TODO change relationship type
+    /**
+     * Test that setType alters the type of the relationship.
+     */
+    @Test
+    @DisplayName ("SetType: Alter the type of the relationship")
+    public void testSetType() {
+        RelationshipType newType = RelationshipType.COMPOSITION;
+        relationship.setType(newType);
+        
+        assertEquals(newType, relationship.getType());
+    }
     
     /**
      * Test that two relationships that are the same equal each other.

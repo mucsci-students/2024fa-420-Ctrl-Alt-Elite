@@ -1,12 +1,12 @@
 package Model;
 public class UmlRelationship {
-    // Source entity (could be a class or any other entity) in the relationship.
-    private String source;
+    /** Source entity (could be a class or any other entity) in the relationship. */
+    private final String source;
     
-    // Destination entity in the relationship.
-    private String destination;
+    /** Destination entity in the relationship. */
+    private final String destination;
     
-    // Type of relationship (AGGREGATION, COMPOSITION, etc.).
+    /** Type of relationship (AGGREGATION, COMPOSITION, etc.). */
     private RelationshipType type;
     
 

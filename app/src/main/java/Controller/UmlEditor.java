@@ -9,7 +9,7 @@ import Model.UmlEditorModel;
 
 public class UmlEditor {
     /** The model that holds the classes and relationships for this Uml Editor */
-    private UmlEditorModel model;
+    private final UmlEditorModel model;
 
 /*----------------------------------------------------------------------------------------------------------------*/
 

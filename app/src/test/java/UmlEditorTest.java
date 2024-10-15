@@ -189,10 +189,143 @@ public class UmlEditorTest {
 /*----------------------------------------------------------------------------------------------------------------*/
 
     //TODO addField tests
+     /**
+     * Test adding a field to a class.
+     */
+    @Test
+    @DisplayName ("AddField: Add a field to a class")
+    public void testAddField() {
+        umlEditor.addClass("ClassA");
+        assertTrue(umlEditor.addField("ClassA", "Field1", "String"), 
+            () -> "Error with adding field.");
+    }
+    
+    /**
+     * Test adding a field to a class that does not exist, should fail.
+     */
+    @Test
+    @DisplayName ("AddField: Add a field to a class that does not exist, failure test")
+    public void testAddFieldFalseClass() {
+        assertFalse(umlEditor.addField("NonExistentClass", "Field1", "String"), 
+            () -> "Error with adding field to non-existent class.");
+    }
+    /**
+     * Test adding duplicate field names to a class, should fail.
+     */
+    @Test
+    @DisplayName ("AddField: Add a field with a duplicate name, failure test")
+    public void testAddDuplicateField() {
+        umlEditor.addClass("ClassA");
+        
+        assertTrue(umlEditor.addField("ClassA", "Field1", "String"), 
+            () -> "Error with adding field in duplicate field test.");
+        assertFalse(umlEditor.addField("ClassA", "Field1", "String"), 
+            () -> "Error with adding a duplicate field.");
+    }
+    /**
+     * Test adding a field with invalid input, should fail.
+     */
+    @Test
+    @DisplayName ("AddField: Add a field with invalid input, failure test")
+    public void testAddFieldInvalidInput() {
+        umlEditor.addClass("ClassA");
+        assertFalse(umlEditor.addField("ClassA", " ", "String"), 
+            () -> "Error with adding a field with invalid name.");
+        
+        assertFalse(umlEditor.addField("ClassA", "Field1", ""), 
+            () -> "Error with adding a field with invalid type.");
+    }
+
+/*----------------------------------------------------------------------------------------------------------------*/
 
     //TODO deleteField tests
 
+    /**
+     * Test deleting a field from a class.
+     */
+    @Test
+    @DisplayName ("DeleteField: Delete a field from a class")
+    public void testDeleteField() {
+        umlEditor.addClass("ClassA");
+        umlEditor.addField("ClassA", "Field1", "String");
+        assertTrue(umlEditor.deleteField("ClassA", "Field1"), 
+            () -> "Error with deleting a field."); 
+    }
+    /**
+     * Test deleting a field that does not exist, should fail.
+     */
+    @Test
+    @DisplayName ("DeleteField: Delete a field that does not exist, failure test")
+    public void testDeleteFieldNotExist() {
+        umlEditor.addClass("ClassA");
+        assertFalse(umlEditor.deleteField("ClassA", "NonExistentField"), 
+            () -> "Error with deleting a non-existent field.");
+    }
+    /**
+     * Test deleting a field from a class that does not exist, should fail.
+     */
+    @Test
+    @DisplayName ("DeleteField: Delete a field from a class that does not exist, failure test")
+    public void testDeleteFieldFalseClass() {
+        assertFalse(umlEditor.deleteField("NonExistentClass", "Field1"), 
+            () -> "Error with deleting field from a non-existent class.");
+    }
+
+/*----------------------------------------------------------------------------------------------------------------*/
+
     //TODO renameField tests
+    /**
+     * Test renaming a field.
+     */
+    @Test
+    @DisplayName ("RenameField: Rename a field")
+    public void testRenameField() {
+        umlEditor.addClass("ClassA");
+        umlEditor.addField("ClassA", "Field1", "String");
+        assertTrue(umlEditor.renameField("ClassA", "Field1", "Field2"), 
+            () -> "Error with renaming a field.");
+    }
+    /**
+     * Test renaming a field that does not exist, should fail.
+     */
+    @Test
+    @DisplayName ("RenameField: Rename a field that does not exist, failure test")
+    public void testRenameFieldNotExist() {
+        umlEditor.addClass("ClassA");
+        assertFalse(umlEditor.renameField("ClassA", "NonExistentField", "Field2"), 
+            () -> "Error with renaming a non-existent field.");
+    }
+    /**
+     * Test renaming a field in a class that does not exist, should fail.
+     */
+    @Test
+    @DisplayName ("RenameField: Rename a field in a class that does not exist, failure test")
+    public void testRenameFieldFalseClass() {
+        assertFalse(umlEditor.renameField("NonExistentClass", "Field1", "Field2"), 
+            () -> "Error with renaming a field in a non-existent class.");
+    }
+    /**
+     * Test renaming a field to an empty string, should fail.
+     */
+    @Test
+    @DisplayName ("RenameField: Rename a field to an empty string, failure test")
+    public void testRenameFieldToEmptyString() {
+        umlEditor.addClass("ClassA");
+        umlEditor.addField("ClassA", "Field1", "String");
+        assertFalse(umlEditor.renameField("ClassA", "Field1", ""), 
+            () -> "Error with renaming a field to an empty name.");
+    }
+    /**
+     * Test renaming a field to null, should fail.
+     */
+    @Test
+    @DisplayName ("RenameField: Rename a field to null, failure test")
+    public void testRenameFieldToNull() {
+        umlEditor.addClass("ClassA");
+        umlEditor.addField("ClassA", "Field1", "String");
+        assertFalse(umlEditor.renameField("ClassA", "Field1", null), 
+            () -> "Error with renaming a field to null.");
+    }
     
 /*----------------------------------------------------------------------------------------------------------------*/
 

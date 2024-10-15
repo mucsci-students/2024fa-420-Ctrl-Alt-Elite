@@ -17,7 +17,7 @@ public class CLI {
     /**
      * Displays the available commands and their descriptions to the user.
      */
-    public static void displayHelp() {
+    public void displayHelp() {
         System.out.println("Available commands:");
         System.out.println("add-class - Add a class");
         System.out.println("delete-class - Delete a class");
