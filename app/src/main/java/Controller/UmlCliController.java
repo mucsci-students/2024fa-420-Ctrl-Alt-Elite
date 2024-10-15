@@ -10,7 +10,7 @@ import Model.UmlClass;
 import Model.UmlEditorModel;
 import Model.UmlRelationship;
 import View.CLI;
-
+//TODO add comments
 public class UmlCliController {
 
     private final UmlEditor umlEditor;

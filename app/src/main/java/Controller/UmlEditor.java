@@ -6,14 +6,10 @@ import java.util.Set;
 import Model.RelationshipType;
 import Model.UmlClass;
 import Model.UmlEditorModel;
-import Model.UmlRelationship;
-import View.CLI;
 
 public class UmlEditor {
     /** The model that holds the classes and relationships for this Uml Editor */
     private UmlEditorModel model;
-
-    private final CLI view;
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -22,7 +18,6 @@ public class UmlEditor {
      */
     public UmlEditor() {
         this.model = new UmlEditorModel();
-        this.view = new CLI();
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -84,7 +79,12 @@ public class UmlEditor {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    // Retrieves the fields of a specified UML class by name
+    /**
+     * Retrieves the fields of a specified UML class by name
+     * 
+     * @param className The name of the class in which the fields belongs
+     * @return A set of fields that belong to a class.
+     */
     public Set<String> getFields(String className) {
         UmlClass umlClass = model.getClass(className);
         if (umlClass != null) {
@@ -254,7 +254,6 @@ public class UmlEditor {
         if (model.classExist(source) && model.classExist(destination)) {
             return model.deleteRelationship(source, destination, type);
         }
-        
         return false;
     }
 
@@ -270,8 +269,8 @@ public class UmlEditor {
         if (model.classExist(source) && model.classExist(destination)) {
             return model.changeRelationshipType(source, destination, currentType, newType);
         }
-        
         return false;
     }
+}
 
 /*----------------------------------------------------------------------------------------------------------------*/

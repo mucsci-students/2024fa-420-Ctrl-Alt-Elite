@@ -79,6 +79,7 @@ public class UmlEditorModel {
     /**
      * Return weather a class of a certain name exists in the Map of classes.
      * 
+     * @param className The name of the class.
      * @return {@code true} if the class name exists in the Map of classes, {@code false} otherwise.
      */
     public boolean classExist(String className) {
