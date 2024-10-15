@@ -81,7 +81,6 @@ public class UmlRelationshipTest {
     @Test
     @DisplayName ("Equals: Test that two relationships that are the same equal each other")
     public void testEquality() {
-        RelationshipType type = RelationshipType.AGGREGATION;
         UmlRelationship relationship2 = new UmlRelationship("ClassA", "ClassB", type);
         assertEquals(relationship, relationship2);
     }
@@ -92,7 +91,6 @@ public class UmlRelationshipTest {
     @Test
     @DisplayName ("Equals: Test that two relationships, that are not the same, are not equal, failure test")
     public void testNotEquality() {
-    	RelationshipType type = RelationshipType.AGGREGATION;
         UmlRelationship relationship2 = new UmlRelationship("ClassB", "ClassA", type);
     	assertNotEquals(relationship, relationship2);
     }
@@ -103,7 +101,6 @@ public class UmlRelationshipTest {
     @Test
     @DisplayName ("HashCode: Test that the same objects have the same hash code")
     public void testHashCode() {
-        RelationshipType type = RelationshipType.AGGREGATION;
         UmlRelationship relationship2 = new UmlRelationship("ClassA", "ClassB", type);
         assertEquals(relationship.hashCode(), relationship2.hashCode());
     }
@@ -114,7 +111,6 @@ public class UmlRelationshipTest {
     @Test
     @DisplayName ("HashCode: Test that different objects different hash code, failure test")
     public void testHashCodeDifferent() {
-        RelationshipType type = RelationshipType.AGGREGATION;
         UmlRelationship relationship2 = new UmlRelationship("ClassB", "ClassA", type);
         assertNotEquals(relationship.hashCode(), relationship2.hashCode());
     }

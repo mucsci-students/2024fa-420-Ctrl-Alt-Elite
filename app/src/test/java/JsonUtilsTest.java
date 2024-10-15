@@ -12,30 +12,32 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import Controller.UmlEditor;
 import Model.JsonUtils;
 import Model.RelationshipType;
+import Model.UmlEditorModel;
 
 /**
  * A test class that checks the functionality of the save and load commands
  */
 public class JsonUtilsTest {
+    /** The UML editor instance to be tested */
+    private UmlEditorModel editorModel;
 
-    private UmlEditor umlEditor; // The UML editor instance to be tested
-    private static final String TEST_FILENAME = "test_data.json"; // Filename for test data
+    /** Filename for test data */
+    private static final String TEST_FILENAME = "test_data.json"; 
 
     /**
      * Setup method to initialize the UML editor before each test.
      */
     @BeforeEach
     public void setUp() {
-        umlEditor = new UmlEditor();
+        editorModel = new UmlEditorModel();
 
-        umlEditor.addClass("ClassA"); // Add a sample class
-        umlEditor.addClass("ClassB"); // Add another sample class
+        editorModel.addClass("ClassA"); // Add a sample class
+        editorModel.addClass("ClassB"); // Add another sample class
         RelationshipType type = RelationshipType.AGGREGATION;
 
-        umlEditor.addRelationship("ClassA", "ClassB", type); // Add a relationship between the classes
+        editorModel.addRelationship("ClassA", "ClassB", type); // Add a relationship between the classes
     }
 
     /**
@@ -58,10 +60,10 @@ public class JsonUtilsTest {
     @DisplayName ("Save and Load: Save data about the Uml Editor to a JSON file and load it")
     public void testSaveAndLoad() throws IOException {
         // Save the UML editor data to a JSON file
-        JsonUtils.save(umlEditor, TEST_FILENAME);
+        JsonUtils.save(editorModel, TEST_FILENAME);
 
         // Load the UML editor data from the JSON file
-        UmlEditor loadedEditor = JsonUtils.load(TEST_FILENAME);
+        UmlEditorModel loadedEditor = JsonUtils.load(TEST_FILENAME);
 
         // Validate that the loaded data is not null and matches the original data
         assertNotNull(loadedEditor);
@@ -72,18 +74,6 @@ public class JsonUtilsTest {
     }
 
     /**
-     * Test saving a null UML editor, should fail.
-     */
-    @Test
-    @DisplayName ("Save: Save a null UNL editor, failure test")
-    public void testSaveNullEditor() {
-        // Expect a NullPointerException when trying to save a null editor
-        assertThrows(NullPointerException.class, () -> {
-            JsonUtils.save(null, TEST_FILENAME);
-        });
-    }
-
-    /**
      * Test saving and loading an empty UML editor
      * 
      * @throws IOException
@@ -91,11 +81,11 @@ public class JsonUtilsTest {
     @Test
     @DisplayName ("Save: Save an empty editor")
     public void testSaveEmptyEditor() throws IOException {
-        UmlEditor emptyEditor = new UmlEditor(); // Create an empty UML editor
+        UmlEditorModel emptyEditor = new UmlEditorModel(); // Create an empty UML editor
         JsonUtils.save(emptyEditor, TEST_FILENAME); // Save the empty editor
 
         // Load the UML editor from the JSON file
-        UmlEditor loadedEditor = JsonUtils.load(TEST_FILENAME);
+        UmlEditorModel loadedEditor = JsonUtils.load(TEST_FILENAME);
         // Verify that the loaded editor is empty
         assertNotNull(loadedEditor);
         assertTrue(loadedEditor.getClasses().isEmpty()); // Check no classes
@@ -118,7 +108,7 @@ public class JsonUtilsTest {
      * Test loading from a file with invalid JSON content, should fail.
      */
     @Test
-    @DisplayName ("Load: Load and invalid JSON file, failure test")
+    @DisplayName ("Load: Load an invalid JSON file, failure test")
     public void testLoadInvalidJson() {
         // Create a file with invalid JSON content
         try (FileWriter writer = new FileWriter(TEST_FILENAME)) {

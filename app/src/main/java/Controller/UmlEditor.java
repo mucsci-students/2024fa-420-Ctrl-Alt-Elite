@@ -9,15 +9,15 @@ import Model.UmlEditorModel;
 
 public class UmlEditor {
     /** The model that holds the classes and relationships for this Uml Editor */
-    private final UmlEditorModel model;
+    private UmlEditorModel model;
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
      * Constructor initializes the collections for classes and relationships.
      */
-    public UmlEditor() {
-        this.model = new UmlEditorModel();
+    public UmlEditor(UmlEditorModel model) {
+        this.model = model;
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/

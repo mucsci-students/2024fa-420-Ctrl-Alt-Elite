@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import Controller.UmlEditor;
 import Model.RelationshipType;
+import Model.UmlEditorModel;
 
 /**
  * A test class for the UmlEditor class
@@ -20,12 +21,16 @@ public class UmlEditorTest {
 	/** A UmlEditor object that will be tested on. */
     private UmlEditor umlEditor;
 
+    /** The model that holds the classes and relationships for this Uml Editor test file */
+    private UmlEditorModel model;
+
     /**
      * Creates an instance of a UmlEditor object to be used in tests.
      */
     @BeforeEach
     public void setUp() {
-        umlEditor = new UmlEditor();
+        model = new UmlEditorModel();
+        umlEditor = new UmlEditor(model);
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -36,8 +41,10 @@ public class UmlEditorTest {
     @Test
     @DisplayName ("Constructor: Construct a UmlEditor Object ")
     public void testUmlEditor() {
-    	assertTrue (((umlEditor.getClasses() != null) && (umlEditor.getRelationships() != null)), 
-    			() -> "Could not construct the UmlEditor.");
+    	umlEditor.addClass("ClassA");
+        
+        assertTrue (((umlEditor.getClass("ClassA")) != null), 
+    		() -> "Could not construct the UmlEditor.");
     }
     
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -51,7 +58,7 @@ public class UmlEditorTest {
         assertTrue(umlEditor.addClass("ClassA"), 
         	() -> "Could not add class.");
         
-        assertNotNull(umlEditor.getClasses().get("ClassA"), 
+        assertNotNull(umlEditor.getClass("ClassA"), 
         	() -> "Could not retrieve the class.");
     }
     
@@ -75,7 +82,7 @@ public class UmlEditorTest {
     public void testAddClassDup() {
     	umlEditor.addClass("ClassA");
 
-    	assertNotNull(umlEditor.getClasses().get("ClassA"), 
+    	assertNotNull(umlEditor.getClass("ClassA"), 
     		() -> "Could not retrieve the class.");
 
     	assertFalse(umlEditor.addClass("ClassA"), 
@@ -91,7 +98,7 @@ public class UmlEditorTest {
     	assertFalse(umlEditor.addClass(""),
     		() -> "Error with adding a class with no name.");
 
-    	assertNull(umlEditor.getClasses().get(""), 
+    	assertNull(umlEditor.getClass(""), 
     		() -> "Error with assertNull on adding a class with an empty name.");
     }
     
@@ -118,7 +125,7 @@ public class UmlEditorTest {
         assertTrue(umlEditor.deleteClass("ClassA"), 
         	() -> "Could not delete the class.");
         
-        assertNull(umlEditor.getClasses().get("ClassA"), 
+        assertNull(umlEditor.getClass("ClassA"), 
         	() -> "Error with assertNull on deleting a class.");
     }
     
@@ -155,10 +162,10 @@ public class UmlEditorTest {
         assertTrue(umlEditor.renameClass("ClassA", "ClassB"), 
         	() -> "Could not rename the class.");
 
-        assertNull(umlEditor.getClasses().get("ClassA"), 
+        assertNull(umlEditor.getClass("ClassA"), 
         	() -> "Error with asserting that the old class name does not exist.");
 
-        assertNotNull(umlEditor.getClasses().get("ClassB"), 
+        assertNotNull(umlEditor.getClass("ClassB"), 
         	() -> "Error with asserting that the new class name exists.");
     }
     
@@ -188,7 +195,6 @@ public class UmlEditorTest {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO addField tests
      /**
      * Test adding a field to a class.
      */
@@ -196,7 +202,7 @@ public class UmlEditorTest {
     @DisplayName ("AddField: Add a field to a class")
     public void testAddField() {
         umlEditor.addClass("ClassA");
-        assertTrue(umlEditor.addField("ClassA", "Field1", "String"), 
+        assertTrue(umlEditor.addField("ClassA", "Field1"), 
             () -> "Error with adding field.");
     }
     
@@ -206,7 +212,7 @@ public class UmlEditorTest {
     @Test
     @DisplayName ("AddField: Add a field to a class that does not exist, failure test")
     public void testAddFieldFalseClass() {
-        assertFalse(umlEditor.addField("NonExistentClass", "Field1", "String"), 
+        assertFalse(umlEditor.addField("NonExistentClass", "Field1"), 
             () -> "Error with adding field to non-existent class.");
     }
     /**
@@ -217,9 +223,9 @@ public class UmlEditorTest {
     public void testAddDuplicateField() {
         umlEditor.addClass("ClassA");
         
-        assertTrue(umlEditor.addField("ClassA", "Field1", "String"), 
+        assertTrue(umlEditor.addField("ClassA", "Field1"), 
             () -> "Error with adding field in duplicate field test.");
-        assertFalse(umlEditor.addField("ClassA", "Field1", "String"), 
+        assertFalse(umlEditor.addField("ClassA", "Field1"), 
             () -> "Error with adding a duplicate field.");
     }
     /**
@@ -229,16 +235,14 @@ public class UmlEditorTest {
     @DisplayName ("AddField: Add a field with invalid input, failure test")
     public void testAddFieldInvalidInput() {
         umlEditor.addClass("ClassA");
-        assertFalse(umlEditor.addField("ClassA", " ", "String"), 
+        assertFalse(umlEditor.addField("ClassA", " "), 
             () -> "Error with adding a field with invalid name.");
         
-        assertFalse(umlEditor.addField("ClassA", "Field1", ""), 
+        assertFalse(umlEditor.addField("ClassA", ""), 
             () -> "Error with adding a field with invalid type.");
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
-
-    //TODO deleteField tests
 
     /**
      * Test deleting a field from a class.
@@ -247,7 +251,7 @@ public class UmlEditorTest {
     @DisplayName ("DeleteField: Delete a field from a class")
     public void testDeleteField() {
         umlEditor.addClass("ClassA");
-        umlEditor.addField("ClassA", "Field1", "String");
+        umlEditor.addField("ClassA", "Field1");
         assertTrue(umlEditor.deleteField("ClassA", "Field1"), 
             () -> "Error with deleting a field."); 
     }
@@ -273,7 +277,6 @@ public class UmlEditorTest {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO renameField tests
     /**
      * Test renaming a field.
      */
@@ -281,7 +284,7 @@ public class UmlEditorTest {
     @DisplayName ("RenameField: Rename a field")
     public void testRenameField() {
         umlEditor.addClass("ClassA");
-        umlEditor.addField("ClassA", "Field1", "String");
+        umlEditor.addField("ClassA", "Field1");
         assertTrue(umlEditor.renameField("ClassA", "Field1", "Field2"), 
             () -> "Error with renaming a field.");
     }
@@ -311,7 +314,7 @@ public class UmlEditorTest {
     @DisplayName ("RenameField: Rename a field to an empty string, failure test")
     public void testRenameFieldToEmptyString() {
         umlEditor.addClass("ClassA");
-        umlEditor.addField("ClassA", "Field1", "String");
+        umlEditor.addField("ClassA", "Field1");
         assertFalse(umlEditor.renameField("ClassA", "Field1", ""), 
             () -> "Error with renaming a field to an empty name.");
     }
@@ -322,7 +325,7 @@ public class UmlEditorTest {
     @DisplayName ("RenameField: Rename a field to null, failure test")
     public void testRenameFieldToNull() {
         umlEditor.addClass("ClassA");
-        umlEditor.addField("ClassA", "Field1", "String");
+        umlEditor.addField("ClassA", "Field1");
         assertFalse(umlEditor.renameField("ClassA", "Field1", null), 
             () -> "Error with renaming a field to null.");
     }
@@ -583,114 +586,6 @@ public class UmlEditorTest {
         assertFalse(umlEditor.deleteRelationship("NonExistentClass", "ClassA", type),
         	() -> "Error with deleting a relationship from non-existent classes (Test 2).");
     }
-    
-/*----------------------------------------------------------------------------------------------------------------*/
-
-    /**
-     * Test listing all classes.
-     */
-    @Test
-    @DisplayName ("ListClasses: List all classes")
-    public void testListClasses() {
-    	System.out.println("ListClasses: List all classes");
-
-        System.out.println("Expected Output: ");
-    	System.out.println("Class: ClassA");
-        System.out.println("Methods: []");
-        System.out.println("Class: ClassB");
-        System.out.println("Methods: []");
-    	
-    	umlEditor.addClass("ClassA");
-        umlEditor.addClass("ClassB");
-        
-        System.out.println("Output: ");
-        umlEditor.listClasses();
-        System.out.println();
-    }
-    
-    /**
-     * Test listing all classes when there are no classes.
-     */
-    @Test
-    @DisplayName ("ListClasses: Display no classes when there are none")
-    public void testListClassesNoClasses() {
-    	System.out.println("ListClasses: Display no classes when there are none");
-
-        System.out.println("Expected Output: (no output)");
-        
-    	System.out.println("Output: ");
-        umlEditor.listClasses();
-        System.out.println();
-    }
-    
-/*----------------------------------------------------------------------------------------------------------------*/
-
-    /**
-     * Test listing a specific class.
-     */
-    @Test
-    @DisplayName ("ListClass: List a class")
-    public void testListClass() {
-    	System.out.println("ListClass: List a class");
-
-        System.out.println("Expected Output: ");
-        System.out.println("Class: ClassA");
-        System.out.println("Methods: []");
-    	
-    	umlEditor.addClass("ClassA");
-          
-        System.out.println("Output: ");
-        umlEditor.listClass("ClassA");
-        System.out.println();
-    }
-    
-    /**
-     * Test listing a non-existent class, should fail.
-     */
-    @Test
-    @DisplayName ("ListClass: Display a non-existent class, failure test")
-    public void testListClassNotExist() {
-    	System.out.println("ListClass: Display a non-existent class, failure test");
-
-        System.out.println("Expected Output: Class \'ClassB\' does not exist.");
-    	
-    	System.out.print("Output: ");
-    	umlEditor.listClass("ClassB"); 
-    	System.out.println();
-    }
-    
-/*----------------------------------------------------------------------------------------------------------------*/
-
-    /**
-     * Test listing relationships between classes.
-     */
-    @Test
-    @DisplayName ("ListRelationships: List the relationships between classes")
-    public void testListRelationships() {
-    	System.out.println("ListRelationships: List the relationships between classes");
-        
-        System.out.println("Expected Output: Relationship from \'ClassA\' to \'ClassB\'");
-    	
-    	umlEditor.addClass("ClassA");
-        umlEditor.addClass("ClassB");
-        RelationshipType type = RelationshipType.AGGREGATION;
-        umlEditor.addRelationship("ClassA", "ClassB", type);
-        
-        System.out.print("Output: ");
-        umlEditor.listRelationships(); 
-        System.out.println();
-    }
-    
-    /**
-     * Test calling ListRelationships when there are no relationships.
-     */
-    @Test
-    @DisplayName ("ListRelationships: List relationships when there are none")
-    public void testListRelationshipsNotExist() {
-        System.out.println("Expected Output: (no output)");
-        
-        System.out.print("Output: ");
-        umlEditor.listRelationships();
-    	System.out.println();
-    }
 }
+
+/*----------------------------------------------------------------------------------------------------------------*/

@@ -2,6 +2,7 @@ package View;
 
 import Controller.UmlCliController;
 import Controller.UmlEditor;
+import Model.UmlEditorModel;
 
 public class CLI {
 
@@ -51,9 +52,10 @@ public class CLI {
      * @param args command-line arguments (not used).
      */
     public static void main(String[] args) {
-        UmlEditor umlEditor = new UmlEditor(); // Instantiate your UML editor
+        UmlEditorModel model = new UmlEditorModel(); // Instantiate the model
+        UmlEditor umlEditor = new UmlEditor(model); // Instantiate your UML editor
         CLI cliView = new CLI(); // Instantiate the CLI view
-        UmlCliController controller = new UmlCliController(umlEditor, cliView); // Create the controller
+        UmlCliController controller = new UmlCliController(model, umlEditor, cliView); // Create the controller
         controller.start(); // Start the application
     }
 }

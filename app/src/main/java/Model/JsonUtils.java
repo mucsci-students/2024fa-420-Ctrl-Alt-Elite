@@ -23,7 +23,7 @@ public class JsonUtils {
      * @param filename    The name of the file to save the data to.
      * @throws IOException If there is an issue writing to the file.
      */
-    public static void save(UmlEditorModel editorModel, String filename) throws IOException {
+    public static void save(UmlEditorModel editorModel, String filename) throws IOException, NullPointerException {
         try (FileWriter writer = new FileWriter(filename)) {
             gson.toJson(editorModel, writer);
         }

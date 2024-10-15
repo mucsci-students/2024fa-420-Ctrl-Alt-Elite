@@ -13,12 +13,14 @@ import View.CLI;
 //TODO add comments
 public class UmlCliController {
 
+    private UmlEditorModel model;
     private final UmlEditor umlEditor;
     private final CLI view;
     private final Scanner scanner;
-    private UmlEditorModel model;
+    
 
-    public UmlCliController(UmlEditor umlEditor, CLI view) {
+    public UmlCliController(UmlEditorModel model, UmlEditor umlEditor, CLI view) {
+        this.model = model;
         this.umlEditor = umlEditor;
         this.view = view;
         this.scanner = new Scanner(System.in);
