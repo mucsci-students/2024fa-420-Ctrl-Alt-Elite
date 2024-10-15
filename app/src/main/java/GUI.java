@@ -418,7 +418,19 @@ public class GUI extends JFrame {
                 try {
                     umlEditor = JsonUtils.load(file.getAbsolutePath());
                     outputArea.append("Project loaded successfully from " + file.getAbsolutePath() + ".\n");
-                    drawingPanel.repaint(); // Repaint the panel to show loaded classes and relationships
+
+                    // Clear previous class positions
+                    classPositions.clear();
+
+                    // Populate classPositions based on the loaded UML editor
+                    for (Map.Entry<String, UmlClass> entry : umlEditor.getClasses().entrySet()) {
+                        String className = entry.getKey();
+                        // Set initial positions for the classes (you may need to adjust this logic)
+                        classPositions.put(className, new Point(100, 100)); // Set positions as needed
+                    }
+
+                    // Repaint the panel to show loaded classes and relationships
+                    drawingPanel.repaint();
                 } catch (IOException ex) {
                     outputArea.append("Failed to load project: " + ex.getMessage() + "\n");
                 }
