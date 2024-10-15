@@ -422,6 +422,89 @@ public class GUI extends JFrame {
         panel.add(renameMethodParametersField);
         panel.add(renameMethodButton);
 
+        // Remove Parameter
+        JTextField removeParameterClassField = new JTextField();
+        JTextField removeParameterMethodField = new JTextField();
+        JTextField removeParameterField = new JTextField();
+        JButton removeParameterButton = new JButton("Remove Parameter");
+
+        removeParameterButton.addActionListener(e -> {
+            String className = removeParameterClassField.getText();
+            String methodName = removeParameterMethodField.getText();
+            String parameterName = removeParameterField.getText();
+
+            // Call the removeParameter method with the class name, method name, and
+            // parameter name
+            if (umlEditor.removeParameter(className, methodName, parameterName)) {
+                outputArea.append("Parameter '" + parameterName + "' removed from method '" + methodName
+                        + "' in class '" + className + "'.\n");
+                drawingPanel.repaint(); // Repaint to show the updated methods
+            } else {
+                outputArea.append("Failed to remove parameter '" + parameterName + "' from method '" + methodName
+                        + "' in class '" + className + "'.\n");
+            }
+
+            // Clear the input fields
+            removeParameterClassField.setText("");
+            removeParameterMethodField.setText("");
+            removeParameterField.setText("");
+        });
+
+        // Add components to the panel for removing a parameter
+        panel.add(new JLabel("Class Name for Parameter Removal:"));
+        panel.add(removeParameterClassField);
+        panel.add(new JLabel("Method Name:"));
+        panel.add(removeParameterMethodField);
+        panel.add(new JLabel("Parameter to Remove:"));
+        panel.add(removeParameterField);
+        panel.add(removeParameterButton);
+
+        // Change Parameters
+        JTextField changeParameterClassField = new JTextField();
+        JTextField changeParameterMethodField = new JTextField();
+        JTextField changeParameterNewParamsField = new JTextField();
+        JButton changeParameterButton = new JButton("Change Parameters");
+
+        changeParameterButton.addActionListener(e -> {
+            String className = changeParameterClassField.getText();
+            String methodName = changeParameterMethodField.getText();
+            String newParametersInput = changeParameterNewParamsField.getText();
+
+            // Convert the comma-separated parameters into a LinkedHashSet
+            LinkedHashSet<String> newParametersSet = new LinkedHashSet<>();
+            if (!newParametersInput.trim().isEmpty()) {
+                // Split by comma and trim spaces, then add to the set
+                Arrays.stream(newParametersInput.split(","))
+                        .map(String::trim)
+                        .forEach(newParametersSet::add);
+            }
+
+            // Call the changeParameters method with the class name, method name, and new
+            // parameters set
+            if (umlEditor.changeParameters(className, methodName, newParametersSet)) {
+                outputArea.append("Parameters of method '" + methodName + "' in class '" + className + "' changed to: "
+                        + newParametersInput + ".\n");
+                drawingPanel.repaint(); // Repaint to show the updated methods
+            } else {
+                outputArea.append(
+                        "Failed to change parameters of method '" + methodName + "' in class '" + className + "'.\n");
+            }
+
+            // Clear the input fields
+            changeParameterClassField.setText("");
+            changeParameterMethodField.setText("");
+            changeParameterNewParamsField.setText("");
+        });
+
+        // Add components to the panel for changing parameters
+        panel.add(new JLabel("Class Name for Parameter Change:"));
+        panel.add(changeParameterClassField);
+        panel.add(new JLabel("Method Name:"));
+        panel.add(changeParameterMethodField);
+        panel.add(new JLabel("New Parameters (comma-separated):"));
+        panel.add(changeParameterNewParamsField);
+        panel.add(changeParameterButton);
+
         // List Classes and Relationships
         JButton listClassesButton = new JButton("List Classes");
         listClassesButton.addActionListener(e -> {
