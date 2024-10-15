@@ -373,6 +373,55 @@ public class GUI extends JFrame {
         panel.add(deleteMethodField);
         panel.add(deleteMethodButton);
 
+        // Rename Method
+        JTextField renameMethodClassField = new JTextField();
+        JTextField renameMethodOldNameField = new JTextField();
+        JTextField renameMethodNewNameField = new JTextField();
+        JTextField renameMethodParametersField = new JTextField(); // Field for parameters (comma-separated)
+        JButton renameMethodButton = new JButton("Rename Method");
+
+        renameMethodButton.addActionListener(e -> {
+            String className = renameMethodClassField.getText();
+            String oldName = renameMethodOldNameField.getText();
+            String newName = renameMethodNewNameField.getText();
+            String parametersInput = renameMethodParametersField.getText();
+
+            // Convert the comma-separated parameters into a LinkedHashSet
+            LinkedHashSet<String> parametersSet = new LinkedHashSet<>();
+            if (!parametersInput.trim().isEmpty()) {
+                // Split by comma and trim spaces, then add to the set
+                Arrays.stream(parametersInput.split(","))
+                        .map(String::trim)
+                        .forEach(parametersSet::add);
+            }
+
+            // Call the renameMethod method with the provided details
+            if (umlEditor.renameMethod(className, oldName, parametersSet, newName)) {
+                outputArea.append(
+                        "Method '" + oldName + "' renamed to '" + newName + "' in class '" + className + "'.\n");
+                drawingPanel.repaint(); // Repaint to show the updated methods
+            } else {
+                outputArea.append("Failed to rename method '" + oldName + "' in class '" + className + "'.\n");
+            }
+
+            // Clear the input fields
+            renameMethodClassField.setText("");
+            renameMethodOldNameField.setText("");
+            renameMethodNewNameField.setText("");
+            renameMethodParametersField.setText("");
+        });
+
+        // Add components to the panel for renaming a method
+        panel.add(new JLabel("Class Name for Renaming:"));
+        panel.add(renameMethodClassField);
+        panel.add(new JLabel("Old Method Name:"));
+        panel.add(renameMethodOldNameField);
+        panel.add(new JLabel("New Method Name:"));
+        panel.add(renameMethodNewNameField);
+        panel.add(new JLabel("Parameters (comma-separated):"));
+        panel.add(renameMethodParametersField);
+        panel.add(renameMethodButton);
+
         // List Classes and Relationships
         JButton listClassesButton = new JButton("List Classes");
         listClassesButton.addActionListener(e -> {
