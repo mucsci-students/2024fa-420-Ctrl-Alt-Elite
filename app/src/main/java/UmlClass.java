@@ -47,6 +47,8 @@ public class UmlClass {
      *         already exists.
      */
     public boolean addField(String fieldName) {
+        //TODO should not be able to add a field with an empty name
+        
         return fields.add(fieldName); // Returns false if the field is already present
     }
 
