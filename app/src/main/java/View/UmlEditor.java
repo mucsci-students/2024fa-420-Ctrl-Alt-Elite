@@ -51,7 +51,7 @@ public class UmlEditor {
      * @return {@code true} if the class was added, {@code false} otherwise.
      */
     public boolean addClass(String name) {
-        if (name == null || name.isEmpty() || classes.containsKey(name)) {
+        if (name == null || name.isEmpty() || classes.containsKey(name) || name.contains(" ")) {
             return false; // Return false if name is null, empty, or class already exists
         }
         classes.put(name, new UmlClass(name));
