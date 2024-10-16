@@ -1,7 +1,8 @@
+package View;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.FileReader;
@@ -10,6 +11,10 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Set;
+
+import Model.RelationshipType;
+import Model.UmlClass;
+import Model.UmlRelationship;
 
 /**
  * Utility class for saving and loading UML editor data in JSON format.
