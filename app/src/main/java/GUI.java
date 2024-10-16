@@ -123,7 +123,7 @@ public class GUI extends JFrame {
 
         // Change Parameters Button and Action
         JButton changeParametersButton = new JButton("Change Parameters");
-        changeParametersButton.addActionListener(e -> showChangeParameterPanel());                                                          
+        changeParametersButton.addActionListener(e -> showChangeParameterPanel());
         cardPanel.add(changeParametersButton);
 
         // Delete Parameter Button and Action
@@ -1006,14 +1006,33 @@ public class GUI extends JFrame {
                 UmlClass umlClass = umlEditor.getClass(className);
                 int boxHeight = getBoxHeight(className); // Get dynamic box height
 
+                // Calculate the maximum width needed for the box
+                int maxWidth = 100; // Start with a default width for the box
+                FontMetrics metrics = g.getFontMetrics();
+
+                // Get the width of the class name
+                maxWidth = Math.max(maxWidth, metrics.stringWidth(className) + 20); // 20 for padding
+
+                // Calculate the width for attributes
+                if (umlClass != null) {
+                    for (String attribute : umlClass.getFields()) {
+                        maxWidth = Math.max(maxWidth, metrics.stringWidth(attribute) + 20);
+                    }
+
+                    // Calculate the width for methods
+                    for (String methodSignature : umlClass.getMethods()) {
+                        maxWidth = Math.max(maxWidth, metrics.stringWidth(methodSignature) + 20);
+                    }
+                }
+
                 // Draw the rectangle for the class
-                g.drawRect(position.x, position.y, 100, boxHeight);
+                g.drawRect(position.x, position.y, maxWidth, boxHeight);
 
                 // Draw the class name
                 g.drawString(className, position.x + 10, position.y + 20);
 
                 // Draw a line to separate class name and attributes
-                g.drawLine(position.x, position.y + 30, position.x + 100, position.y + 30);
+                g.drawLine(position.x, position.y + 30, position.x + maxWidth, position.y + 30);
 
                 // Draw attributes
                 if (umlClass != null) {
@@ -1031,6 +1050,7 @@ public class GUI extends JFrame {
                     }
                 }
             }
+
         }
 
         // Method to draw an arrowhead for different relationship types
