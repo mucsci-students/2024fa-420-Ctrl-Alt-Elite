@@ -15,16 +15,14 @@ import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import Controller.UmlEditor;
+
 import Model.JsonUtils;
 import Model.RelationshipType;
 import Model.UmlClass;
-import Model.UmlEditorModel;
 import Model.UmlRelationship;
 
 public class GUI extends JFrame {
-    private UmlEditorModel umlEditor;
-    private UmlEditor umlEditor2;
+    private UmlEditor umlEditor;
     private HashMap<String, Point> classPositions;
     private DrawingPanel drawingPanel;
     private JTextArea outputArea;
@@ -33,7 +31,7 @@ public class GUI extends JFrame {
     private JPanel cardPanel; // Panel for switching between text input panels
 
     public GUI() {
-        umlEditor = new UmlEditorModel();
+        umlEditor = new UmlEditor();
         classPositions = new HashMap<>(); // Initialize class positions
         setTitle("UML Editor");
         setSize(800, 400); // Increased width to accommodate drawing panel
@@ -166,15 +164,15 @@ public class GUI extends JFrame {
         listRelationshipsButton.addActionListener(e -> showListRelationshipsPanel());
         cardPanel.add(listRelationshipsButton);
 
-        // Save UML Project Button and Action
-        JButton saveButton = new JButton("Save UML Project");
-        saveButton.addActionListener(e -> showSaveProjectPanel());
-        cardPanel.add(saveButton);
+        // // Save UML Project Button and Action
+        // JButton saveButton = new JButton("Save UML Project");
+        // saveButton.addActionListener(e -> showSaveProjectPanel());
+        // cardPanel.add(saveButton);
 
-        // Load UML Project Button and Action
-        JButton loadButton = new JButton("Load UML Project");
-        loadButton.addActionListener(e -> showLoadProjectPanel());
-        cardPanel.add(loadButton);
+        // // Load UML Project Button and Action
+        // JButton loadButton = new JButton("Load UML Project");
+        // loadButton.addActionListener(e -> showLoadProjectPanel());
+        // cardPanel.add(loadButton);
 
         // Add the card panel to the frame
         add(cardPanel, BorderLayout.EAST);
@@ -285,7 +283,7 @@ public class GUI extends JFrame {
         submitButton.addActionListener(e -> {
             String className = classNameField.getText();
             String fieldName = fieldNameField.getText();
-            if (umlEditor2.addField(className, fieldName)) {
+            if (umlEditor.addField(className, fieldName)) {
                 outputArea.append("Field '" + fieldName + "' added to class '" + className + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
@@ -315,7 +313,7 @@ public class GUI extends JFrame {
         submitButton.addActionListener(e -> {
             String className = classNameField.getText();
             String fieldName = fieldNameField.getText();
-            if (umlEditor2.deleteField(className, fieldName)) {
+            if (umlEditor.deleteField(className, fieldName)) {
                 outputArea.append("Field '" + fieldName + "' deleted from class '" + className + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
@@ -349,7 +347,7 @@ public class GUI extends JFrame {
             String className = classNameField.getText();
             String oldFieldName = oldFieldNameField.getText();
             String newFieldName = newFieldNameField.getText();
-            if (umlEditor2.renameField(className, oldFieldName, newFieldName)) {
+            if (umlEditor.renameField(className, oldFieldName, newFieldName)) {
                 outputArea.append("Field '" + oldFieldName + "' renamed to '" + newFieldName + "' in class '"
                         + className + "'.\n");
                 drawingPanel.revalidate();
@@ -387,7 +385,7 @@ public class GUI extends JFrame {
             String className = classNameField.getText();
             String methodName = methodNameField.getText();
             LinkedHashSet<String> paraList = parseParameterList(parameterListField.getText());
-            if (umlEditor2.addMethod(className, methodName, paraList)) {
+            if (umlEditor.addMethod(className, methodName, paraList)) {
                 outputArea.append("Method '" + methodName + "' added to class '" + className + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
@@ -423,7 +421,7 @@ public class GUI extends JFrame {
             String className = classNameField.getText();
             String methodName = methodNameField.getText();
             LinkedHashSet<String> paraList = parseParameterList(parameterListField.getText());
-            if (umlEditor2.deleteMethod(className, methodName, paraList)) {
+            if (umlEditor.deleteMethod(className, methodName, paraList)) {
                 outputArea.append("Method '" + methodName + "' deleted from class '" + className + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
@@ -463,7 +461,7 @@ public class GUI extends JFrame {
             String oldName = oldMethodNameField.getText();
             String newName = newMethodNameField.getText();
             LinkedHashSet<String> paraList = parseParameterList(parameterListField.getText());
-            if (umlEditor2.renameMethod(className, oldName, paraList, newName)) {
+            if (umlEditor.renameMethod(className, oldName, paraList, newName)) {
                 outputArea.append(
                         "Method '" + oldName + "' renamed to '" + newName + "' in class '" + className + "'.\n");
                 drawingPanel.revalidate();
@@ -517,7 +515,7 @@ public class GUI extends JFrame {
             String className = classNameField.getText();
             String methodName = methodNameField.getText();
             String parameterName = parameterNameField.getText();
-            if (umlEditor2.removeParameter(className, methodName, parameterName)) {
+            if (umlEditor.removeParameter(className, methodName, parameterName)) {
                 outputArea.append("Parameter '" + parameterName + "' deleted from method '" + methodName
                         + "' in class '" + className + "'.\n");
                 drawingPanel.revalidate();
@@ -565,7 +563,7 @@ public class GUI extends JFrame {
 
             // Call the changeParameters method with the class name, method name, and new
             // parameters set
-            if (umlEditor2.changeParameters(className, methodName, newParametersSet)) {
+            if (umlEditor.changeParameters(className, methodName, newParametersSet)) {
                 outputArea.append("Parameters of method '" + methodName + "' in class '" + className + "' changed to: "
                         + newParametersInput + ".\n");
                 drawingPanel.revalidate();
@@ -795,46 +793,46 @@ public class GUI extends JFrame {
         }
     }
 
-    private void showSaveProjectPanel() {
-        JFileChooser fileChooser = new JFileChooser();
-        int option = fileChooser.showSaveDialog(null);
-        if (option == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            try {
-                JsonUtils.save(umlEditor, file.getAbsolutePath());
-                outputArea.append("Project saved successfully to " + file.getAbsolutePath() + ".\n");
-            } catch (IOException ex) {
-                outputArea.append("Failed to save project: " + ex.getMessage() + "\n");
-            }
-        }
-    }
+    // private void showSaveProjectPanel() {
+    //     JFileChooser fileChooser = new JFileChooser();
+    //     int option = fileChooser.showSaveDialog(null);
+    //     if (option == JFileChooser.APPROVE_OPTION) {
+    //         File file = fileChooser.getSelectedFile();
+    //         try {
+    //             JsonUtils.save(umlEditor, file.getAbsolutePath());
+    //             outputArea.append("Project saved successfully to " + file.getAbsolutePath() + ".\n");
+    //         } catch (IOException ex) {
+    //             outputArea.append("Failed to save project: " + ex.getMessage() + "\n");
+    //         }
+    //     }
+    // }
 
-    private void showLoadProjectPanel() {
-        JFileChooser fileChooser = new JFileChooser();
-        int option = fileChooser.showOpenDialog(null);
-        if (option == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            try {
-                umlEditor = JsonUtils.load(file.getAbsolutePath());
-                outputArea.append("Project loaded successfully from " + file.getAbsolutePath() + ".\n");
+    // private void showLoadProjectPanel() {
+    //     JFileChooser fileChooser = new JFileChooser();
+    //     int option = fileChooser.showOpenDialog(null);
+    //     if (option == JFileChooser.APPROVE_OPTION) {
+    //         File file = fileChooser.getSelectedFile();
+    //         try {
+    //             umlEditor = JsonUtils.load(file.getAbsolutePath());
+    //             outputArea.append("Project loaded successfully from " + file.getAbsolutePath() + ".\n");
 
-                // Clear previous class positions
-                classPositions.clear();
+    //             // Clear previous class positions
+    //             classPositions.clear();
 
-                // Populate classPositions based on the loaded UML editor
-                for (Map.Entry<String, UmlClass> entry : umlEditor.getClasses().entrySet()) {
-                    String className = entry.getKey();
-                    // Set initial positions for the classes (you may need to adjust this logic)
-                    classPositions.put(className, new Point(100, 100)); // Set positions as needed
-                }
+    //             // Populate classPositions based on the loaded UML editor
+    //             for (Map.Entry<String, UmlClass> entry : umlEditor.getClasses().entrySet()) {
+    //                 String className = entry.getKey();
+    //                 // Set initial positions for the classes (you may need to adjust this logic)
+    //                 classPositions.put(className, new Point(100, 100)); // Set positions as needed
+    //             }
 
-                // Repaint the panel to show loaded classes and relationships
-                drawingPanel.repaint();
-            } catch (IOException ex) {
-                outputArea.append("Failed to load project: " + ex.getMessage() + "\n");
-            }
-        }
-    }
+    //             // Repaint the panel to show loaded classes and relationships
+    //             drawingPanel.repaint();
+    //         } catch (IOException ex) {
+    //             outputArea.append("Failed to load project: " + ex.getMessage() + "\n");
+    //         }
+    //     }
+    // }
 
     private void addClassRectangle(String className) {
         Random random = new Random();
@@ -888,7 +886,7 @@ public class GUI extends JFrame {
                         String className = entry.getKey();
                         Point position = entry.getValue();
                         Rectangle rect = new Rectangle(position.x, position.y, 100,
-                                50 + (umlEditor2.getClass(className).getFields().size() * 15));
+                                50 + (umlEditor.getClass(className).getFields().size() * 15));
                         if (rect.contains(e.getPoint())) {
                             selectedClassName = className; // Set the selected class
                             dragStartPoint = e.getPoint(); // Store the initial drag point
@@ -1013,7 +1011,7 @@ public class GUI extends JFrame {
             for (Map.Entry<String, Point> entry : classPositions.entrySet()) {
                 String className = entry.getKey();
                 Point position = entry.getValue();
-                UmlClass umlClass = umlEditor2.getClass(className);
+                UmlClass umlClass = umlEditor.getClass(className);
                 int boxHeight = getBoxHeight(className); // Get dynamic box height
 
                 // Calculate the maximum width needed for the box
@@ -1107,7 +1105,7 @@ public class GUI extends JFrame {
 
         // Helper method to get the box height based on the class name
         private int getBoxHeight(String className) {
-            UmlClass umlClass = umlEditor2.getClass(className);
+            UmlClass umlClass = umlEditor.getClass(className);
             int attributeCount = (umlClass != null) ? umlClass.getFields().size() : 0;
             int methodCount = (umlClass != null) ? umlClass.getMethods().size() : 0; // Get the number of methods
             return 50 + (attributeCount * 15) + (methodCount * 15); // Base height + dynamic attribute and method height
