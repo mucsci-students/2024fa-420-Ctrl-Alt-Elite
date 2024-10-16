@@ -1,14 +1,15 @@
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -464,7 +465,23 @@ public class UmlEditorModelTest {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
-//TODO find relationship
+    /**
+     * Test finding a relationship given its source, destination, and type.
+     */
+    @Test
+    @DisplayName ("findRelationship: Find a relationship given its source, destination, and type.")
+    public void testFindRelationship() {
+        model.addClass("ClassA");
+        model.addClass("ClassB");
+        RelationshipType typeA = RelationshipType.AGGREGATION;
+        model.addRelationship("ClassA", "ClassB", typeA);
 
+        model.addClass("ClassC");
+        RelationshipType typeB = RelationshipType.COMPOSITION;
+        model.addRelationship("ClassB", "ClassC", typeB);
 
+        assertTrue(model.findRelationship("ClassA", "ClassB", typeA).equals(model.getRelationships().getFirst()));
+    }
 }
+
+/*----------------------------------------------------------------------------------------------------------------*/
