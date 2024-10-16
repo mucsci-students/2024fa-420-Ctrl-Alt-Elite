@@ -10,6 +10,7 @@ import Model.RelationshipType;
 import Model.UmlClass;
 import Model.UmlRelationship;
 
+
 public class UmlEditor {
     /** A map to store UML classes by their name */
     private Map<String, UmlClass> classes;
