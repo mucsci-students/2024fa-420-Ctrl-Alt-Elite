@@ -504,6 +504,20 @@ public class UmlEditorTest {
     }
 
     /**
+     * Test removing a parameter that does not exist, should fail.
+     */
+    @Test
+    @DisplayName ("removeParameter: Try to remove a parameter that does not exist, failure test")
+    public void testRemoveParameterNotExist() {
+    	umlEditor.addClass("ClassA");
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        umlEditor.addMethod("ClassA", "MethodA", lst);
+        
+        assertFalse(umlEditor.removeParameter("ClassA", "MethodA", "Para-D"));
+    }
+
+    /**
      * Test removing a parameter from a method that does not exist, should fail.
      */
     @Test
@@ -526,6 +540,20 @@ public class UmlEditorTest {
         umlEditor.addMethod("ClassA", "MethodA", lst);
 
         assertFalse(umlEditor.removeParameter("ClassB", "MethodA", "Para-A"));
+    }
+
+    /** 
+     * Test trying to remove a parameter from a method with invalid input, should fail.
+     */
+    @Test
+    @DisplayName ("removeParameter: Remove a parameter with invalid input, failure test")
+    public void testRemoveParameterInvalidInput() {
+        umlEditor.addClass("ClassA");
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para A", "Para B ", " Para-C"));
+            umlEditor.addMethod("ClassA", "MethodA", lst);
+        
+        assertFalse(umlEditor.removeParameter("ClassA", "MethodA", "Para A"));
     }
 
     
@@ -626,6 +654,22 @@ public class UmlEditorTest {
         assertFalse(umlEditor.changeParameters("ClassB", "MethodB", lstA));
     }
 
+    /**
+     * Test trying to change a parameter with invalid input, should fail.
+     */
+    @Test
+    @DisplayName ("changeParameters: Change the list of parameters with invalid input, failure test")
+    public void testChangeParametersInvalidInput() {
+    	umlEditor.addClass("ClassA");
+        LinkedHashSet<String> lstA = new LinkedHashSet<>(
+            Arrays.asList(" Para A", "Para-B ", "Para- C"));
+        umlEditor.addMethod("ClassA", "MethodA", lstA);
+
+        LinkedHashSet<String> lstB = new LinkedHashSet<>(
+            Arrays.asList(" Para A "));
+        
+        assertFalse(umlEditor.changeParameters("ClassA", "MethodA", lstB));
+    }
 
 /*----------------------------------------------------------------------------------------------------------------*/
 

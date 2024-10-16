@@ -428,10 +428,146 @@ public class UmlClassTest {
 /*----------------------------------------------------------------------------------------------------------------*/
 
     // TODO remove parameter
+
+    /**
+     * Test removing a parameter from a method.
+     */
+    @Test
+    @DisplayName ("removeParameter: Remove a parameter from a method")
+    public void testRemoveParameter() {
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        umlClass.addMethod("MethodA", lst);
+        
+        assertTrue(umlClass.removeParameter("MethodA", "Para-A"));
+    }
+
+    /**
+     * Test removing a parameter that does not exist, should fail.
+     */
+    @Test
+    @DisplayName ("removeParameter: Try to remove a parameter that does not exist, failure test")
+    public void testRemoveParameterNotExist() {
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        umlClass.addMethod("MethodA", lst);
+        
+        assertFalse(umlClass.removeParameter("MethodA", "Para-D"));
+    }
+
+    /**
+     * Test removing a parameter from a method that does not exist, should fail.
+     */
+    @Test
+    @DisplayName ("removeParameter: Remove a parameter from a method that does not exist, failure test")
+    public void testRemoveParameterMethodNotExist() {
+        assertFalse(umlClass.removeParameter("MethodA", "Para-A"));
+    }
+
+    /** 
+     * Test trying to remove a parameter from a method with invalid input, should fail.
+     */
+    @Test
+    @DisplayName ("removeParameter: Remove a parameter with invalid input, failure test")
+    public void testRemoveParameterInvalidInput() {
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para A", "Para B ", " Para-C"));
+        umlClass.addMethod("MethodA", lst);
+        
+        assertFalse(umlClass.removeParameter("MethodA", "Para A"));
+    }
+
     
 /*----------------------------------------------------------------------------------------------------------------*/   
     
-    // TODO change parameter
+    /**
+     * Test changing the list of parameters of a method.
+     */
+    @Test
+    @DisplayName ("changeParameters: Change the list of parameters of a method")
+    public void testChangeParameters() {
+        LinkedHashSet<String> lstA = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        umlClass.addMethod("MethodA", lstA);
+
+        LinkedHashSet<String> lstB = new LinkedHashSet<>(
+            Arrays.asList("Para-A"));
+        
+        assertTrue(umlClass.changeParameters("MethodA", lstB));
+    }
+
+    /**
+     * Test changing the list of parameters from none to a few parameters
+     */
+    @Test
+    @DisplayName ("changeParameters: Change the list of parameters of a method from none to a few")
+    public void testChangeParametersNoneFew() {
+        LinkedHashSet<String> lstA = new LinkedHashSet<>(
+            Arrays.asList(""));
+            umlClass.addMethod("MethodA", lstA);
+
+        LinkedHashSet<String> lstB = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        
+        assertTrue(umlClass.changeParameters("MethodA", lstB));
+    }
+
+    /**
+     * Test changing the list of parameters from a few to none.
+     */
+    @Test
+    @DisplayName ("changeParameters: Change the list of parameters of a method from a few to none")
+    public void testChangeParametersFewNone() {
+        LinkedHashSet<String> lstA = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        umlClass.addMethod("MethodA", lstA);
+
+        LinkedHashSet<String> lstB = new LinkedHashSet<>(
+            Arrays.asList(""));
+        
+        assertTrue(umlClass.changeParameters("MethodA", lstB));
+    }
+
+    /**
+     * Test changing the list of parameters of a method that does not exist, should fail.
+     */
+    @Test
+    @DisplayName ("changeParameters: Change the list of parameters from a method that does not exist, failure test")
+    public void testChangeParametersMethodNotExist() {
+        LinkedHashSet<String> lstB = new LinkedHashSet<>(
+            Arrays.asList("Para-A"));
+        
+        assertFalse(umlClass.changeParameters("MethodB", lstB));
+    }
+
+    /**
+     * Test changing the list of parameters to the same list, should fail.
+     */
+    @Test
+    @DisplayName ("changeParameters: Change the list of parameters to the same list, failure test")
+    public void testChangeParametersSameList() {
+        LinkedHashSet<String> lstA = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+            umlClass.addMethod("MethodA", lstA);
+        
+        assertFalse(umlClass.changeParameters("MethodB", lstA));
+    }
+
+    /**
+     * Test trying to change a parameter with invalid input, should fail.
+     */
+    @Test
+    @DisplayName ("changeParameters: Change the list of parameters with invalid input, failure test")
+    public void testChangeParametersInvalidInput() {
+        LinkedHashSet<String> lstA = new LinkedHashSet<>(
+            Arrays.asList(" Para A", "Para-B ", "Para- C"));
+        umlClass.addMethod("MethodA", lstA);
+
+        LinkedHashSet<String> lstB = new LinkedHashSet<>(
+            Arrays.asList(" Para A "));
+        
+        assertFalse(umlClass.changeParameters("MethodA", lstB));
+    }
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
