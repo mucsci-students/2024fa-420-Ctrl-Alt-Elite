@@ -11,24 +11,39 @@ import Model.UmlEditorModel;
 import Model.UmlRelationship;
 import View.CLI;
 //TODO add comments
+/**
+ * The UmlCliController class handles the command-line interface (CLI) interactions
+ * for managing a UML diagram. It communicates with the UmlEditorModel to
+ * manipulate the data and uses the CLI view to display messages to the user.
+ */
 public class UmlCliController {
 
+    //Fields
     private UmlEditorModel model;
     private final UmlEditor umlEditor;
     private final CLI view;
     private final Scanner scanner;
     
-
+    /**
+     * Constructs a new UmlCliController.
+     *
+     * @param model The UML editor model used to manage UML data.
+     * @param umlEditor The UmlEditor object that provides operations to modify UML components.
+     * @param view The CLI view for displaying messages and prompting the user.
+     */
     public UmlCliController(UmlEditorModel model, UmlEditor umlEditor, CLI view) {
         this.model = model;
         this.umlEditor = umlEditor;
         this.view = view;
         this.scanner = new Scanner(System.in);
     }
-
+    /**
+     * Starts the command loop that waits for and processes user input commands.
+     */
     public void start() {
         boolean exit = false;
 
+        // Loop until the user chooses to exit
         while (!exit) {
             view.displayMessage("Enter a command (Type 'help' for a list of commands): ");
             String command = scanner.nextLine().trim();
@@ -107,7 +122,9 @@ public class UmlCliController {
         scanner.close(); // Close the scanner when done
     }
 
-    // Add a class to the UML editor
+    /**
+     * Handles the 'add-class' command by prompting the user for a class name and adding it to the UML editor.
+     */
     public void handleAddClass() {
         view.displayMessage("Enter the class name: ");
         String className = scanner.nextLine().trim();
@@ -117,7 +134,10 @@ public class UmlCliController {
             view.displayMessage("Failed to add class. Name may be invalid or duplicated.");
         }
     }
-
+    
+    /**
+     * Handles the 'delete-class' command by prompting the user for a class name and deleting it from the UML editor.
+     */
     public void handleDeleteClass() {
         // Delete a class from the UML editor
         view.displayMessage("Enter the name of the class to delete: ");
@@ -129,6 +149,9 @@ public class UmlCliController {
         }
     }
 
+    /**
+     * Handles the 'rename-class' command by prompting the user for the old class name and new class name and renaming it in the UML editor.
+     */
     public void handleRenameClass() {
         // Rename an existing class
         view.displayMessage("Enter the class name to rename: ");
@@ -142,7 +165,9 @@ public class UmlCliController {
         }
     }
 
-    // Handle adding a field to a class
+    /**
+     * Handles the 'add-field' command by prompting the user for a class and field name and adding the field to the class.
+     */
     public void handleAddField() {
         view.displayMessage("Enter the name of the class to add the field to: ");
         String classToAddField = scanner.nextLine().trim();
@@ -155,7 +180,9 @@ public class UmlCliController {
         }
     }
 
-    // Handle deleting a field from a class
+    /**
+     * Handles the 'delete-field' command by prompting the user for a class and field name and removing the field from the class.
+     */    
     public void handleDeleteField() {
         view.displayMessage("Enter the name of the class to delete the field from: ");
         String classToDeleteField = scanner.nextLine().trim();
@@ -168,7 +195,9 @@ public class UmlCliController {
         }
     }
 
-    // Handle renaming a field in a class
+    /**
+     * Handles the 'rename-field' command by prompting the user for a class and old and new field names and renaming the field.
+     */
     public void handleRenameField() {
         view.displayMessage("Enter the name of the class to rename the field in: ");
         String classToRenameField = scanner.nextLine().trim();
@@ -184,7 +213,11 @@ public class UmlCliController {
         }
     }
 
-    // Handle adding a method to a class
+    
+    /**
+    * Handles adding a method to a class by prompting the user for class name,
+    * method name, and parameters, and then adding the method to the UML editor.
+    */    
     public void handleAddMethod() {
         view.displayMessage("Enter the name of the class to add the method to: ");
         String classToAddMethod = scanner.nextLine().trim();
@@ -221,7 +254,10 @@ public class UmlCliController {
         }
     }
 
-    // Handle deleting a method from a class
+    /**
+     * Handles deleting a method from a class by prompting the user for class name,
+     * method name, and parameters, and then deleting the method from the UML editor.
+     */
     public void handleDeleteMethod() {
         view.displayMessage("Enter the name of the class to delete the method from: ");
         String classToDeleteMethod = scanner.nextLine().trim();
@@ -255,6 +291,10 @@ public class UmlCliController {
         }
     }
 
+    /**
+     * Handles renaming a method in a class by prompting the user for class name,
+     * current method name, new method name, and parameters, and then renaming the method.
+     */
     public void handleRenameMethod() {
         // Renames a method in a class
         view.displayMessage("Enter the name of the class with the method to rename: ");
@@ -291,7 +331,11 @@ public class UmlCliController {
             view.displayMessage("Failed to rename method. Name may be invalid or duplicated, or class does not exist.");
         }
     }
-
+    
+    /**
+     * Handles removing a parameter from a method by prompting the user for class name,
+     * method name, and parameter names, and then removing the parameter from the method.
+     */
     public void handleRemoveParameter() {
         // Removes a parameter, or many parameters, from a method
         view.displayMessage("Enter the name of the class of the method with the parameters to remove: ");
@@ -324,6 +368,10 @@ public class UmlCliController {
         }
     }
 
+    /**
+     * Handles changing parameters of a method by prompting the user for class name,
+     * method name, and new parameters, and then changing the parameters of the method.
+     */
     public void handleChangeParameter() {
         // Replaces a list of parameters with a new list.
         view.displayMessage("Enter the name of the class of the method with the parameters to change: ");
@@ -359,6 +407,10 @@ public class UmlCliController {
         }
     }
 
+    /**
+     * Handles adding a relationship between two classes by prompting the user for source class,
+     * destination class, and relationship type, and then adding the relationship to the UML editor.
+     */
     public void handleAddRelationship() {
         // Adds a relationship between two classes
         view.displayMessage("Enter the source class: ");
@@ -387,6 +439,10 @@ public class UmlCliController {
         }
     }
 
+    /**
+     * Handles deleting a relationship between two classes by prompting the user
+     * for source class and destination class, and then deleting the relationship.
+     */
     public void handleDeleteRelationship() {
         // Deletes a relationship between two classes
         view.displayMessage("Enter the source class: ");
@@ -416,6 +472,11 @@ public class UmlCliController {
         }
     }
 
+    /**
+     * Handles changing the relationship type between two classes.
+     * Prompts the user for the source class, destination class, 
+     * the current relationship type, and the new relationship type.
+     */
     public void handleChangeRelationshipType() {
         // Get the source class
         view.displayMessage("Enter the source class: ");
@@ -462,6 +523,10 @@ public class UmlCliController {
         }
     }
 
+    /**
+     * Handles saving the UML model to a JSON file.
+     * Prompts the user to enter a filename and saves the current UML data.
+     */
     public void handleSave() {
         // Saves the current UML data to a JSON file
         System.out.println("Enter a filename to save to: ");
@@ -475,6 +540,10 @@ public class UmlCliController {
         }
     }
 
+    /**
+     * Handles loading a UML model from a JSON file.
+     * Prompts the user to enter a filename and loads the UML data.
+     */
     public void handleLoad() {
         // Loads UML data from a JSON file
         System.out.println("Enter a filename to load from: ");
@@ -488,6 +557,10 @@ public class UmlCliController {
         }
     }
 
+    /**
+     * Handles listing all classes in the UML model.
+     * Displays each class to the user.
+     */
     public void handleListClasses() {
         // For every class that the model has, tell the view 
         //  to display it to the user.
@@ -496,6 +569,10 @@ public class UmlCliController {
         }
     }
 
+    /**
+     * Handles listing the details of a specified class.
+     * Prompts the user to enter the class name and displays its methods.
+     */
     public void handleListClass() {
         // Lists the methods of a specified class
         System.out.println("Enter the class name to list: ");
@@ -509,6 +586,10 @@ public class UmlCliController {
         }
     }
 
+    /**
+     * Handles listing all relationships between classes in the UML model.
+     * Displays each relationship to the user.
+     */
     public void handleListRelationships() {
         // Lists all relationships between classes
        for (UmlRelationship relationship : model.getRelationships()) {
