@@ -586,6 +586,11 @@ public class UmlEditorTest {
         assertFalse(umlEditor.deleteRelationship("NonExistentClass", "ClassA", type),
         	() -> "Error with deleting a relationship from non-existent classes (Test 2).");
     }
+
+/*----------------------------------------------------------------------------------------------------------------*/
+
+//TODO changeRelatinship
+
 }
 
 /*----------------------------------------------------------------------------------------------------------------*/

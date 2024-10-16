@@ -50,7 +50,8 @@ public class GUI extends JFrame {
     private JButton toggleButton; // Button to collapse/expand
 
     public GUI() {
-        umlEditor = new UmlEditor();
+        model = new UmlEditorModel();
+        umlEditor = new UmlEditor(model);
         classPositions = new HashMap<>(); // Initialize class positions
         setTitle("UML Editor");
         setSize(800, 400); // Increased width to accommodate drawing panel

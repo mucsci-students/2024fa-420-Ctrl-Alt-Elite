@@ -44,6 +44,7 @@ public class UmlEditorModel {
      */
     public void setClasses(Map<String, UmlClass> classes) {
         this.classes = classes;
+        
     }
 
     /**
@@ -72,7 +73,11 @@ public class UmlEditorModel {
      * @param name The name of the UML class to return.
      * @return The UML class if found, {@code null} otherwise.
      */
-    public UmlClass getClass(String name) {
+    public UmlClass getUmlClass(String name) {
+        if (name == null || name.isEmpty()) {
+            return null;
+        }
+        
         return classes.get(name);
     }
 
@@ -83,6 +88,10 @@ public class UmlEditorModel {
      * @return {@code true} if the class name exists in the Map of classes, {@code false} otherwise.
      */
     public boolean classExist(String className) {
+        if (className == null || className.isEmpty()) {
+            return false;
+        }
+        
         return classes.containsKey(className);
     }
     
@@ -105,7 +114,7 @@ public class UmlEditorModel {
      * @return {@code true} if the class was added, {@code false} otherwise.
      */
     public boolean addClass(String name) {
-        if (classes.containsKey(name)) {
+        if (classes.containsKey(name) || name == null || name.isEmpty()) {
             return false; // Return false if name is null, empty, or class already exists
         }
         classes.put(name, new UmlClass(name));
@@ -119,6 +128,10 @@ public class UmlEditorModel {
      * @return {@code true} if the class was deleted, {@code false} otherwise.
      */
     public boolean deleteClass(String name) {
+        if (name == null || name.isEmpty()) {
+            return false;
+        }
+        
         if (classes.containsKey(name)) {
             classes.remove(name);
             // Remove relationships involving the class
@@ -182,6 +195,11 @@ public class UmlEditorModel {
             return false;
         }
         
+        // Check that both classes exist.
+        if (!classExist(source) || !classExist(destination)) {
+            return false;
+        }
+
         // Create a new relationship and add it to the list.
         UmlRelationship newRelationship = new UmlRelationship(source, destination, type);
 

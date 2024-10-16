@@ -578,7 +578,7 @@ public class UmlCliController {
         System.out.println("Enter the class name to list: ");
         String listClassName = scanner.nextLine().trim();
         
-        UmlClass umlClass = model.getClass(listClassName);
+        UmlClass umlClass = model.getUmlClass(listClassName);
         if (umlClass != null) {
             view.displayMessage(umlClass.toString());
         } else {

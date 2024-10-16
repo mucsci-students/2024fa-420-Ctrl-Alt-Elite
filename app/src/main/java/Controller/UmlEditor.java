@@ -32,7 +32,7 @@ public class UmlEditor {
         if (name == null || name.isEmpty()) {
             return null;
         }
-        return model.getClass(name);
+        return model.getUmlClass(name);
     }
 
     /**
@@ -86,7 +86,7 @@ public class UmlEditor {
      * @return A set of fields that belong to a class.
      */
     public Set<String> getFields(String className) {
-        UmlClass umlClass = model.getClass(className);
+        UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.getFields(); // Assuming getFields() returns a Set<String> of field names
         }
@@ -101,7 +101,7 @@ public class UmlEditor {
      * @return {@code true} if the field was added, {@code false} otherwise.
      */
     public boolean addField(String className, String fieldName) {
-        UmlClass umlClass = model.getClass(className);
+        UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.addField(fieldName);
         }
@@ -116,7 +116,7 @@ public class UmlEditor {
      * @return {@code true} if the field was deleted, {@code false} otherwise.
      */
     public boolean deleteField(String className, String fieldName) {
-        UmlClass umlClass = model.getClass(className);
+        UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.deleteField(fieldName);
         }
@@ -132,7 +132,7 @@ public class UmlEditor {
      * @return {@code true} if the field was renamed, {@code false} otherwise.
      */
     public boolean renameField(String className, String oldFieldName, String newFieldName) {
-        UmlClass umlClass = model.getClass(className);
+        UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.renameField(oldFieldName, newFieldName);
         }
@@ -150,7 +150,7 @@ public class UmlEditor {
      * @return {@code true} if the method was added, {@code false} otherwise.
      */
     public boolean addMethod(String className, String methodName, LinkedHashSet<String> paraList) {
-        UmlClass umlClass = model.getClass(className);
+        UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.addMethod(methodName, paraList);
         }
@@ -166,7 +166,7 @@ public class UmlEditor {
      * @return {@code true} if the method was deleted, {@code false} otherwise.
      */
     public boolean deleteMethod(String className, String methodName, LinkedHashSet<String> paraList) {
-        UmlClass umlClass = model.getClass(className);
+        UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.deleteMethod(methodName, paraList);
         }
@@ -183,7 +183,7 @@ public class UmlEditor {
      * @return {@code true} if the method was renamed, {@code false} otherwise.
      */
     public boolean renameMethod(String className, String oldName, LinkedHashSet<String> paraList, String newName) {
-        UmlClass umlClass = model.getClass(className);
+        UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.renameMethod(oldName, paraList, newName);
         }
@@ -201,7 +201,7 @@ public class UmlEditor {
      * @return {@code true} if the parameter was removed, {@code false} otherwise.
      */
     public boolean removeParameter(String className, String methodName, String paraName) {
-        UmlClass umlClass = model.getClass(className);
+        UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.removeParameter(methodName, paraName);
         }
@@ -217,7 +217,7 @@ public class UmlEditor {
      * @return {@code true} if the parameters were changed, {@code false} otherwise.
      */
     public boolean changeParameters(String className, String methodName, LinkedHashSet<String> parameters) {
-        UmlClass umlClass = model.getClass(className);
+        UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.changeParameters(methodName, parameters);
         }
