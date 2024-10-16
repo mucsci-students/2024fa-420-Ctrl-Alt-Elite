@@ -1,3 +1,5 @@
+package View;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -12,6 +14,12 @@ import java.util.LinkedHashSet;
 import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+
+import Model.JsonUtils;
+import Model.RelationshipType;
+import Model.UmlClass;
+import Model.UmlRelationship;
 
 public class GUI extends JFrame {
     private UmlEditor umlEditor;
@@ -156,15 +164,15 @@ public class GUI extends JFrame {
         listRelationshipsButton.addActionListener(e -> showListRelationshipsPanel());
         cardPanel.add(listRelationshipsButton);
 
-        // Save UML Project Button and Action
-        JButton saveButton = new JButton("Save UML Project");
-        saveButton.addActionListener(e -> showSaveProjectPanel());
-        cardPanel.add(saveButton);
+        // // Save UML Project Button and Action
+        // JButton saveButton = new JButton("Save UML Project");
+        // saveButton.addActionListener(e -> showSaveProjectPanel());
+        // cardPanel.add(saveButton);
 
-        // Load UML Project Button and Action
-        JButton loadButton = new JButton("Load UML Project");
-        loadButton.addActionListener(e -> showLoadProjectPanel());
-        cardPanel.add(loadButton);
+        // // Load UML Project Button and Action
+        // JButton loadButton = new JButton("Load UML Project");
+        // loadButton.addActionListener(e -> showLoadProjectPanel());
+        // cardPanel.add(loadButton);
 
         // Add the card panel to the frame
         add(cardPanel, BorderLayout.EAST);
@@ -785,46 +793,46 @@ public class GUI extends JFrame {
         }
     }
 
-    private void showSaveProjectPanel() {
-        JFileChooser fileChooser = new JFileChooser();
-        int option = fileChooser.showSaveDialog(null);
-        if (option == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            try {
-                JsonUtils.save(umlEditor, file.getAbsolutePath());
-                outputArea.append("Project saved successfully to " + file.getAbsolutePath() + ".\n");
-            } catch (IOException ex) {
-                outputArea.append("Failed to save project: " + ex.getMessage() + "\n");
-            }
-        }
-    }
+    // private void showSaveProjectPanel() {
+    //     JFileChooser fileChooser = new JFileChooser();
+    //     int option = fileChooser.showSaveDialog(null);
+    //     if (option == JFileChooser.APPROVE_OPTION) {
+    //         File file = fileChooser.getSelectedFile();
+    //         try {
+    //             JsonUtils.save(umlEditor, file.getAbsolutePath());
+    //             outputArea.append("Project saved successfully to " + file.getAbsolutePath() + ".\n");
+    //         } catch (IOException ex) {
+    //             outputArea.append("Failed to save project: " + ex.getMessage() + "\n");
+    //         }
+    //     }
+    // }
 
-    private void showLoadProjectPanel() {
-        JFileChooser fileChooser = new JFileChooser();
-        int option = fileChooser.showOpenDialog(null);
-        if (option == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            try {
-                umlEditor = JsonUtils.load(file.getAbsolutePath());
-                outputArea.append("Project loaded successfully from " + file.getAbsolutePath() + ".\n");
+    // private void showLoadProjectPanel() {
+    //     JFileChooser fileChooser = new JFileChooser();
+    //     int option = fileChooser.showOpenDialog(null);
+    //     if (option == JFileChooser.APPROVE_OPTION) {
+    //         File file = fileChooser.getSelectedFile();
+    //         try {
+    //             umlEditor = JsonUtils.load(file.getAbsolutePath());
+    //             outputArea.append("Project loaded successfully from " + file.getAbsolutePath() + ".\n");
 
-                // Clear previous class positions
-                classPositions.clear();
+    //             // Clear previous class positions
+    //             classPositions.clear();
 
-                // Populate classPositions based on the loaded UML editor
-                for (Map.Entry<String, UmlClass> entry : umlEditor.getClasses().entrySet()) {
-                    String className = entry.getKey();
-                    // Set initial positions for the classes (you may need to adjust this logic)
-                    classPositions.put(className, new Point(100, 100)); // Set positions as needed
-                }
+    //             // Populate classPositions based on the loaded UML editor
+    //             for (Map.Entry<String, UmlClass> entry : umlEditor.getClasses().entrySet()) {
+    //                 String className = entry.getKey();
+    //                 // Set initial positions for the classes (you may need to adjust this logic)
+    //                 classPositions.put(className, new Point(100, 100)); // Set positions as needed
+    //             }
 
-                // Repaint the panel to show loaded classes and relationships
-                drawingPanel.repaint();
-            } catch (IOException ex) {
-                outputArea.append("Failed to load project: " + ex.getMessage() + "\n");
-            }
-        }
-    }
+    //             // Repaint the panel to show loaded classes and relationships
+    //             drawingPanel.repaint();
+    //         } catch (IOException ex) {
+    //             outputArea.append("Failed to load project: " + ex.getMessage() + "\n");
+    //         }
+    //     }
+    // }
 
     private void addClassRectangle(String className) {
         Random random = new Random();

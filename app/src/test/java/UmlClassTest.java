@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import Model.UmlClass;
+
 /**
  * A test class that checks the functionality of UnlClass.
  */
@@ -26,7 +28,15 @@ public class UmlClassTest {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO UmlClass constructor
+    /**
+     * Test creating a UmlClass object.
+     */
+    @Test
+    @DisplayName ("Constructor: Create a UmlClass object")
+    public void testUmlClassConstructor() {
+        UmlClass umlClassTest = new UmlClass("ClassA");
+        assertEquals(umlClassTest.getName(), umlClass.getName());
+    }
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -52,8 +62,7 @@ public class UmlClassTest {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO addField tests
-/**
+    /**
      * Test that a field can be successfully added.
      */
     @Test
@@ -61,7 +70,6 @@ public class UmlClassTest {
     public void testAddField() {
         assertTrue(umlClass.addField("Field1"));
     }
-
     /**
      * Test adding a field that already exists, should fail.
      */
@@ -71,7 +79,6 @@ public class UmlClassTest {
         umlClass.addField("Field1");
         assertFalse(umlClass.addField("Field1"));
     }
-
     /**
      * Test adding a field with an empty name, should fail.
      */
@@ -83,8 +90,7 @@ public class UmlClassTest {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO deleteField tests
-/**
+    /**
      * Test that a field can be successfully deleted.
      */
     @Test
@@ -93,7 +99,6 @@ public class UmlClassTest {
         umlClass.addField("Field1");
         assertTrue(umlClass.deleteField("Field1"));
     }
-
     /**
      * Test deleting a field that does not exist, should fail.
      */
@@ -105,8 +110,7 @@ public class UmlClassTest {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO renameField tests
-/**
+    /**
      * Test renaming a field.
      */
     @Test
@@ -115,7 +119,6 @@ public class UmlClassTest {
         umlClass.addField("Field1");
         assertTrue(umlClass.renameField("Field1", "Field2"));
     }
-
     /**
      * Test renaming a field that does not exist, should fail.
      */
@@ -124,7 +127,6 @@ public class UmlClassTest {
     public void testRenameFieldNotExist() {
         assertFalse(umlClass.renameField("Field1", "Field2"));
     }
-
     /**
      * Test renaming a field to an empty name, should fail.
      */
@@ -134,28 +136,9 @@ public class UmlClassTest {
         umlClass.addField("Field1");
         assertFalse(umlClass.renameField("Field1", ""));
     }
-
     
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO method constructor
-
-/*----------------------------------------------------------------------------------------------------------------*/
-
-    //TODO get name
-    //TODO set name
-
-/*----------------------------------------------------------------------------------------------------------------*/
-
-    //TODO get parameters
-    //TODO set parameters
-
-/*----------------------------------------------------------------------------------------------------------------*/
-
-    //TODO remove parameter
-
-/*----------------------------------------------------------------------------------------------------------------*/
-    
     /**
      * Test that two methods that are the same equal each other.
      */
@@ -433,11 +416,143 @@ public class UmlClassTest {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    // TODO remove parameter
+    /**
+     * Test removing a parameter from a method.
+     */
+    @Test
+    @DisplayName ("removeParameter: Remove a parameter from a method")
+    public void testRemoveParameter() {
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        umlClass.addMethod("MethodA", lst);
+        
+        assertTrue(umlClass.removeParameter("MethodA", "Para-A"));
+    }
+
+    /**
+     * Test removing a parameter that does not exist, should fail.
+     */
+    @Test
+    @DisplayName ("removeParameter: Try to remove a parameter that does not exist, failure test")
+    public void testRemoveParameterNotExist() {
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        umlClass.addMethod("MethodA", lst);
+        
+        assertFalse(umlClass.removeParameter("MethodA", "Para-D"));
+    }
+
+    /**
+     * Test removing a parameter from a method that does not exist, should fail.
+     */
+    @Test
+    @DisplayName ("removeParameter: Remove a parameter from a method that does not exist, failure test")
+    public void testRemoveParameterMethodNotExist() {
+        assertFalse(umlClass.removeParameter("MethodA", "Para-A"));
+    }
+
+    /** 
+     * Test trying to remove a parameter from a method with invalid input, should fail.
+     */
+    @Test
+    @DisplayName ("removeParameter: Remove a parameter with invalid input, failure test")
+    public void testRemoveParameterInvalidInput() {
+        LinkedHashSet<String> lst = new LinkedHashSet<>(
+            Arrays.asList("Para A", "Para B ", " Para-C"));
+        umlClass.addMethod("MethodA", lst);
+        
+        assertFalse(umlClass.removeParameter("MethodA", "Para A"));
+    }
+
     
 /*----------------------------------------------------------------------------------------------------------------*/   
     
-    // TODO change parameter
+    /**
+     * Test changing the list of parameters of a method.
+     */
+    @Test
+    @DisplayName ("changeParameters: Change the list of parameters of a method")
+    public void testChangeParameters() {
+        LinkedHashSet<String> lstA = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        umlClass.addMethod("MethodA", lstA);
+
+        LinkedHashSet<String> lstB = new LinkedHashSet<>(
+            Arrays.asList("Para-A"));
+        
+        assertTrue(umlClass.changeParameters("MethodA", lstB));
+    }
+
+    /**
+     * Test changing the list of parameters from none to a few parameters
+     */
+    @Test
+    @DisplayName ("changeParameters: Change the list of parameters of a method from none to a few")
+    public void testChangeParametersNoneFew() {
+        LinkedHashSet<String> lstA = new LinkedHashSet<>();
+            umlClass.addMethod("MethodA", lstA);
+
+        LinkedHashSet<String> lstB = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        
+        assertTrue(umlClass.changeParameters("MethodA", lstB));
+    }
+
+    /**
+     * Test changing the list of parameters from a few to none.
+     */
+    @Test
+    @DisplayName ("changeParameters: Change the list of parameters of a method from a few to none")
+    public void testChangeParametersFewNone() {
+        LinkedHashSet<String> lstA = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        umlClass.addMethod("MethodA", lstA);
+
+        LinkedHashSet<String> lstB = new LinkedHashSet<>();
+        
+        assertTrue(umlClass.changeParameters("MethodA", lstB));
+    }
+
+    /**
+     * Test changing the list of parameters of a method that does not exist, should fail.
+     */
+    @Test
+    @DisplayName ("changeParameters: Change the list of parameters from a method that does not exist, failure test")
+    public void testChangeParametersMethodNotExist() {
+        LinkedHashSet<String> lstB = new LinkedHashSet<>(
+            Arrays.asList("Para-A"));
+        
+        assertFalse(umlClass.changeParameters("MethodB", lstB));
+    }
+
+    /**
+     * Test changing the list of parameters to the same list, should fail.
+     */
+    @Test
+    @DisplayName ("changeParameters: Change the list of parameters to the same list, failure test")
+    public void testChangeParametersSameList() {
+        LinkedHashSet<String> lstA = new LinkedHashSet<>(
+            Arrays.asList("Para-A", "Para-B", "Para-C"));
+            umlClass.addMethod("MethodA", lstA);
+        
+        assertFalse(umlClass.changeParameters("MethodB", lstA));
+    }
+
+    /**
+     * Test trying to change a parameter with invalid input, should fail.
+     */
+    @Test
+    @DisplayName ("changeParameters: Change the list of parameters with invalid input, failure test")
+    public void testChangeParametersInvalidInput() {
+        LinkedHashSet<String> lstA = new LinkedHashSet<>(
+            Arrays.asList(" Para A", "Para-B ", "Para- C"));
+        umlClass.addMethod("MethodA", lstA);
+
+        LinkedHashSet<String> lstB = new LinkedHashSet<>(
+            Arrays.asList(" Para A "));
+        
+        assertFalse(umlClass.changeParameters("MethodA", lstB));
+    }
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -471,3 +586,5 @@ public class UmlClassTest {
                      """, umlClass.toString());
     }
 }
+
+/*----------------------------------------------------------------------------------------------------------------*/

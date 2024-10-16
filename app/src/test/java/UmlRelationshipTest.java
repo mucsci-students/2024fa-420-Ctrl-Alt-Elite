@@ -4,6 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import Model.RelationshipType;
+import Model.UmlRelationship;
+
 /**
  * A test class that checks the functionality of UmlRelationship.
  */
@@ -11,13 +14,14 @@ public class UmlRelationshipTest {
 	
 	/** A UmlRelationship object that will be tested on. */
 	private UmlRelationship relationship;
+
+    private final RelationshipType type = RelationshipType.AGGREGATION;
 	
 	/**
      * Creates an instance of a UmlRelationship object to be used in tests.
      */
     @BeforeEach
     public void setUp() {
-    	RelationshipType type = RelationshipType.AGGREGATION;
         relationship = new UmlRelationship("ClassA", "ClassB", type);
     }
 	
@@ -29,6 +33,7 @@ public class UmlRelationshipTest {
     public void testUmlRelationship() {
         assertEquals("ClassA", relationship.getSource());
         assertEquals("ClassB", relationship.getDestination());
+        assertEquals(type, relationship.getType());
     }
 
     /**
@@ -49,15 +54,26 @@ public class UmlRelationshipTest {
         assertEquals("ClassB", relationship.getDestination());
     }
 
-    //TODO getType
+    /**
+     * Test that getType returns the type of the relationship.
+     */
+    @Test
+    @DisplayName ("GetType: Retrieve the type of the relationship")
+    public void testGetType() {
+        assertEquals(type, relationship.getType());
+    }
 
-    //TODO setType
-
-    //TODO add relationship
-
-    //TODO delete relationship
-
-    //TODO change relationship type
+    /**
+     * Test that setType alters the type of the relationship.
+     */
+    @Test
+    @DisplayName ("SetType: Alter the type of the relationship")
+    public void testSetType() {
+        RelationshipType newType = RelationshipType.COMPOSITION;
+        relationship.setType(newType);
+        
+        assertEquals(newType, relationship.getType());
+    }
     
     /**
      * Test that two relationships that are the same equal each other.
@@ -65,7 +81,6 @@ public class UmlRelationshipTest {
     @Test
     @DisplayName ("Equals: Test that two relationships that are the same equal each other")
     public void testEquality() {
-        RelationshipType type = RelationshipType.AGGREGATION;
         UmlRelationship relationship2 = new UmlRelationship("ClassA", "ClassB", type);
         assertEquals(relationship, relationship2);
     }
@@ -76,7 +91,6 @@ public class UmlRelationshipTest {
     @Test
     @DisplayName ("Equals: Test that two relationships, that are not the same, are not equal, failure test")
     public void testNotEquality() {
-    	RelationshipType type = RelationshipType.AGGREGATION;
         UmlRelationship relationship2 = new UmlRelationship("ClassB", "ClassA", type);
     	assertNotEquals(relationship, relationship2);
     }
@@ -87,7 +101,6 @@ public class UmlRelationshipTest {
     @Test
     @DisplayName ("HashCode: Test that the same objects have the same hash code")
     public void testHashCode() {
-        RelationshipType type = RelationshipType.AGGREGATION;
         UmlRelationship relationship2 = new UmlRelationship("ClassA", "ClassB", type);
         assertEquals(relationship.hashCode(), relationship2.hashCode());
     }
@@ -98,7 +111,6 @@ public class UmlRelationshipTest {
     @Test
     @DisplayName ("HashCode: Test that different objects different hash code, failure test")
     public void testHashCodeDifferent() {
-        RelationshipType type = RelationshipType.AGGREGATION;
         UmlRelationship relationship2 = new UmlRelationship("ClassB", "ClassA", type);
         assertNotEquals(relationship.hashCode(), relationship2.hashCode());
     }

@@ -1,3 +1,4 @@
+package Model;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -84,7 +85,9 @@ public class UmlClass {
      *         already exists.
      */
     public boolean addField(String fieldName) {
-        //TODO should not be able to add a field with an empty name
+        if (fieldName.isEmpty() || fieldName.contains(" ")) {
+            return false;
+        }
         
         return fields.add(fieldName); // Returns false if the field is already present
     }
@@ -97,6 +100,9 @@ public class UmlClass {
      *         not found.
      */
     public boolean deleteField(String fieldName) {
+        if (fieldName.isEmpty()) {
+            return false;
+        }
         return fields.remove(fieldName);
     }
 
@@ -109,6 +115,10 @@ public class UmlClass {
      *         could not me renamed.
      */
     public boolean renameField(String oldName, String newName) {
+        if (oldName.isEmpty() || newName.isEmpty() || oldName.contains(" ") || newName.contains(" ")) {
+            return false;
+        }
+       
         if (fields.contains(oldName) && !fields.contains(newName)) {
             fields.remove(oldName);
             fields.add(newName);
@@ -286,8 +296,17 @@ public class UmlClass {
      */
     public boolean addMethod(String methodName, LinkedHashSet<String> parameters) {
         // The method must have a name
-        if (methodName.isEmpty()) {
+        if (methodName.isEmpty() || methodName.contains(" ")) {
             return false;
+        }
+
+        if (!parameters.isEmpty()) {
+            //Check that all of the parameter names are valid
+            for (String parameter : parameters) {
+             if (parameter.isEmpty() || parameter.contains(" ")) {
+                return false;
+                }
+            }
         }
 
         // Loop through the methods to see if a method that equals
@@ -332,8 +351,9 @@ public class UmlClass {
      *         the new name already exists or if the 'oldname' method was not found
      */
     public boolean renameMethod(String oldName, LinkedHashSet<String> parameters, String newName) {
-        // If the names are empty, or if there are no methods, return false.
-        if (oldName.isEmpty() || newName.isEmpty() || methods.isEmpty()) {
+        // If the names are empty, if there are no methods, or if there is white space
+        //  in the new name, return false.
+        if (oldName.isEmpty() || newName.isEmpty() || methods.isEmpty() || newName.contains(" ")) {
             return false;
         }
 
@@ -393,6 +413,15 @@ public class UmlClass {
         // If the method name is invalid, return false.
         if (methodName.isEmpty()) {
             return false;
+        }
+
+        if (!parameters.isEmpty()) {
+            //Check that all of the parameter names are valid
+            for (String parameter : parameters) {
+             if (parameter.isEmpty() || parameter.contains(" ")) {
+                return false;
+                }
+            }
         }
 
         for (Method method : methods) {

@@ -1,8 +1,14 @@
+package View;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+
+import Model.RelationshipType;
+import Model.UmlClass;
+import Model.UmlRelationship;
 
 public class UmlEditor {
     /** A map to store UML classes by their name */
