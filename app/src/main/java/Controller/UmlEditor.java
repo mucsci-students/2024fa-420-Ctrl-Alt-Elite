@@ -42,7 +42,7 @@ public class UmlEditor {
      * @return {@code true} if the class was added, {@code false} otherwise.
      */
     public boolean addClass(String name) {
-        if (name == null || name.isEmpty()) {
+        if (name == null || name.isEmpty() || name.contains(" ")) {
             return false;
         }
         return model.addClass(name); 
@@ -70,7 +70,7 @@ public class UmlEditor {
      * @return {@code true} if the class was renamed, {@code false} otherwise.
      */
     public boolean renameClass(String oldName, String newName) {
-        if (oldName == null || oldName.isEmpty() || newName == null || newName.isEmpty()) {
+        if (oldName == null || oldName.isEmpty() || newName == null || newName.isEmpty() || newName.contains(" ")) {
             return false;
         }
         

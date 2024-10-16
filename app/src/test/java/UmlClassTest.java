@@ -28,7 +28,15 @@ public class UmlClassTest {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO UmlClass constructor
+    /**
+     * Test creating a UmlClass object.
+     */
+    @Test
+    @DisplayName ("Constructor: Create a UmlClass object")
+    public void testUmlClassConstructor() {
+        UmlClass umlClassTest = new UmlClass("ClassA");
+        assertEquals(umlClassTest.getName(), umlClass.getName());
+    }
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -128,28 +136,9 @@ public class UmlClassTest {
         umlClass.addField("Field1");
         assertFalse(umlClass.renameField("Field1", ""));
     }
-
     
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO method constructor
-
-/*----------------------------------------------------------------------------------------------------------------*/
-
-    //TODO get name
-    //TODO set name
-
-/*----------------------------------------------------------------------------------------------------------------*/
-
-    //TODO get parameters
-    //TODO set parameters
-
-/*----------------------------------------------------------------------------------------------------------------*/
-
-    //TODO remove parameter
-
-/*----------------------------------------------------------------------------------------------------------------*/
-    
     /**
      * Test that two methods that are the same equal each other.
      */
@@ -427,8 +416,6 @@ public class UmlClassTest {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    // TODO remove parameter
-
     /**
      * Test removing a parameter from a method.
      */
@@ -502,8 +489,7 @@ public class UmlClassTest {
     @Test
     @DisplayName ("changeParameters: Change the list of parameters of a method from none to a few")
     public void testChangeParametersNoneFew() {
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList(""));
+        LinkedHashSet<String> lstA = new LinkedHashSet<>();
             umlClass.addMethod("MethodA", lstA);
 
         LinkedHashSet<String> lstB = new LinkedHashSet<>(
@@ -522,8 +508,7 @@ public class UmlClassTest {
             Arrays.asList("Para-A", "Para-B", "Para-C"));
         umlClass.addMethod("MethodA", lstA);
 
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList(""));
+        LinkedHashSet<String> lstB = new LinkedHashSet<>();
         
         assertTrue(umlClass.changeParameters("MethodA", lstB));
     }
@@ -601,3 +586,5 @@ public class UmlClassTest {
                      """, umlClass.toString());
     }
 }
+
+/*----------------------------------------------------------------------------------------------------------------*/

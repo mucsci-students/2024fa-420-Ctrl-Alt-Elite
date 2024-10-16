@@ -114,9 +114,11 @@ public class UmlEditorModel {
      * @return {@code true} if the class was added, {@code false} otherwise.
      */
     public boolean addClass(String name) {
-        if (classes.containsKey(name) || name == null || name.isEmpty()) {
-            return false; // Return false if name is null, empty, or class already exists
+        // Return false if name is null, empty, class already exists, or the name has white space
+        if (classes.containsKey(name) || name == null || name.isEmpty() || name.contains(" ")) {
+            return false;
         }
+        
         classes.put(name, new UmlClass(name));
         return true;
     }
@@ -150,14 +152,13 @@ public class UmlEditorModel {
      * @return {@code true} if the class was renamed, {@code false} otherwise.
      */
     public boolean renameClass(String oldName, String newName) {
-        // Check for null or empty newName and if oldName exists
-        if (!classes.containsKey(oldName)) {
+        // Check for null or empty newName, if oldName exists, if the new name already exists
+        //  and if the new name has white space
+        if (newName == null || newName.isEmpty()
+            || !classes.containsKey(oldName) 
+            || classes.containsKey(newName) 
+            || newName.contains(" ")) {
             return false; // Invalid conditions
-        }
-
-        // Check if the new name already exists
-        if (classes.containsKey(newName)) {
-            return false; // New name already exists
         }
 
         UmlClass umlClass = classes.remove(oldName);

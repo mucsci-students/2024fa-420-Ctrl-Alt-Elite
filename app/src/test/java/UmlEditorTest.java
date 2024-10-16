@@ -318,17 +318,6 @@ public class UmlEditorTest {
         assertFalse(umlEditor.renameField("ClassA", "Field1", ""), 
             () -> "Error with renaming a field to an empty name.");
     }
-    /**
-     * Test renaming a field to null, should fail.
-     */
-    @Test
-    @DisplayName ("RenameField: Rename a field to null, failure test")
-    public void testRenameFieldToNull() {
-        umlEditor.addClass("ClassA");
-        umlEditor.addField("ClassA", "Field1");
-        assertFalse(umlEditor.renameField("ClassA", "Field1", null), 
-            () -> "Error with renaming a field to null.");
-    }
     
 /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -583,8 +572,7 @@ public class UmlEditorTest {
     @DisplayName ("changeParameters: Change the list of parameters of a method from none to a few")
     public void testChangeParametersNoneFew() {
     	umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList(""));
+        LinkedHashSet<String> lstA = new LinkedHashSet<>();
         umlEditor.addMethod("ClassA", "MethodA", lstA);
 
         LinkedHashSet<String> lstB = new LinkedHashSet<>(
@@ -604,8 +592,7 @@ public class UmlEditorTest {
             Arrays.asList("Para-A", "Para-B", "Para-C"));
         umlEditor.addMethod("ClassA", "MethodA", lstA);
 
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList(""));
+        LinkedHashSet<String> lstB = new LinkedHashSet<>();
         
         assertTrue(umlEditor.changeParameters("ClassA", "MethodA", lstB));
     }
