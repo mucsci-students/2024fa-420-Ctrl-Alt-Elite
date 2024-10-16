@@ -37,7 +37,8 @@ public class UmlEditor {
      * @return {@code true} if the class was added, {@code false} otherwise.
      */
     /**
-     * Adds a new class if it doesn't already exist and the name is not null or empty.
+     * Adds a new class if it doesn't already exist and the name is not null or
+     * empty.
      * 
      * @param name The name of the new class.
      * @return {@code true} if the class was added, {@code false} otherwise.
@@ -259,54 +260,53 @@ public class UmlEditor {
         return relationships.remove(new UmlRelationship(source, destination, type));
     }
 
-    public boolean changeRelationshipType(String source, String destination, RelationshipType currentType, RelationshipType newType) {
+    public boolean changeRelationshipType(String source, String destination, RelationshipType currentType,
+            RelationshipType newType) {
         // Find the relationship with the current type
         UmlRelationship relationship = findRelationship(source, destination, currentType);
-    
+
         // Check if the relationship exists
         if (relationship == null) {
             System.out.println("Relationship not found between '" + source + "' and '" + destination + "'.");
             return false; // Relationship not found
         }
-    
+
         // Check if the new type already exists for the same relationship
         if (findRelationship(source, destination, newType) != null) {
-            System.out.println("A relationship of type '" + newType + "' already exists between '" + source + "' and '" + destination + "'.");
+            System.out.println("A relationship of type '" + newType + "' already exists between '" + source + "' and '"
+                    + destination + "'.");
             return false; // Prevent changing to an existing type
         }
-    
+
         // Change the relationship type
         relationship.setType(newType); // Update the relationship type
         System.out.println("Relationship between '" + source + "' and '" + destination + "' has been changed from '"
                 + currentType + "' to '" + newType + "'.");
         return true; // Change successful
     }
-    
-    
+
     // Existing method that checks only source and destination
-public UmlRelationship findRelationship(String source, String destination) {
-    for (UmlRelationship relationship : relationships) {
-        if (relationship.getSource().equals(source) &&
-            relationship.getDestination().equals(destination)) {
-            return relationship; // Return the found relationship
+    public UmlRelationship findRelationship(String source, String destination) {
+        for (UmlRelationship relationship : relationships) {
+            if (relationship.getSource().equals(source) &&
+                    relationship.getDestination().equals(destination)) {
+                return relationship; // Return the found relationship
+            }
         }
+        return null; // Return null if no relationship is found
     }
-    return null; // Return null if no relationship is found
-}
 
-// New overloaded method that checks source, destination, and type
-public UmlRelationship findRelationship(String source, String destination, RelationshipType type) {
-    for (UmlRelationship relationship : relationships) {
-        if (relationship.getSource().equals(source) &&
-            relationship.getDestination().equals(destination) &&
-            relationship.getType() == type) { // Check for relationship type
-            return relationship; // Return the found relationship
+    // New overloaded method that checks source, destination, and type
+    public UmlRelationship findRelationship(String source, String destination, RelationshipType type) {
+        for (UmlRelationship relationship : relationships) {
+            if (relationship.getSource().equals(source) &&
+                    relationship.getDestination().equals(destination) &&
+                    relationship.getType() == type) { // Check for relationship type
+                return relationship; // Return the found relationship
+            }
         }
+        return null; // Return null if no relationship is found
     }
-    return null; // Return null if no relationship is found
-}
-
-    
 
     /**
      * Lists all UML classes.
@@ -376,12 +376,12 @@ public UmlRelationship findRelationship(String source, String destination, Relat
         this.relationships = relationships;
     }
 
- // Retrieves the fields of a specified UML class by name
- public Set<String> getFields(String className) {
-    UmlClass umlClass = classes.get(className);
-    if (umlClass != null) {
-        return umlClass.getFields(); // Assuming getFields() returns a Set<String> of field names
+    // Retrieves the fields of a specified UML class by name
+    public Set<String> getFields(String className) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.getFields(); // Assuming getFields() returns a Set<String> of field names
+        }
+        return null; // Return null if the class does not exist
     }
-    return null; // Return null if the class does not exist
-}
 }
