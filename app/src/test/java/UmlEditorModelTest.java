@@ -409,7 +409,58 @@ public class UmlEditorModelTest {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
-//TODO change relatioship
+/**
+     * Test changing the relationship type.
+     */
+    @Test
+    @DisplayName ("changeRelationshipType: Change the type of a relationship")
+    public void testChangeRelationshipType() {
+        model.addClass("ClassA");
+        model.addClass("ClassB");
+        RelationshipType typeA = RelationshipType.AGGREGATION;
+        model.addRelationship("ClassA", "ClassB", typeA);
+
+        RelationshipType typeB = RelationshipType.COMPOSITION;
+        assertTrue(model.changeRelationshipType("ClassA", "ClassB", typeA, typeB));
+    }
+
+    /**
+     * Test changing the relationship type to the same type, should fail.
+     */
+    @Test
+    @DisplayName ("changeRelationshipType: Change the type of a relationship to its current type, failure test.")
+    public void testChangeRelationshipTypeSameType() {
+        model.addClass("ClassA");
+        model.addClass("ClassB");
+        RelationshipType typeA = RelationshipType.AGGREGATION;
+
+        assertFalse(model.changeRelationshipType("ClassA", "ClassB", typeA, typeA));
+    }
+
+    /**
+     * Test changing the relationship type of a relationship from classes that do not exist, should fail.
+     */
+    @Test
+    @DisplayName ("changeRelationshipType: Change the type of a relationship between classes that do not exist, failure test.")
+    public void testChangeRelationshipTypeClassNotExist() {
+        RelationshipType typeA = RelationshipType.AGGREGATION;
+        RelationshipType typeB = RelationshipType.COMPOSITION;
+        assertFalse(model.changeRelationshipType("ClassA", "ClassB", typeA, typeB));
+    }
+
+    /**
+     * Test changing the relationship type of a relationship that does not exist, should fail.
+     */
+    @Test
+    @DisplayName ("changeRelationshipType: Change the type of a relationship that does not exist, failure test.")
+    public void testChangeRelationshipTypeNotExist() {
+        model.addClass("ClassA");
+        model.addClass("ClassB");
+        RelationshipType typeA = RelationshipType.AGGREGATION;
+
+        RelationshipType typeB = RelationshipType.COMPOSITION;
+        assertFalse(model.changeRelationshipType("ClassA", "ClassB", typeA, typeB));
+    }
 
 /*----------------------------------------------------------------------------------------------------------------*/
 

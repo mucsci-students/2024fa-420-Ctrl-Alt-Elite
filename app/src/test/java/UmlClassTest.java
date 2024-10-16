@@ -54,7 +54,6 @@ public class UmlClassTest {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO addField tests
     /**
      * Test that a field can be successfully added.
      */
@@ -83,7 +82,6 @@ public class UmlClassTest {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO deleteField tests
     /**
      * Test that a field can be successfully deleted.
      */
@@ -104,7 +102,6 @@ public class UmlClassTest {
 
 /*----------------------------------------------------------------------------------------------------------------*/
 
-    //TODO renameField tests
     /**
      * Test renaming a field.
      */

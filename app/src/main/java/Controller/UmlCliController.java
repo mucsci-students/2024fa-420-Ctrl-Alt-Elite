@@ -10,7 +10,7 @@ import Model.UmlClass;
 import Model.UmlEditorModel;
 import Model.UmlRelationship;
 import View.CLI;
-//TODO add comments
+
 /**
  * The UmlCliController class handles the command-line interface (CLI) interactions
  * for managing a UML diagram. It communicates with the UmlEditorModel to
