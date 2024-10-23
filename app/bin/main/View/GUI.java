@@ -14,7 +14,6 @@ import java.util.LinkedHashSet;
 import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.border.EmptyBorder;
 
 import Model.RelationshipType;
 import Model.UmlClass;
@@ -149,7 +148,7 @@ public class GUI extends JFrame {
         cardPanel.add(deleteRelationshipButton);
 
         // Rename Relationship Button and Action
-        JButton renameRelationshipButton = new JButton("Change Relationship");
+        JButton renameRelationshipButton = new JButton("Rename Relationship");
         renameRelationshipButton.addActionListener(e -> showChangeRelationshipTypePanel());
         cardPanel.add(renameRelationshipButton);
 
@@ -178,22 +177,13 @@ public class GUI extends JFrame {
     }
 
     private void showAddClassPanel() {
-        // Create a new JDialog
-        JDialog dialog = new JDialog(this, "Add Class", true);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
-        // Create the add class panel with input fields
         JPanel addClassPanel = new JPanel();
         addClassPanel.setLayout(new BoxLayout(addClassPanel, BoxLayout.Y_AXIS));
-        addClassPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding around the panel
 
-        JTextField classNameField = new JTextField(15); // Adjust width
+        JTextField classNameField = new JTextField(10);
         addClassPanel.add(new JLabel("Class Name:"));
-        addClassPanel.add(Box.createVerticalStrut(5)); // Add space between label and text field
         addClassPanel.add(classNameField);
-        addClassPanel.add(Box.createVerticalStrut(10)); // Add space before the button
 
-        // Create the Submit button
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             String className = classNameField.getText();
@@ -206,76 +196,53 @@ public class GUI extends JFrame {
                 outputArea.append("Failed to add class '" + className + "'.\n");
             }
             classNameField.setText("");
-            dialog.dispose(); // Close the dialog after submission
+            ((CardLayout) cardPanel.getLayout()).show(cardPanel, ""); // Go back to main panel
         });
-
-        // Add the submit button to the panel
         addClassPanel.add(submitButton);
 
-        // Add the panel to the dialog, set size, and center it
-        dialog.getContentPane().add(addClassPanel);
-        dialog.pack();
-        dialog.setSize(300, 150); // Set a preferred size
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
+        // Show the add class panel
+        JOptionPane.showMessageDialog(this, addClassPanel, "Add Class", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void showDeleteClassPanel() {
-        JDialog dialog = new JDialog(this, "Delete Class", true);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
         JPanel deleteClassPanel = new JPanel();
         deleteClassPanel.setLayout(new BoxLayout(deleteClassPanel, BoxLayout.Y_AXIS));
-        deleteClassPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
 
-        JTextField deleteClassField = new JTextField(15); // Adjust width
+        JTextField deleteClassField = new JTextField(10);
         deleteClassPanel.add(new JLabel("Class Name to Delete:"));
-        deleteClassPanel.add(Box.createVerticalStrut(5)); // Add space between label and text field
         deleteClassPanel.add(deleteClassField);
-        deleteClassPanel.add(Box.createVerticalStrut(10)); // Add space before the button
 
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             String className = deleteClassField.getText();
             if (umlEditor.deleteClass(className)) {
                 outputArea.append("Class '" + className + "' deleted.\n");
-                removeClassRectangle(className);
+                removeClassRectangle(className); // Remove the rectangle for the deleted class
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
             } else {
                 outputArea.append("Failed to delete class '" + className + "'.\n");
             }
             deleteClassField.setText("");
-            dialog.dispose();
+            ((CardLayout) cardPanel.getLayout()).show(cardPanel, ""); // Go back to main panel
         });
-
         deleteClassPanel.add(submitButton);
-        dialog.getContentPane().add(deleteClassPanel);
-        dialog.pack();
-        dialog.setSize(300, 150); // Set a preferred size
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
+
+        // Show the delete class panel
+        JOptionPane.showMessageDialog(this, deleteClassPanel, "Delete Class", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void showRenameClassPanel() {
-        JDialog dialog = new JDialog(this, "Rename Class", true);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
         JPanel renameClassPanel = new JPanel();
         renameClassPanel.setLayout(new BoxLayout(renameClassPanel, BoxLayout.Y_AXIS));
-        renameClassPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
 
-        JTextField oldClassNameField = new JTextField(15); // Adjust width
-        JTextField newClassNameField = new JTextField(15); // Adjust width
+        JTextField oldClassNameField = new JTextField(10);
+        JTextField newClassNameField = new JTextField(10);
 
         renameClassPanel.add(new JLabel("Old Class Name:"));
-        renameClassPanel.add(Box.createVerticalStrut(5));
         renameClassPanel.add(oldClassNameField);
-        renameClassPanel.add(Box.createVerticalStrut(10)); // Add space between fields
         renameClassPanel.add(new JLabel("New Class Name:"));
-        renameClassPanel.add(Box.createVerticalStrut(5));
         renameClassPanel.add(newClassNameField);
-        renameClassPanel.add(Box.createVerticalStrut(10)); // Add space before the button
 
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
@@ -283,7 +250,7 @@ public class GUI extends JFrame {
             String newName = newClassNameField.getText();
             if (umlEditor.renameClass(oldName, newName)) {
                 outputArea.append("Class '" + oldName + "' renamed to '" + newName + "'.\n");
-                renameClassRectangle(oldName, newName);
+                renameClassRectangle(oldName, newName); // Rename the rectangle
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
             } else {
@@ -291,35 +258,24 @@ public class GUI extends JFrame {
             }
             oldClassNameField.setText("");
             newClassNameField.setText("");
-            dialog.dispose();
+            ((CardLayout) cardPanel.getLayout()).show(cardPanel, ""); // Go back to main panel
         });
-
         renameClassPanel.add(submitButton);
-        dialog.getContentPane().add(renameClassPanel);
-        dialog.pack();
-        dialog.setSize(350, 200); // Set a preferred size
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
+
+        // Show the rename class panel
+        JOptionPane.showMessageDialog(this, renameClassPanel, "Rename Class", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void showAddFieldPanel() {
-        JDialog dialog = new JDialog(this, "Add Field", true);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
         JPanel addFieldPanel = new JPanel();
         addFieldPanel.setLayout(new BoxLayout(addFieldPanel, BoxLayout.Y_AXIS));
-        addFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
 
-        JTextField classNameField = new JTextField(15); // Adjust width
-        JTextField fieldNameField = new JTextField(15); // Adjust width
+        JTextField classNameField = new JTextField(10);
+        JTextField fieldNameField = new JTextField(10);
         addFieldPanel.add(new JLabel("Class Name:"));
-        addFieldPanel.add(Box.createVerticalStrut(5));
         addFieldPanel.add(classNameField);
-        addFieldPanel.add(Box.createVerticalStrut(10)); // Add space between fields
         addFieldPanel.add(new JLabel("Field Name:"));
-        addFieldPanel.add(Box.createVerticalStrut(5));
         addFieldPanel.add(fieldNameField);
-        addFieldPanel.add(Box.createVerticalStrut(10)); // Add space before the button
 
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
@@ -334,35 +290,22 @@ public class GUI extends JFrame {
             }
             classNameField.setText("");
             fieldNameField.setText("");
-            dialog.dispose();
         });
-
         addFieldPanel.add(submitButton);
-        dialog.getContentPane().add(addFieldPanel);
-        dialog.pack();
-        dialog.setSize(300, 200); // Set a preferred size
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
+
+        JOptionPane.showMessageDialog(this, addFieldPanel, "Add Field", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void showDeleteFieldPanel() {
-        JDialog dialog = new JDialog(this, "Delete Field", true);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
         JPanel deleteFieldPanel = new JPanel();
         deleteFieldPanel.setLayout(new BoxLayout(deleteFieldPanel, BoxLayout.Y_AXIS));
-        deleteFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
 
-        JTextField classNameField = new JTextField(15); // Adjust width
-        JTextField fieldNameField = new JTextField(15); // Adjust width
+        JTextField classNameField = new JTextField(10);
+        JTextField fieldNameField = new JTextField(10);
         deleteFieldPanel.add(new JLabel("Class Name:"));
-        deleteFieldPanel.add(Box.createVerticalStrut(5));
         deleteFieldPanel.add(classNameField);
-        deleteFieldPanel.add(Box.createVerticalStrut(10)); // Add space between fields
         deleteFieldPanel.add(new JLabel("Field Name:"));
-        deleteFieldPanel.add(Box.createVerticalStrut(5));
         deleteFieldPanel.add(fieldNameField);
-        deleteFieldPanel.add(Box.createVerticalStrut(10)); // Add space before the button
 
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
@@ -377,40 +320,25 @@ public class GUI extends JFrame {
             }
             classNameField.setText("");
             fieldNameField.setText("");
-            dialog.dispose();
         });
-
         deleteFieldPanel.add(submitButton);
-        dialog.getContentPane().add(deleteFieldPanel);
-        dialog.pack();
-        dialog.setSize(300, 200); // Set a preferred size
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
+
+        JOptionPane.showMessageDialog(this, deleteFieldPanel, "Delete Field", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void showRenameFieldPanel() {
-        JDialog dialog = new JDialog(this, "Rename Field", true);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
         JPanel renameFieldPanel = new JPanel();
         renameFieldPanel.setLayout(new BoxLayout(renameFieldPanel, BoxLayout.Y_AXIS));
-        renameFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
 
-        JTextField classNameField = new JTextField(15); // Adjust width
-        JTextField oldFieldNameField = new JTextField(15); // Adjust width
-        JTextField newFieldNameField = new JTextField(15); // Adjust width
+        JTextField classNameField = new JTextField(10);
+        JTextField oldFieldNameField = new JTextField(10);
+        JTextField newFieldNameField = new JTextField(10);
         renameFieldPanel.add(new JLabel("Class Name:"));
-        renameFieldPanel.add(Box.createVerticalStrut(5));
         renameFieldPanel.add(classNameField);
-        renameFieldPanel.add(Box.createVerticalStrut(10));
         renameFieldPanel.add(new JLabel("Old Field Name:"));
-        renameFieldPanel.add(Box.createVerticalStrut(5));
         renameFieldPanel.add(oldFieldNameField);
-        renameFieldPanel.add(Box.createVerticalStrut(10));
         renameFieldPanel.add(new JLabel("New Field Name:"));
-        renameFieldPanel.add(Box.createVerticalStrut(5));
         renameFieldPanel.add(newFieldNameField);
-        renameFieldPanel.add(Box.createVerticalStrut(10)); // Add space before the button
 
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
@@ -429,41 +357,26 @@ public class GUI extends JFrame {
             classNameField.setText("");
             oldFieldNameField.setText("");
             newFieldNameField.setText("");
-            dialog.dispose();
         });
-
         renameFieldPanel.add(submitButton);
-        dialog.getContentPane().add(renameFieldPanel);
-        dialog.pack();
-        dialog.setSize(350, 250); // Set a preferred size
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
+
+        JOptionPane.showMessageDialog(this, renameFieldPanel, "Rename Field", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void showAddMethodPanel() {
-        JDialog dialog = new JDialog(this, "Add Method", true);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
         JPanel addMethodPanel = new JPanel();
         addMethodPanel.setLayout(new BoxLayout(addMethodPanel, BoxLayout.Y_AXIS));
-        addMethodPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
 
-        JTextField classNameField = new JTextField(15); // Adjust width
-        JTextField methodNameField = new JTextField(15); // Adjust width
-        JTextField parameterListField = new JTextField(15); // Adjust width
+        JTextField classNameField = new JTextField(10);
+        JTextField methodNameField = new JTextField(10);
+        JTextField parameterListField = new JTextField(10);
 
         addMethodPanel.add(new JLabel("Class Name:"));
-        addMethodPanel.add(Box.createVerticalStrut(5));
         addMethodPanel.add(classNameField);
-        addMethodPanel.add(Box.createVerticalStrut(10));
         addMethodPanel.add(new JLabel("Method Name:"));
-        addMethodPanel.add(Box.createVerticalStrut(5));
         addMethodPanel.add(methodNameField);
-        addMethodPanel.add(Box.createVerticalStrut(10));
         addMethodPanel.add(new JLabel("Parameter List (comma-separated):"));
-        addMethodPanel.add(Box.createVerticalStrut(5));
         addMethodPanel.add(parameterListField);
-        addMethodPanel.add(Box.createVerticalStrut(10)); // Add space before the button
 
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
@@ -480,40 +393,26 @@ public class GUI extends JFrame {
             classNameField.setText("");
             methodNameField.setText("");
             parameterListField.setText("");
-            dialog.dispose(); // Close dialog after submission
         });
         addMethodPanel.add(submitButton);
 
-        dialog.add(addMethodPanel);
-        dialog.pack();
-        dialog.setLocationRelativeTo(this); // Center dialog
-        dialog.setVisible(true);
+        JOptionPane.showMessageDialog(this, addMethodPanel, "Add Method", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void showDeleteMethodPanel() {
-        JDialog dialog = new JDialog(this, "Delete Method", true);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
         JPanel deleteMethodPanel = new JPanel();
         deleteMethodPanel.setLayout(new BoxLayout(deleteMethodPanel, BoxLayout.Y_AXIS));
-        deleteMethodPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
 
-        JTextField classNameField = new JTextField(15); // Adjust width
-        JTextField methodNameField = new JTextField(15); // Adjust width
-        JTextField parameterListField = new JTextField(15); // Adjust width
+        JTextField classNameField = new JTextField(10);
+        JTextField methodNameField = new JTextField(10);
+        JTextField parameterListField = new JTextField(10);
 
         deleteMethodPanel.add(new JLabel("Class Name:"));
-        deleteMethodPanel.add(Box.createVerticalStrut(5));
         deleteMethodPanel.add(classNameField);
-        deleteMethodPanel.add(Box.createVerticalStrut(10));
         deleteMethodPanel.add(new JLabel("Method Name:"));
-        deleteMethodPanel.add(Box.createVerticalStrut(5));
         deleteMethodPanel.add(methodNameField);
-        deleteMethodPanel.add(Box.createVerticalStrut(10));
         deleteMethodPanel.add(new JLabel("Parameter List (comma-separated):"));
-        deleteMethodPanel.add(Box.createVerticalStrut(5));
         deleteMethodPanel.add(parameterListField);
-        deleteMethodPanel.add(Box.createVerticalStrut(10)); // Add space before the button
 
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
@@ -530,45 +429,29 @@ public class GUI extends JFrame {
             classNameField.setText("");
             methodNameField.setText("");
             parameterListField.setText("");
-            dialog.dispose(); // Close dialog after submission
         });
         deleteMethodPanel.add(submitButton);
 
-        dialog.add(deleteMethodPanel);
-        dialog.pack();
-        dialog.setLocationRelativeTo(this); // Center dialog
-        dialog.setVisible(true);
+        JOptionPane.showMessageDialog(this, deleteMethodPanel, "Delete Method", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void showRenameMethodPanel() {
-        JDialog dialog = new JDialog(this, "Rename Method", true);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
         JPanel renameMethodPanel = new JPanel();
         renameMethodPanel.setLayout(new BoxLayout(renameMethodPanel, BoxLayout.Y_AXIS));
-        renameMethodPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
 
-        JTextField classNameField = new JTextField(15); // Adjust width
-        JTextField oldMethodNameField = new JTextField(15); // Adjust width
-        JTextField newMethodNameField = new JTextField(15); // Adjust width
-        JTextField parameterListField = new JTextField(15); // Adjust width
+        JTextField classNameField = new JTextField(10);
+        JTextField oldMethodNameField = new JTextField(10);
+        JTextField newMethodNameField = new JTextField(10);
+        JTextField parameterListField = new JTextField(10);
 
         renameMethodPanel.add(new JLabel("Class Name:"));
-        renameMethodPanel.add(Box.createVerticalStrut(5));
         renameMethodPanel.add(classNameField);
-        renameMethodPanel.add(Box.createVerticalStrut(10));
         renameMethodPanel.add(new JLabel("Old Method Name:"));
-        renameMethodPanel.add(Box.createVerticalStrut(5));
         renameMethodPanel.add(oldMethodNameField);
-        renameMethodPanel.add(Box.createVerticalStrut(10));
         renameMethodPanel.add(new JLabel("New Method Name:"));
-        renameMethodPanel.add(Box.createVerticalStrut(5));
         renameMethodPanel.add(newMethodNameField);
-        renameMethodPanel.add(Box.createVerticalStrut(10));
         renameMethodPanel.add(new JLabel("Parameter List (comma-separated):"));
-        renameMethodPanel.add(Box.createVerticalStrut(5));
         renameMethodPanel.add(parameterListField);
-        renameMethodPanel.add(Box.createVerticalStrut(10)); // Add space before the button
 
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
@@ -589,58 +472,41 @@ public class GUI extends JFrame {
             oldMethodNameField.setText("");
             newMethodNameField.setText("");
             parameterListField.setText("");
-            dialog.dispose(); // Close dialog after submission
         });
         renameMethodPanel.add(submitButton);
 
-        dialog.add(renameMethodPanel);
-        dialog.pack();
-        dialog.setLocationRelativeTo(this); // Center dialog
-        dialog.setVisible(true);
+        JOptionPane.showMessageDialog(this, renameMethodPanel, "Rename Method", JOptionPane.PLAIN_MESSAGE);
     }
 
-    private LinkedHashSet<String> parseParameterList(String input) {
-        LinkedHashSet<String> parameters = new LinkedHashSet<>();
-
-        // Check if the input is empty
-        if (input.trim().isEmpty()) {
-            return parameters; // Return an empty set if no parameters are provided
+    /**
+     * Parses a comma-separated parameter list string into a LinkedHashSet.
+     * 
+     * @param parameterList The parameter list as a comma-separated string.
+     * @return A LinkedHashSet containing the parameters.
+     */
+    private LinkedHashSet<String> parseParameterList(String parameterList) {
+        LinkedHashSet<String> paraList = new LinkedHashSet<>();
+        String[] parameters = parameterList.split(",");
+        for (String parameter : parameters) {
+            paraList.add(parameter.trim());
         }
-
-        // Split the input by commas and add non-empty trimmed values to the set
-        for (String param : input.split(",")) {
-            String trimmedParam = param.trim();
-            if (!trimmedParam.isEmpty()) {
-                parameters.add(trimmedParam);
-            }
-        }
-        return parameters;
+        return paraList;
     }
 
     private void showDeleteParameterPanel() {
-        JDialog dialog = new JDialog(this, "Delete Parameter", true);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
         JPanel deleteParameterPanel = new JPanel();
         deleteParameterPanel.setLayout(new BoxLayout(deleteParameterPanel, BoxLayout.Y_AXIS));
-        deleteParameterPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
 
         JTextField classNameField = new JTextField(10);
         JTextField methodNameField = new JTextField(10);
         JTextField parameterNameField = new JTextField(10);
 
         deleteParameterPanel.add(new JLabel("Class Name:"));
-        deleteParameterPanel.add(Box.createVerticalStrut(5)); // Add space
         deleteParameterPanel.add(classNameField);
-        deleteParameterPanel.add(Box.createVerticalStrut(10)); // Add space
         deleteParameterPanel.add(new JLabel("Method Name:"));
-        deleteParameterPanel.add(Box.createVerticalStrut(5)); // Add space
         deleteParameterPanel.add(methodNameField);
-        deleteParameterPanel.add(Box.createVerticalStrut(10)); // Add space
         deleteParameterPanel.add(new JLabel("Parameter Name:"));
-        deleteParameterPanel.add(Box.createVerticalStrut(5)); // Add space
         deleteParameterPanel.add(parameterNameField);
-        deleteParameterPanel.add(Box.createVerticalStrut(10)); // Add space
 
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
@@ -660,53 +526,41 @@ public class GUI extends JFrame {
             methodNameField.setText("");
             parameterNameField.setText("");
         });
-        deleteParameterPanel.add(Box.createVerticalStrut(10)); // Add space before the button
         deleteParameterPanel.add(submitButton);
 
-        dialog.add(deleteParameterPanel);
-        dialog.pack();
-        dialog.setLocationRelativeTo(this); // Center dialog
-        dialog.setVisible(true);
+        JOptionPane.showMessageDialog(this, deleteParameterPanel, "Delete Parameter", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void showChangeParameterPanel() {
-        JDialog dialog = new JDialog(this, "Change Method Parameters", true);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
+        // Create a panel with BoxLayout
         JPanel changeParameterPanel = new JPanel();
         changeParameterPanel.setLayout(new BoxLayout(changeParameterPanel, BoxLayout.Y_AXIS));
-        changeParameterPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
 
+        // Input fields for class name, method name, and new parameters
         JTextField changeParameterClassField = new JTextField(10);
         JTextField changeParameterMethodField = new JTextField(10);
         JTextField changeParameterNewParamsField = new JTextField(10);
 
-        changeParameterPanel.add(new JLabel("Class Name for Parameter Change:"));
-        changeParameterPanel.add(Box.createVerticalStrut(5)); // Add space
-        changeParameterPanel.add(changeParameterClassField);
-        changeParameterPanel.add(Box.createVerticalStrut(10)); // Add space
-        changeParameterPanel.add(new JLabel("Method Name:"));
-        changeParameterPanel.add(Box.createVerticalStrut(5)); // Add space
-        changeParameterPanel.add(changeParameterMethodField);
-        changeParameterPanel.add(Box.createVerticalStrut(10)); // Add space
-        changeParameterPanel.add(new JLabel("New Parameters (comma-separated):"));
-        changeParameterPanel.add(Box.createVerticalStrut(5)); // Add space
-        changeParameterPanel.add(changeParameterNewParamsField);
-        changeParameterPanel.add(Box.createVerticalStrut(10)); // Add space
-
+        // Button for changing parameters
         JButton changeParameterButton = new JButton("Change Parameters");
+
+        // Action listener for the button
         changeParameterButton.addActionListener(e -> {
             String className = changeParameterClassField.getText();
             String methodName = changeParameterMethodField.getText();
             String newParametersInput = changeParameterNewParamsField.getText();
 
+            // Convert the comma-separated parameters into a LinkedHashSet
             LinkedHashSet<String> newParametersSet = new LinkedHashSet<>();
             if (!newParametersInput.trim().isEmpty()) {
+                // Split by comma and trim spaces, then add to the set
                 Arrays.stream(newParametersInput.split(","))
                         .map(String::trim)
                         .forEach(newParametersSet::add);
             }
 
+            // Call the changeParameters method with the class name, method name, and new
+            // parameters set
             if (umlEditor.changeParameters(className, methodName, newParametersSet)) {
                 outputArea.append("Parameters of method '" + methodName + "' in class '" + className + "' changed to: "
                         + newParametersInput + ".\n");
@@ -717,58 +571,51 @@ public class GUI extends JFrame {
                         "Failed to change parameters of method '" + methodName + "' in class '" + className + "'.\n");
             }
 
+            // Clear the input fields
             changeParameterClassField.setText("");
             changeParameterMethodField.setText("");
             changeParameterNewParamsField.setText("");
         });
-        changeParameterPanel.add(Box.createVerticalStrut(10)); // Add space before the button
+
+        // Add components to the panel for changing parameters
+        changeParameterPanel.add(new JLabel("Class Name for Parameter Change:"));
+        changeParameterPanel.add(changeParameterClassField);
+        changeParameterPanel.add(new JLabel("Method Name:"));
+        changeParameterPanel.add(changeParameterMethodField);
+        changeParameterPanel.add(new JLabel("New Parameters (comma-separated):"));
+        changeParameterPanel.add(changeParameterNewParamsField);
         changeParameterPanel.add(changeParameterButton);
 
-        dialog.add(changeParameterPanel);
-        dialog.pack();
-        dialog.setLocationRelativeTo(this); // Center dialog
-        dialog.setVisible(true);
+        // Show the panel in a dialog
+        JOptionPane.showMessageDialog(this, changeParameterPanel, "Change Method Parameters",
+                JOptionPane.PLAIN_MESSAGE);
     }
 
     private void showAddRelationshipPanel() {
         JPanel addRelationshipPanel = new JPanel();
         addRelationshipPanel.setLayout(new BoxLayout(addRelationshipPanel, BoxLayout.Y_AXIS));
-        addRelationshipPanel.setBorder(new EmptyBorder(10, 10, 10, 10)); // Set padding
 
         JTextField sourceField = new JTextField(10);
         JTextField destinationField = new JTextField(10);
 
         // Create a combo box for RelationshipType
-        String[] relationshipTypes = { "REALIZATION", "AGGREGATION", "COMPOSITION", "INHERITANCE" };
+        String[] relationshipTypes = { "REALIZATION", "AGGREGATION", "COMPOSITION", "INHERITANCE" }; // Add your
+                                                                                                     // relationship
+                                                                                                     // types here
         JComboBox<String> typeComboBox = new JComboBox<>(relationshipTypes);
 
-        // Set alignment for each component to the left
-        JLabel sourceLabel = new JLabel("Source Class:");
-        sourceLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        sourceField.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel destinationLabel = new JLabel("Destination Class:");
-        destinationLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        destinationField.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel typeLabel = new JLabel("Relationship Type:");
-        typeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        typeComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        // Add components to the panel
-        addRelationshipPanel.add(sourceLabel);
+        addRelationshipPanel.add(new JLabel("Source Class:"));
         addRelationshipPanel.add(sourceField);
-        addRelationshipPanel.add(destinationLabel);
+        addRelationshipPanel.add(new JLabel("Destination Class:"));
         addRelationshipPanel.add(destinationField);
-        addRelationshipPanel.add(typeLabel);
-        addRelationshipPanel.add(typeComboBox);
+        addRelationshipPanel.add(new JLabel("Relationship Type:"));
+        addRelationshipPanel.add(typeComboBox); // Add the combo box instead of a text field
 
-        JButton submitButton = new JButton("Submit");
-        submitButton.setAlignmentX(Component.LEFT_ALIGNMENT); // Align button to the left
+        JButton submitButton = new JButton("Add Relationship");
         submitButton.addActionListener(e -> {
             String source = sourceField.getText();
             String destination = destinationField.getText();
-            String typeString = (String) typeComboBox.getSelectedItem();
+            String typeString = (String) typeComboBox.getSelectedItem(); // Get selected item from combo box
 
             // Convert selected item to enum
             RelationshipType type;
@@ -776,7 +623,7 @@ public class GUI extends JFrame {
                 type = RelationshipType.valueOf(typeString);
             } catch (IllegalArgumentException ex) {
                 outputArea.append("Invalid relationship type: '" + typeString + "'. Please use a valid type.\n");
-                return;
+                return; // Exit if the type is invalid
             }
 
             if (umlEditor.addRelationship(source, destination, type)) {
@@ -790,58 +637,38 @@ public class GUI extends JFrame {
             // Clear the fields
             sourceField.setText("");
             destinationField.setText("");
-            typeComboBox.setSelectedIndex(0);
+            typeComboBox.setSelectedIndex(0); // Reset combo box to default
         });
-
         addRelationshipPanel.add(submitButton);
 
-        // Show the panel in a dialog without OK button
-        JDialog dialog = new JDialog(this, "Add Relationship", true);
-        dialog.getContentPane().add(addRelationshipPanel);
-        dialog.pack();
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
+        JOptionPane.showMessageDialog(this, addRelationshipPanel, "Add Relationship", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void showDeleteRelationshipPanel() {
         JPanel deleteRelationshipPanel = new JPanel();
         deleteRelationshipPanel.setLayout(new BoxLayout(deleteRelationshipPanel, BoxLayout.Y_AXIS));
-        deleteRelationshipPanel.setBorder(new EmptyBorder(10, 10, 10, 10)); // Set padding
 
         JTextField sourceField = new JTextField(10);
         JTextField destinationField = new JTextField(10);
 
         // Create a combo box for RelationshipType
-        String[] relationshipTypes = { "REALIZATION", "AGGREGATION", "COMPOSITION", "INHERITANCE" };
+        String[] relationshipTypes = { "REALIZATION", "AGGREGATION", "COMPOSITION", "INHERITANCE" }; // Define your
+                                                                                                     // relationship
+                                                                                                     // types here
         JComboBox<String> typeComboBox = new JComboBox<>(relationshipTypes);
 
-        // Create and align labels and fields
-        JLabel sourceLabel = new JLabel("Source Class:");
-        sourceLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        sourceField.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel destinationLabel = new JLabel("Destination Class:");
-        destinationLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        destinationField.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel typeLabel = new JLabel("Relationship Type:");
-        typeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        typeComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        // Add components to the panel
-        deleteRelationshipPanel.add(sourceLabel);
+        deleteRelationshipPanel.add(new JLabel("Source Class:"));
         deleteRelationshipPanel.add(sourceField);
-        deleteRelationshipPanel.add(destinationLabel);
+        deleteRelationshipPanel.add(new JLabel("Destination Class:"));
         deleteRelationshipPanel.add(destinationField);
-        deleteRelationshipPanel.add(typeLabel);
-        deleteRelationshipPanel.add(typeComboBox);
+        deleteRelationshipPanel.add(new JLabel("Relationship Type:"));
+        deleteRelationshipPanel.add(typeComboBox); // Add the combo box instead of a text field
 
-        JButton submitButton = new JButton("Submit");
-        submitButton.setAlignmentX(Component.LEFT_ALIGNMENT); // Align button to the left
+        JButton submitButton = new JButton("Delete Relationship");
         submitButton.addActionListener(e -> {
             String source = sourceField.getText();
             String destination = destinationField.getText();
-            String typeString = (String) typeComboBox.getSelectedItem();
+            String typeString = (String) typeComboBox.getSelectedItem(); // Get selected item from combo box
 
             RelationshipType type;
             // Attempt to convert the string to RelationshipType
@@ -849,7 +676,7 @@ public class GUI extends JFrame {
                 type = RelationshipType.valueOf(typeString);
             } catch (IllegalArgumentException ex) {
                 outputArea.append("Invalid relationship type: '" + typeString + "'. Please use a valid type.\n");
-                return;
+                return; // Exit if the type is invalid
             }
 
             if (umlEditor.deleteRelationship(source, destination, type)) {
@@ -865,66 +692,44 @@ public class GUI extends JFrame {
             // Clear input fields
             sourceField.setText("");
             destinationField.setText("");
-            typeComboBox.setSelectedIndex(0);
+            typeComboBox.setSelectedIndex(0); // Reset combo box to default
         });
 
         deleteRelationshipPanel.add(submitButton);
 
-        // Show the panel in a dialog without OK button
-        JDialog dialog = new JDialog(this, "Delete Relationship", true);
-        dialog.getContentPane().add(deleteRelationshipPanel);
-        dialog.pack();
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
+        // Show the panel in a dialog
+        JOptionPane.showMessageDialog(this, deleteRelationshipPanel, "Delete Relationship", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void showChangeRelationshipTypePanel() {
         JPanel changeRelationshipTypePanel = new JPanel();
         changeRelationshipTypePanel.setLayout(new BoxLayout(changeRelationshipTypePanel, BoxLayout.Y_AXIS));
-        changeRelationshipTypePanel.setBorder(new EmptyBorder(10, 10, 10, 10)); // Set padding
 
         JTextField sourceField = new JTextField(10);
         JTextField destinationField = new JTextField(10);
 
-        // Create combo boxes for Current and New Relationship Type
-        String[] relationshipTypes = { "REALIZATION", "AGGREGATION", "COMPOSITION", "INHERITANCE" };
+        // Create a combo box for Current Relationship Type
+        String[] relationshipTypes = { "REALIZATION", "AGGREGATION", "COMPOSITION", "INHERITANCE" }; // Define your
+                                                                                                     // relationship
+                                                                                                     // types here
         JComboBox<String> currentTypeComboBox = new JComboBox<>(relationshipTypes);
-        JComboBox<String> newTypeComboBox = new JComboBox<>(relationshipTypes);
+        JComboBox<String> newTypeComboBox = new JComboBox<>(relationshipTypes); // New relationship type combo box
 
-        // Create and align labels and fields
-        JLabel sourceLabel = new JLabel("Source Class:");
-        sourceLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        sourceField.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel destinationLabel = new JLabel("Destination Class:");
-        destinationLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        destinationField.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel currentTypeLabel = new JLabel("Current Relationship Type:");
-        currentTypeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        currentTypeComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel newTypeLabel = new JLabel("New Relationship Type:");
-        newTypeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        newTypeComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        // Add components to the panel
-        changeRelationshipTypePanel.add(sourceLabel);
+        changeRelationshipTypePanel.add(new JLabel("Source Class:"));
         changeRelationshipTypePanel.add(sourceField);
-        changeRelationshipTypePanel.add(destinationLabel);
+        changeRelationshipTypePanel.add(new JLabel("Destination Class:"));
         changeRelationshipTypePanel.add(destinationField);
-        changeRelationshipTypePanel.add(currentTypeLabel);
-        changeRelationshipTypePanel.add(currentTypeComboBox);
-        changeRelationshipTypePanel.add(newTypeLabel);
-        changeRelationshipTypePanel.add(newTypeComboBox);
+        changeRelationshipTypePanel.add(new JLabel("Current Relationship Type:"));
+        changeRelationshipTypePanel.add(currentTypeComboBox); // Use combo box for current type
+        changeRelationshipTypePanel.add(new JLabel("New Relationship Type:"));
+        changeRelationshipTypePanel.add(newTypeComboBox); // Use combo box for new type
 
-        JButton submitButton = new JButton("Submit");
-        submitButton.setAlignmentX(Component.LEFT_ALIGNMENT); // Align button to the left
+        JButton submitButton = new JButton("Change Relationship Type");
         submitButton.addActionListener(e -> {
             String source = sourceField.getText();
             String destination = destinationField.getText();
-            String currentTypeString = (String) currentTypeComboBox.getSelectedItem();
-            String newTypeString = (String) newTypeComboBox.getSelectedItem();
+            String currentTypeString = (String) currentTypeComboBox.getSelectedItem(); // Get selected current type
+            String newTypeString = (String) newTypeComboBox.getSelectedItem(); // Get selected new type
 
             RelationshipType currentType;
             RelationshipType newType;
@@ -935,14 +740,14 @@ public class GUI extends JFrame {
             } catch (IllegalArgumentException ex) {
                 outputArea.append(
                         "Invalid current relationship type: '" + currentTypeString + "'. Please use a valid type.\n");
-                return;
+                return; // Exit if the current type is invalid
             }
 
             try {
                 newType = RelationshipType.valueOf(newTypeString);
             } catch (IllegalArgumentException ex) {
                 outputArea.append("Invalid new relationship type: '" + newTypeString + "'. Please use a valid type.\n");
-                return;
+                return; // Exit if the new type is invalid
             }
 
             if (umlEditor.changeRelationshipType(source, destination, currentType, newType)) {
@@ -956,18 +761,14 @@ public class GUI extends JFrame {
             }
             sourceField.setText("");
             destinationField.setText("");
-            currentTypeComboBox.setSelectedIndex(0);
-            newTypeComboBox.setSelectedIndex(0);
+            currentTypeComboBox.setSelectedIndex(0); // Reset combo box to default
+            newTypeComboBox.setSelectedIndex(0); // Reset combo box to default
         });
 
         changeRelationshipTypePanel.add(submitButton);
 
-        // Show the panel in a dialog without OK button
-        JDialog dialog = new JDialog(this, "Change Relationship Type", true);
-        dialog.getContentPane().add(changeRelationshipTypePanel);
-        dialog.pack();
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
+        JOptionPane.showMessageDialog(this, changeRelationshipTypePanel, "Change Relationship Type",
+                JOptionPane.PLAIN_MESSAGE);
     }
 
     private void showListClassesPanel() {
