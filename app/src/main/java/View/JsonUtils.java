@@ -9,6 +9,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,7 +48,14 @@ public class JsonUtils {
      * @throws IOException If there is an issue reading the file or if the JSON is invalid.
      */
     public static UmlEditor load(String filename) throws IOException {
-        try (FileReader reader = new FileReader(filename)) {
+        Path path = Paths.get(filename);
+        
+        // Check if the file exists
+        if (!Files.exists(path)) {
+            throw new IOException("File not found: " + path.toAbsolutePath());
+        }
+
+        try (FileReader reader = new FileReader(path.toFile())) {
             Type type = new TypeToken<UmlEditorData>() {}.getType();
             try {
                 UmlEditorData data = gson.fromJson(reader, type);
@@ -92,7 +102,7 @@ public class JsonUtils {
          * @return The relationships in the UML editor.
          */
         public Set<UmlRelationship> getRelationships() {
-             return relationships;
+            return relationships;
         }
     }
 }
