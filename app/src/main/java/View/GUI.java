@@ -1146,56 +1146,100 @@ public class GUI extends JFrame {
                     // Calculate vertical offset for the line to avoid overlap
                     int offset = lineOffset * 5; // Adjust this value for spacing
 
+                    // Define an offset for the arrowhead
+                    int arrowheadOffset1 = 10; // Increase this value to move the arrowhead further out
+                    int arrowheadOffset2 = 20; // Increase this value to move the arrowhead further out
+
                     // Determine color and line style based on relationship type
                     switch (relationship.getType()) {
                         case INHERITANCE:
                             g2d.setColor(Color.BLUE); // Color for inheritance
-                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25 + offset,
-                                    destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset);
-                            drawArrow(g, destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset,
-                                    "inheritance"); // Pass "inheritance" for arrowhead style
+                            // Check for self-relationship
+                            if (relationship.getSource().equals(relationship.getDestination())) {
+                                // Draw the arrowhead shape at the top middle of the box
+                                drawArrow(g, sourcePosition.x + 50,
+                                        sourcePosition.y + offset, // Arrowhead at the top of the source box
+                                        "inheritance"); // Pass "inheritance" for arrowhead style
+                            } else {
+                                g2d.drawLine(sourcePosition.x + 50,
+                                        sourcePosition.y + getBoxHeight(relationship.getSource()) + offset, // Start from the bottom middle
+                                        destinationPosition.x + 50,
+                                        destinationPosition.y + getBoxHeight(relationship.getDestination()) + 10); // Line ends below the box
+                                drawArrow(g, destinationPosition.x + 50,
+                                        destinationPosition.y + getBoxHeight(relationship.getDestination())
+                                                + arrowheadOffset1, // Offset for arrowhead
+                                        "inheritance"); // Pass "inheritance" for arrowhead style
+                            }
                             break;
 
                         case REALIZATION:
                             g2d.setColor(Color.GREEN); // Color for realization
-                            // Draw dotted line for realization
-                            float[] dottedPattern = { 2f, 5f }; // Dotted line pattern
-                            g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f,
-                                    dottedPattern, 0f));
-                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25 + offset,
-                                    destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset);
-                            g2d.setStroke(new BasicStroke()); // Reset stroke to solid
-                            drawArrow(g, destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset,
-                                    "realization"); // Pass "realization" for arrowhead style
+                            // Check for self-relationship
+                            if (relationship.getSource().equals(relationship.getDestination())) {
+                                // Draw the arrowhead shape at the top middle of the box
+                                drawArrow(g, sourcePosition.x + 50,
+                                        sourcePosition.y + offset, // Arrowhead at the top of the source box
+                                        "realization"); // Pass "realization" for arrowhead style
+                            } else {
+                                // Draw dotted line for realization
+                                float[] dottedPattern = { 2f, 5f }; // Dotted line pattern
+                                g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f,
+                                        dottedPattern, 0f));
+                                g2d.drawLine(sourcePosition.x + 50,
+                                        sourcePosition.y + getBoxHeight(relationship.getSource()) + offset, // Start from the bottom middle
+                                        destinationPosition.x + 50,
+                                        destinationPosition.y + getBoxHeight(relationship.getDestination()) + 10); // Line ends below the box
+                                g2d.setStroke(new BasicStroke()); // Reset stroke to solid
+                                drawArrow(g, destinationPosition.x + 50,
+                                        destinationPosition.y + getBoxHeight(relationship.getDestination())
+                                                + arrowheadOffset1, // Offset for arrowhead
+                                        "realization"); // Pass "realization" for arrowhead style
+                            }
                             break;
 
                         case AGGREGATION:
                             g2d.setColor(Color.ORANGE); // Color for aggregation
-                            // Draw dashed line for aggregation
-                            float[] dashPattern = { 10f, 5f }; // Dashed line pattern
-                            g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f,
-                                    dashPattern, 0f));
-                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25 + offset,
-                                    destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset);
-                            g2d.setStroke(new BasicStroke()); // Reset stroke to solid
-                            drawArrow(g, destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset,
-                                    "aggregation"); // Pass "aggregation" for arrowhead style
+                            // Check for self-relationship
+                            if (relationship.getSource().equals(relationship.getDestination())) {
+                                // Draw the arrowhead shape at the top middle of the box
+                                drawArrow(g, sourcePosition.x + 50,
+                                        sourcePosition.y + offset, // Arrowhead at the top of the source box
+                                        "aggregation"); // Pass "aggregation" for arrowhead style
+                            } else {
+                                // Draw dashed line for aggregation
+                                float[] dashPattern = { 10f, 5f }; // Dashed line pattern
+                                g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f,
+                                        dashPattern, 0f));
+                                g2d.drawLine(sourcePosition.x + 50,
+                                        sourcePosition.y + getBoxHeight(relationship.getSource()) + offset, // Start from the bottom middle
+                                        destinationPosition.x + 50,
+                                        destinationPosition.y + getBoxHeight(relationship.getDestination()) + 20); // Line ends below the box
+                                g2d.setStroke(new BasicStroke()); // Reset stroke to solid
+                                drawArrow(g, destinationPosition.x + 50,
+                                        destinationPosition.y + getBoxHeight(relationship.getDestination())
+                                                + arrowheadOffset2, // Offset for arrowhead
+                                        "aggregation"); // Pass "aggregation" for arrowhead style
+                            }
                             break;
 
                         case COMPOSITION:
                             g2d.setColor(Color.RED); // Color for composition
-                            g2d.drawLine(sourcePosition.x + 50, sourcePosition.y + 25 + offset,
-                                    destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset);
-                            drawArrow(g, destinationPosition.x + 50,
-                                    destinationPosition.y + getBoxHeight(relationship.getDestination()) + offset,
-                                    "composition"); // Pass "composition" for arrowhead style
+                            // Check for self-relationship
+                            if (relationship.getSource().equals(relationship.getDestination())) {
+                                // Draw the arrowhead shape at the top middle of the box
+                                drawArrow(g, sourcePosition.x + 50,
+                                        sourcePosition.y + offset, // Arrowhead at the top of the source box
+                                        "composition"); // Pass "composition" for arrowhead style
+                            } else {
+                                g2d.drawLine(sourcePosition.x + 50,
+                                        sourcePosition.y + getBoxHeight(relationship.getSource()) + offset, // Start from the bottom middle
+                                        destinationPosition.x + 50,
+                                        destinationPosition.y + getBoxHeight(relationship.getDestination()) + 20); // Line ends below the box
+                                drawArrow(g, destinationPosition.x + 50,
+                                        destinationPosition.y + getBoxHeight(relationship.getDestination())
+                                                + arrowheadOffset2, // Offset for arrowhead
+                                        "composition"); // Pass "composition" for arrowhead style
+                            }
                             break;
                     }
 
