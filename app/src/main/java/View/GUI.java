@@ -27,7 +27,6 @@ public class GUI extends JFrame {
     private JTextArea outputArea;
     private JPanel collapsiblePanel;
     private JButton toggleButton;
-    private JPanel cardPanel; // Panel for switching between text input panels
 
     public GUI() {
         umlEditor = new UmlEditor();
@@ -79,102 +78,60 @@ public class GUI extends JFrame {
         // Add the collapsible panel to the frame
         add(collapsiblePanel, BorderLayout.WEST);
 
-        // Create the card panel for buttons and text fields
-        cardPanel = new JPanel();
-        cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
+        // Create the menu bar
+        JMenuBar menuBar = new JMenuBar();
 
-        // Add Class Button and Action
-        JButton addClassButton = new JButton("Add Class");
-        addClassButton.addActionListener(e -> showAddClassPanel());
-        cardPanel.add(addClassButton);
+        // Create the "Class" menu
+        JMenu classMenu = new JMenu("Class");
+        addMenuItem(classMenu, "Add Class", e -> showAddClassPanel());
+        addMenuItem(classMenu, "Delete Class", e -> showDeleteClassPanel());
+        addMenuItem(classMenu, "Rename Class", e -> showRenameClassPanel());
+        menuBar.add(classMenu);
 
-        // Delete Class Button and Action
-        JButton deleteClassButton = new JButton("Delete Class");
-        deleteClassButton.addActionListener(e -> showDeleteClassPanel());
-        cardPanel.add(deleteClassButton);
+        // Create the "Field" menu
+        JMenu fieldMenu = new JMenu("Field");
+        addMenuItem(fieldMenu, "Add Field", e -> showAddFieldPanel());
+        addMenuItem(fieldMenu, "Delete Field", e -> showDeleteFieldPanel());
+        addMenuItem(fieldMenu, "Rename Field", e -> showRenameFieldPanel());
+        menuBar.add(fieldMenu);
 
-        // Rename Class Button and Action
-        JButton renameClassButton = new JButton("Rename Class");
-        renameClassButton.addActionListener(e -> showRenameClassPanel());
-        cardPanel.add(renameClassButton);
+        // Create the "Method" menu
+        JMenu methodMenu = new JMenu("Method");
+        addMenuItem(methodMenu, "Add Method", e -> showAddMethodPanel());
+        addMenuItem(methodMenu, "Delete Method", e -> showDeleteMethodPanel());
+        addMenuItem(methodMenu, "Rename Method", e -> showRenameMethodPanel());
+        addMenuItem(methodMenu, "Change Parameters", e -> showChangeParameterPanel());
+        addMenuItem(methodMenu, "Delete Parameter", e -> showDeleteParameterPanel());
+        menuBar.add(methodMenu);
 
-        // Add Field Button and Action
-        JButton addFieldButton = new JButton("Add Field");
-        addFieldButton.addActionListener(e -> showAddFieldPanel());
-        cardPanel.add(addFieldButton);
+        // Create the "Relationship" menu
+        JMenu relationshipMenu = new JMenu("Relationship");
+        addMenuItem(relationshipMenu, "Add Relationship", e -> showAddRelationshipPanel());
+        addMenuItem(relationshipMenu, "Delete Relationship", e -> showDeleteRelationshipPanel());
+        addMenuItem(relationshipMenu, "Change Relationship", e -> showChangeRelationshipTypePanel());
+        menuBar.add(relationshipMenu);
 
-        // Delete Field Button and Action
-        JButton deleteFieldButton = new JButton("Delete Field");
-        deleteFieldButton.addActionListener(e -> showDeleteFieldPanel());
-        cardPanel.add(deleteFieldButton);
+        // Create the "List" menu
+        JMenu listMenu = new JMenu("List");
+        addMenuItem(listMenu, "List Classes", e -> showListClassesPanel());
+        addMenuItem(listMenu, "List Relationships", e -> showListRelationshipsPanel());
+        menuBar.add(listMenu);
 
-        // Rename Field Button and Action
-        JButton renameFieldButton = new JButton("Rename Field");
-        renameFieldButton.addActionListener(e -> showRenameFieldPanel());
-        cardPanel.add(renameFieldButton);
+        // Create the "Project" menu
+        JMenu projectMenu = new JMenu("Project");
+        addMenuItem(projectMenu, "Save UML Project", e -> showSaveProjectPanel());
+        addMenuItem(projectMenu, "Load UML Project", e -> showLoadProjectPanel());
+        menuBar.add(projectMenu);
 
-        // Add Method Button and Action
-        JButton addMethodButton = new JButton("Add Method");
-        addMethodButton.addActionListener(e -> showAddMethodPanel());
-        cardPanel.add(addMethodButton);
+        // Set the menu bar
+        setJMenuBar(menuBar);
+    }
 
-        // Delete Method Button and Action
-        JButton deleteMethodButton = new JButton("Delete Method");
-        deleteMethodButton.addActionListener(e -> showDeleteMethodPanel());
-        cardPanel.add(deleteMethodButton);
-
-        // Rename Method Button and Action
-        JButton renameMethodButton = new JButton("Rename Method");
-        renameMethodButton.addActionListener(e -> showRenameMethodPanel());
-        cardPanel.add(renameMethodButton);
-
-        // Change Parameters Button and Action
-        JButton changeParametersButton = new JButton("Change Parameters");
-        changeParametersButton.addActionListener(e -> showChangeParameterPanel());
-        cardPanel.add(changeParametersButton);
-
-        // Delete Parameter Button and Action
-        JButton deleteParameterButton = new JButton("Delete Parameter");
-        deleteParameterButton.addActionListener(e -> showDeleteParameterPanel());
-        cardPanel.add(deleteParameterButton);
-
-        // Add Relationship Button and Action
-        JButton addRelationshipButton = new JButton("Add Relationship");
-        addRelationshipButton.addActionListener(e -> showAddRelationshipPanel());
-        cardPanel.add(addRelationshipButton);
-
-        // Delete Relationship Button and Action
-        JButton deleteRelationshipButton = new JButton("Delete Relationship");
-        deleteRelationshipButton.addActionListener(e -> showDeleteRelationshipPanel());
-        cardPanel.add(deleteRelationshipButton);
-
-        // Rename Relationship Button and Action
-        JButton renameRelationshipButton = new JButton("Change Relationship");
-        renameRelationshipButton.addActionListener(e -> showChangeRelationshipTypePanel());
-        cardPanel.add(renameRelationshipButton);
-
-        // List Classes Button and Action
-        JButton listClassesButton = new JButton("List Classes");
-        listClassesButton.addActionListener(e -> showListClassesPanel());
-        cardPanel.add(listClassesButton);
-
-        // List Relationships Button and Action
-        JButton listRelationshipsButton = new JButton("List Relationships");
-        listRelationshipsButton.addActionListener(e -> showListRelationshipsPanel());
-        cardPanel.add(listRelationshipsButton);
-
-        // Save UML Project Button and Action
-        JButton saveButton = new JButton("Save UML Project");
-        saveButton.addActionListener(e -> showSaveProjectPanel());
-        cardPanel.add(saveButton);
-
-        // Load UML Project Button and Action
-        JButton loadButton = new JButton("Load UML Project");
-        loadButton.addActionListener(e -> showLoadProjectPanel());
-        cardPanel.add(loadButton);
-
-        // Add the card panel to the frame
-        add(cardPanel, BorderLayout.EAST);
+    // Helper method to add menu items to a menu
+    private void addMenuItem(JMenu menu, String title, ActionListener action) {
+        JMenuItem menuItem = new JMenuItem(title);
+        menuItem.addActionListener(action);
+        menu.add(menuItem);
     }
 
     private void showAddClassPanel() {
