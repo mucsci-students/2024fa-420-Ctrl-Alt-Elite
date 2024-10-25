@@ -8,6 +8,7 @@
   - [Step 3: Build the Project](https://github.com/mucsci-students/2024fa-420-Ctrl-Alt-Elite/tree/README#step-3-build-the-project)
   - [Step 4: Run the Program](https://github.com/mucsci-students/2024fa-420-Ctrl-Alt-Elite/tree/README#step-4-run-the-program)
 - [Dependencies](https://github.com/mucsci-students/2024fa-420-Ctrl-Alt-Elite/tree/README#dependencies)
+- [Testing](https://github.com/mucsci-students/2024fa-420-Ctrl-Alt-Elite/tree/README#testing)
 - [Developers](https://github.com/mucsci-students/2024fa-420-Ctrl-Alt-Elite/tree/README#developers)
 
 ## Project Description
