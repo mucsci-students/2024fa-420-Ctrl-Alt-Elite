@@ -45,7 +45,23 @@ To run this project, ensure you have the following installed on your machine:
 + [Java Development Kit (JDK)](https://www.oracle.com/java/technologies/downloads/#java23) (Version 17 or later)
 
 ## Testing
-For the test files, they were created using JUnit 5. If you want to run them, you can visit [this website](https://junit.org/junit5/) for details on downloading and running JUnit.
+To ensure the quality and functionality of the project, automated tests have been written using JUnit. Follow the instructions below to run the tests using Gradle.
+### Running All Tests
++ To run all the tests in the project, execute the following command:
+```sh
+   ./gradlew test
+```
+### Running a Specific Test Class
++ If you want to run a specific test class, use the following command:
+```sh
+   ./gradlew test --tests "TestClassName"
+```
+### Running a Specific Test Method
++ To run a particular test method within a test class, use:
+```sh
+   ./gradlew test --tests "TestClassName.TestMethodName"
+
+```
 
 ## Developers
 - Sydney Norgaard - sydney-norgaard
