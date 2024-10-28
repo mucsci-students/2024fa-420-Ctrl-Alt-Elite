@@ -27,6 +27,15 @@ public class UmlEditorModel {
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
+    /**
+     * Retrieves a UML class by name.
+     * 
+     * @param name The name of the UML class to retrieve.
+     * @return The UML class if found, {@code null} otherwise.
+     */
+    public UmlClass getClass(String name) {
+        return classes.get(name);
+    }
     
     /**
      * Get all of the UML classes.
