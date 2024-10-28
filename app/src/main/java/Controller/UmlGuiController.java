@@ -1312,6 +1312,5 @@ public class UmlGuiController extends JFrame {
             int methodCount = (umlClass != null) ? umlClass.getMethods().size() : 0; // Get the number of methods
             return 50 + (attributeCount * 15) + (methodCount * 15); // Base height + dynamic attribute and method height
         }
-
     }
 }
