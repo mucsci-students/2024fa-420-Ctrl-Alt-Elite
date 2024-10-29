@@ -31,8 +31,26 @@ public class UmlGuiController extends JFrame {
     private JPanel collapsiblePanel;
     private JButton toggleButton;
 
-    private JMenuItem deleteClassItem;
-    private JMenuItem renameClassItem;
+    // Declare menu items as instance variables at the top of your class
+private JMenuItem deleteClassItem;
+private JMenuItem renameClassItem;
+
+private JMenuItem addFieldItem;
+private JMenuItem deleteFieldItem;
+private JMenuItem renameFieldItem;
+
+private JMenuItem addMethodItem;
+private JMenuItem deleteMethodItem;
+private JMenuItem renameMethodItem;
+private JMenuItem changeParametersItem;
+private JMenuItem deleteParameterItem;
+
+private JMenuItem addRelationshipItem;
+private JMenuItem deleteRelationshipItem;
+private JMenuItem changeRelationshipItem;
+
+private JMenuItem saveProjectItem;
+private JMenuItem loadProjectItem;
 
     public UmlGuiController() {
         umlEditorModel = new UmlEditorModel();
@@ -88,53 +106,54 @@ public class UmlGuiController extends JFrame {
         // Create the menu bar
         JMenuBar menuBar = new JMenuBar();
 
-        // Create the "Class" menu
-        JMenu classMenu = new JMenu("Class");
-        // Initialize the Add, Delete, and Rename menu items
-        addMenuItem(classMenu, "Add Class", e -> showAddClassPanel());
-        deleteClassItem = addMenuItem(classMenu, "Delete Class", e -> showDeleteClassPanel());
-        renameClassItem = addMenuItem(classMenu, "Rename Class", e -> showRenameClassPanel());
-        menuBar.add(classMenu);
-        // Initially update button states
-        updateButtonStates();
+        // Create the "Class" menu and initialize menu items
+    JMenu classMenu = new JMenu("Class");
+    addMenuItem(classMenu, "Add Class", e -> showAddClassPanel());
+    deleteClassItem = addMenuItem(classMenu, "Delete Class", e -> showDeleteClassPanel());
+    renameClassItem = addMenuItem(classMenu, "Rename Class", e -> showRenameClassPanel());
+    menuBar.add(classMenu);
 
-        // Create the "Field" menu
-        JMenu fieldMenu = new JMenu("Field");
-        addMenuItem(fieldMenu, "Add Field", e -> showAddFieldPanel());
-        addMenuItem(fieldMenu, "Delete Field", e -> showDeleteFieldPanel());
-        addMenuItem(fieldMenu, "Rename Field", e -> showRenameFieldPanel());
-        menuBar.add(fieldMenu);
+    // Create the "Field" menu and initialize menu items
+    JMenu fieldMenu = new JMenu("Field");
+    addFieldItem = addMenuItem(fieldMenu, "Add Field", e -> showAddFieldPanel());
+    deleteFieldItem = addMenuItem(fieldMenu, "Delete Field", e -> showDeleteFieldPanel());
+    renameFieldItem = addMenuItem(fieldMenu, "Rename Field", e -> showRenameFieldPanel());
+    menuBar.add(fieldMenu);
 
-        // Create the "Method" menu
-        JMenu methodMenu = new JMenu("Method");
-        addMenuItem(methodMenu, "Add Method", e -> showAddMethodPanel());
-        addMenuItem(methodMenu, "Delete Method", e -> showDeleteMethodPanel());
-        addMenuItem(methodMenu, "Rename Method", e -> showRenameMethodPanel());
-        addMenuItem(methodMenu, "Change Parameters", e -> showChangeParameterPanel());
-        addMenuItem(methodMenu, "Delete Parameter", e -> showDeleteParameterPanel());
-        menuBar.add(methodMenu);
+    // Create the "Method" menu and initialize menu items
+    JMenu methodMenu = new JMenu("Method");
+    addMethodItem = addMenuItem(methodMenu, "Add Method", e -> showAddMethodPanel());
+    deleteMethodItem = addMenuItem(methodMenu, "Delete Method", e -> showDeleteMethodPanel());
+    renameMethodItem = addMenuItem(methodMenu, "Rename Method", e -> showRenameMethodPanel());
+    changeParametersItem = addMenuItem(methodMenu, "Change Parameters", e -> showChangeParameterPanel());
+    deleteParameterItem = addMenuItem(methodMenu, "Delete Parameter", e -> showDeleteParameterPanel());
+    menuBar.add(methodMenu);
 
-        // Create the "Relationship" menu
-        JMenu relationshipMenu = new JMenu("Relationship");
-        addMenuItem(relationshipMenu, "Add Relationship", e -> showAddRelationshipPanel());
-        addMenuItem(relationshipMenu, "Delete Relationship", e -> showDeleteRelationshipPanel());
-        addMenuItem(relationshipMenu, "Change Relationship", e -> showChangeRelationshipTypePanel());
-        menuBar.add(relationshipMenu);
+    // Create the "Relationship" menu and initialize menu items
+    JMenu relationshipMenu = new JMenu("Relationship");
+    addRelationshipItem = addMenuItem(relationshipMenu, "Add Relationship", e -> showAddRelationshipPanel());
+    deleteRelationshipItem = addMenuItem(relationshipMenu, "Delete Relationship", e -> showDeleteRelationshipPanel());
+    changeRelationshipItem = addMenuItem(relationshipMenu, "Change Relationship", e -> showChangeRelationshipTypePanel());
+    menuBar.add(relationshipMenu);
 
-        // Create the "List" menu
-        JMenu listMenu = new JMenu("List");
-        addMenuItem(listMenu, "List Classes", e -> showListClassesPanel());
-        addMenuItem(listMenu, "List Relationships", e -> showListRelationshipsPanel());
-        menuBar.add(listMenu);
+    // Create the "Project" menu and initialize menu items
+    JMenu projectMenu = new JMenu("Project");
+    saveProjectItem = addMenuItem(projectMenu, "Save UML Project", e -> showSaveProjectPanel());
+    loadProjectItem = addMenuItem(projectMenu, "Load UML Project", e -> showLoadProjectPanel());
+    menuBar.add(projectMenu);
 
-        // Create the "Project" menu
-        JMenu projectMenu = new JMenu("Project");
-        addMenuItem(projectMenu, "Save UML Project", e -> showSaveProjectPanel());
-        addMenuItem(projectMenu, "Load UML Project", e -> showLoadProjectPanel());
-        menuBar.add(projectMenu);
+    // Create the "List" menu
+    JMenu listMenu = new JMenu("List");
+    addMenuItem(listMenu, "List Classes", e -> showListClassesPanel());
+    addMenuItem(listMenu, "List Relationships", e -> showListRelationshipsPanel());
+    menuBar.add(listMenu);
 
-        // Set the menu bar
-        setJMenuBar(menuBar);
+
+    // Set the menu bar
+    setJMenuBar(menuBar);
+
+    // Initially update button states
+    updateButtonStates();
     }
 
     // Helper method to create menu items and add to the menu
@@ -145,12 +164,35 @@ public class UmlGuiController extends JFrame {
         return menuItem;
     }
 
-    // Method to enable/disable menu items based on existing classes
     private void updateButtonStates() {
         boolean hasClasses = !umlEditorModel.getClasses().isEmpty(); // Check if there are any classes
-        deleteClassItem.setEnabled(hasClasses);  // Enable only if classes exist
-        renameClassItem.setEnabled(hasClasses);  // Enable only if classes exist
+    
+        // Enable/disable "Class" menu items
+        deleteClassItem.setEnabled(hasClasses);
+        renameClassItem.setEnabled(hasClasses);
+    
+        // Enable/disable "Field" menu items
+        addFieldItem.setEnabled(hasClasses);
+        deleteFieldItem.setEnabled(hasClasses);
+        renameFieldItem.setEnabled(hasClasses);
+    
+        // Enable/disable "Method" menu items
+        addMethodItem.setEnabled(hasClasses);
+        deleteMethodItem.setEnabled(hasClasses);
+        renameMethodItem.setEnabled(hasClasses);
+        changeParametersItem.setEnabled(hasClasses);
+        deleteParameterItem.setEnabled(hasClasses);
+    
+        // Enable/disable "Relationship" menu items
+        addRelationshipItem.setEnabled(hasClasses);
+        deleteRelationshipItem.setEnabled(hasClasses);
+        changeRelationshipItem.setEnabled(hasClasses);
+    
+        // Enable "Save" and "Load" items unconditionally
+        saveProjectItem.setEnabled(true);
+        loadProjectItem.setEnabled(true);
     }
+    
 
     private void showAddClassPanel() {
         JDialog dialog = new JDialog(this, "Add Class", true);
