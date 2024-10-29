@@ -31,6 +31,9 @@ public class UmlGuiController extends JFrame {
     private JPanel collapsiblePanel;
     private JButton toggleButton;
 
+    private JMenuItem deleteClassItem;
+    private JMenuItem renameClassItem;
+
     public UmlGuiController() {
         umlEditorModel = new UmlEditorModel();
         umlEditor = new UmlEditor(umlEditorModel);
@@ -87,10 +90,13 @@ public class UmlGuiController extends JFrame {
 
         // Create the "Class" menu
         JMenu classMenu = new JMenu("Class");
+        // Initialize the Add, Delete, and Rename menu items
         addMenuItem(classMenu, "Add Class", e -> showAddClassPanel());
-        addMenuItem(classMenu, "Delete Class", e -> showDeleteClassPanel());
-        addMenuItem(classMenu, "Rename Class", e -> showRenameClassPanel());
+        deleteClassItem = addMenuItem(classMenu, "Delete Class", e -> showDeleteClassPanel());
+        renameClassItem = addMenuItem(classMenu, "Rename Class", e -> showRenameClassPanel());
         menuBar.add(classMenu);
+        // Initially update button states
+        updateButtonStates();
 
         // Create the "Field" menu
         JMenu fieldMenu = new JMenu("Field");
@@ -131,19 +137,25 @@ public class UmlGuiController extends JFrame {
         setJMenuBar(menuBar);
     }
 
-    // Helper method to add menu items to a menu
-    private void addMenuItem(JMenu menu, String title, ActionListener action) {
+    // Helper method to create menu items and add to the menu
+    private JMenuItem addMenuItem(JMenu menu, String title, ActionListener action) {
         JMenuItem menuItem = new JMenuItem(title);
         menuItem.addActionListener(action);
         menu.add(menuItem);
+        return menuItem;
+    }
+
+    // Method to enable/disable menu items based on existing classes
+    private void updateButtonStates() {
+        boolean hasClasses = !umlEditorModel.getClasses().isEmpty(); // Check if there are any classes
+        deleteClassItem.setEnabled(hasClasses);  // Enable only if classes exist
+        renameClassItem.setEnabled(hasClasses);  // Enable only if classes exist
     }
 
     private void showAddClassPanel() {
-        // Create a new JDialog
         JDialog dialog = new JDialog(this, "Add Class", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-        // Create the add class panel with input fields
         JPanel addClassPanel = new JPanel();
         addClassPanel.setLayout(new BoxLayout(addClassPanel, BoxLayout.Y_AXIS));
         addClassPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding around the panel
@@ -154,7 +166,6 @@ public class UmlGuiController extends JFrame {
         addClassPanel.add(classNameField);
         addClassPanel.add(Box.createVerticalStrut(10)); // Add space before the button
 
-        // Create the Submit button
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             String className = classNameField.getText();
@@ -163,17 +174,14 @@ public class UmlGuiController extends JFrame {
                 addClassRectangle(className); // Draw rectangle for the new class
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
+                updateButtonStates(); // Update button states after adding
             } else {
                 outputArea.append("Failed to add class '" + className + "'.\n");
             }
-            classNameField.setText("");
             dialog.dispose(); // Close the dialog after submission
         });
 
-        // Add the submit button to the panel
         addClassPanel.add(submitButton);
-
-        // Add the panel to the dialog, set size, and center it
         dialog.getContentPane().add(addClassPanel);
         dialog.pack();
         dialog.setSize(300, 150); // Set a preferred size
@@ -189,11 +197,9 @@ public class UmlGuiController extends JFrame {
         deleteClassPanel.setLayout(new BoxLayout(deleteClassPanel, BoxLayout.Y_AXIS));
         deleteClassPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
 
-        JTextField deleteClassField = new JTextField(15); // Adjust width
+        JTextField deleteClassField = new JTextField(15);
         deleteClassPanel.add(new JLabel("Class Name to Delete:"));
-        deleteClassPanel.add(Box.createVerticalStrut(5)); // Add space between label and text field
         deleteClassPanel.add(deleteClassField);
-        deleteClassPanel.add(Box.createVerticalStrut(10)); // Add space before the button
 
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
@@ -203,17 +209,17 @@ public class UmlGuiController extends JFrame {
                 removeClassRectangle(className);
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
+                updateButtonStates(); // Update button states after deletion
             } else {
                 outputArea.append("Failed to delete class '" + className + "'.\n");
             }
-            deleteClassField.setText("");
             dialog.dispose();
         });
 
         deleteClassPanel.add(submitButton);
         dialog.getContentPane().add(deleteClassPanel);
         dialog.pack();
-        dialog.setSize(300, 150); // Set a preferred size
+        dialog.setSize(300, 150);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
@@ -224,19 +230,15 @@ public class UmlGuiController extends JFrame {
 
         JPanel renameClassPanel = new JPanel();
         renameClassPanel.setLayout(new BoxLayout(renameClassPanel, BoxLayout.Y_AXIS));
-        renameClassPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
+        renameClassPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JTextField oldClassNameField = new JTextField(15); // Adjust width
-        JTextField newClassNameField = new JTextField(15); // Adjust width
+        JTextField oldClassNameField = new JTextField(15);
+        JTextField newClassNameField = new JTextField(15);
 
         renameClassPanel.add(new JLabel("Old Class Name:"));
-        renameClassPanel.add(Box.createVerticalStrut(5));
         renameClassPanel.add(oldClassNameField);
-        renameClassPanel.add(Box.createVerticalStrut(10)); // Add space between fields
         renameClassPanel.add(new JLabel("New Class Name:"));
-        renameClassPanel.add(Box.createVerticalStrut(5));
         renameClassPanel.add(newClassNameField);
-        renameClassPanel.add(Box.createVerticalStrut(10)); // Add space before the button
 
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
@@ -247,22 +249,21 @@ public class UmlGuiController extends JFrame {
                 renameClassRectangle(oldName, newName);
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
+                updateButtonStates(); // Update button states after renaming
             } else {
                 outputArea.append("Failed to rename class from '" + oldName + "' to '" + newName + "'.\n");
             }
-            oldClassNameField.setText("");
-            newClassNameField.setText("");
             dialog.dispose();
         });
 
         renameClassPanel.add(submitButton);
         dialog.getContentPane().add(renameClassPanel);
         dialog.pack();
-        dialog.setSize(350, 200); // Set a preferred size
+        dialog.setSize(350, 200);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
-
+    
     private void showAddFieldPanel() {
         JDialog dialog = new JDialog(this, "Add Field", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
