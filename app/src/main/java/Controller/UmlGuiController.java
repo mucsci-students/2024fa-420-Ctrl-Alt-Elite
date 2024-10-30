@@ -1020,24 +1020,29 @@ public class UmlGuiController extends JFrame {
             try {
                 umlEditorModel = JsonUtils.load(file.getAbsolutePath());
                 outputArea.append("Project loaded successfully from " + file.getAbsolutePath() + ".\n");
-
+    
                 // Clear previous class positions
                 classPositions.clear();
-
+    
                 // Populate classPositions based on the loaded UML editor
                 for (Map.Entry<String, UmlClass> entry : umlEditorModel.getClasses().entrySet()) {
                     String className = entry.getKey();
                     // Set initial positions for the classes (you may need to adjust this logic)
                     classPositions.put(className, new Point(100, 100)); // Set positions as needed
                 }
-
+    
                 // Repaint the panel to show loaded classes and relationships
                 drawingPanel.repaint();
+                
+                // Update button states after loading the project
+                updateButtonStates(); // Ensure buttons are updated based on loaded data
+                
             } catch (IOException ex) {
                 outputArea.append("Failed to load project: " + ex.getMessage() + "\n");
             }
         }
     }
+    
 
     private void addClassRectangle(String className) {
         Random random = new Random();
