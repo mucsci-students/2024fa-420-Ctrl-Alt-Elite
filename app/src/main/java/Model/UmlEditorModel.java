@@ -47,6 +47,14 @@ public class UmlEditorModel {
     }
 
     /**
+     * Method to get class names as an array of strings
+     * @return An array of class names
+     */
+    public String[] getClassNames() {
+        return classes.keySet().toArray(new String[0]); // Convert key set to an array
+    }
+    
+    /**
      * Set all of the UML classes.
      * 
      * @param classes The new map of classes.

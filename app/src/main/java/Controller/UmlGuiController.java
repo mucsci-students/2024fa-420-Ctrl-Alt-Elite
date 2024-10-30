@@ -741,9 +741,13 @@ public class UmlGuiController extends JFrame {
         addRelationshipPanel.setLayout(new BoxLayout(addRelationshipPanel, BoxLayout.Y_AXIS));
         addRelationshipPanel.setBorder(new EmptyBorder(10, 10, 10, 10)); // Set padding
     
-        JTextField sourceField = new JTextField(10);
-        JTextField destinationField = new JTextField(10);
+        // Sample class names for the combo boxes (replace these with actual class names)
+        String[] availableClasses = umlEditorModel.getClassNames();
     
+        // Create combo boxes for source and destination classes
+        JComboBox<String> sourceComboBox = new JComboBox<>(availableClasses);
+        JComboBox<String> destinationComboBox = new JComboBox<>(availableClasses);
+        
         // Create a combo box for RelationshipType
         String[] relationshipTypes = { "REALIZATION", "AGGREGATION", "COMPOSITION", "INHERITANCE" };
         JComboBox<String> typeComboBox = new JComboBox<>(relationshipTypes);
@@ -751,11 +755,11 @@ public class UmlGuiController extends JFrame {
         // Set alignment for each component to the left
         JLabel sourceLabel = new JLabel("Source Class:");
         sourceLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        sourceField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        sourceComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
     
         JLabel destinationLabel = new JLabel("Destination Class:");
         destinationLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        destinationField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        destinationComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
     
         JLabel typeLabel = new JLabel("Relationship Type:");
         typeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -763,17 +767,17 @@ public class UmlGuiController extends JFrame {
     
         // Add components to the panel
         addRelationshipPanel.add(sourceLabel);
-        addRelationshipPanel.add(sourceField);
+        addRelationshipPanel.add(sourceComboBox);
         addRelationshipPanel.add(destinationLabel);
-        addRelationshipPanel.add(destinationField);
+        addRelationshipPanel.add(destinationComboBox);
         addRelationshipPanel.add(typeLabel);
         addRelationshipPanel.add(typeComboBox);
     
         JButton submitButton = new JButton("Submit");
         submitButton.setAlignmentX(Component.LEFT_ALIGNMENT); // Align button to the left
         submitButton.addActionListener(e -> {
-            String source = sourceField.getText();
-            String destination = destinationField.getText();
+            String source = (String) sourceComboBox.getSelectedItem(); // Get selected source class
+            String destination = (String) destinationComboBox.getSelectedItem(); // Get selected destination class
             String typeString = (String) typeComboBox.getSelectedItem();
     
             // Convert selected item to enum
@@ -794,12 +798,14 @@ public class UmlGuiController extends JFrame {
             } else {
                 outputArea.append("Failed to add relationship from '" + source + "' to '" + destination + "'.\n");
             }
-            // Clear the fields
-            sourceField.setText("");
-            destinationField.setText("");
+            
+            // Clear the selections
+            sourceComboBox.setSelectedIndex(0);
+            destinationComboBox.setSelectedIndex(0);
             typeComboBox.setSelectedIndex(0);
         });
     
+        // Add the submit button to the panel
         addRelationshipPanel.add(submitButton);
     
         // Show the panel in a dialog without OK button
@@ -809,6 +815,7 @@ public class UmlGuiController extends JFrame {
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
+    
     
 
     private void showDeleteRelationshipPanel() {
