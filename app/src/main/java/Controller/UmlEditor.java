@@ -93,20 +93,19 @@ public class UmlEditor {
         return null; // Return null if the class does not exist
     }
 
-    /**
-     * Add a field to a class.
-     * 
-     * @param className The name of the class in which the field will be added.
-     * @param fieldName The name of the field.
-     * @return {@code true} if the field was added, {@code false} otherwise.
-     */
     public boolean addField(String className, String fieldName) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
-            return umlClass.addField(fieldName);
+            boolean result = umlClass.addField(fieldName);
+            if (!result) {
+                System.out.println("Field '" + fieldName + "' already exists in class '" + className + "'.");
+            }
+            return result;
         }
+        System.out.println("Class '" + className + "' not found.");
         return false;
     }
+    
 
     /**
      * Delete a field from a class.
