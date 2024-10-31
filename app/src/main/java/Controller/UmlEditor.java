@@ -2,6 +2,7 @@ package Controller;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.awt.Point;
 
 import Model.RelationshipType;
 import Model.UmlClass;
@@ -33,6 +34,20 @@ public class UmlEditor {
             return null;
         }
         return model.getUmlClass(name);
+    }
+
+    /**
+     * Adds a new class if it doesn't already exist and the name is not null or empty.
+     * 
+     * @param name The name of the new class.
+     * @param position The initial position of the new class.
+     * @return {@code true} if the class was added, {@code false} otherwise.
+     */
+    public boolean addClass(String name, Point position) {
+        if (name == null || name.isEmpty() || name.contains(" ")) {
+            return false;
+        }
+        return model.addClass(name, position); // Pass the position to the model
     }
 
     /**
@@ -93,20 +108,19 @@ public class UmlEditor {
         return null; // Return null if the class does not exist
     }
 
-    /**
-     * Add a field to a class.
-     * 
-     * @param className The name of the class in which the field will be added.
-     * @param fieldName The name of the field.
-     * @return {@code true} if the field was added, {@code false} otherwise.
-     */
     public boolean addField(String className, String fieldName) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
-            return umlClass.addField(fieldName);
+            boolean result = umlClass.addField(fieldName);
+            if (!result) {
+                System.out.println("Field '" + fieldName + "' already exists in class '" + className + "'.");
+            }
+            return result;
         }
+        System.out.println("Class '" + className + "' not found.");
         return false;
     }
+    
 
     /**
      * Delete a field from a class.
@@ -193,10 +207,10 @@ public class UmlEditor {
 /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
-     * Remove a parameter, or multiple, from a method.
+     * Remove a parameter from a method.
      * 
      * @param className  The name of the class in which the method belongs.
-     * @param methodName The name of the method in which the parameters belong.
+     * @param methodName The name of the method in which the parameter belongs.
      * @param paraName   The name of the parameter to remove.
      * @return {@code true} if the parameter was removed, {@code false} otherwise.
      */

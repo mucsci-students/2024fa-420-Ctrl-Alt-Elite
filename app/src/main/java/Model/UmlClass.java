@@ -2,6 +2,7 @@ package Model;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.awt.Point;
 
 /**
  * Represents a UML class with a name and a list of methods.
@@ -10,8 +11,22 @@ public class UmlClass {
     private String name;
     private final LinkedHashSet<String> fields;
     private final ArrayList<Method> methods;
+    private Point position; // Add position as a Point object
 
     /**
+     * Constructs a new UmlClass with the specified name and position.
+     * 
+     * @param name The name of the UML class.
+     * @param name The x-y position of the UML class.
+     */
+    public UmlClass(String name, Point position) {
+        this.name = name;
+        this.methods = new ArrayList<>();
+        this.fields = new LinkedHashSet<>();
+        this.position = position; // Initialize position
+    }
+
+     /**
      * Constructs a new UmlClass with the specified name.
      * 
      * @param name The name of the UML class.
@@ -21,6 +36,9 @@ public class UmlClass {
         this.methods = new ArrayList<>();
         this.fields = new LinkedHashSet<>();
     }
+
+    public Point getPosition() { return position; }
+    public void setPosition(Point position) { this.position = position; }
 
     /**
      * Gets the name of the UML class.
@@ -386,11 +404,13 @@ public class UmlClass {
      *         if it could not be removed.
      */
     public boolean removeParameter(String methodName, String paraName) {
-        // If any of the parameters are invalid, return false.
+        // If any of the function parameters are invalid, return false.
         if (methodName.isEmpty() || paraName.isEmpty()) {
             return false;
         }
 
+        // Loop through the methods, find the one we need,
+        //  and remove the parameter
         for (Method method : methods) {
             if (method.getName().equals(methodName)) {
                 return method.removeParameter(paraName);

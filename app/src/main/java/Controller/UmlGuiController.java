@@ -31,6 +31,21 @@ public class UmlGuiController extends JFrame {
     private JPanel collapsiblePanel;
     private JButton toggleButton;
 
+    // Declare menu items as instance variables 
+    private JMenuItem deleteClassItem;
+    private JMenuItem renameClassItem;
+    private JMenuItem addFieldItem;
+    private JMenuItem deleteFieldItem;
+    private JMenuItem renameFieldItem;
+    private JMenuItem addMethodItem;
+    private JMenuItem deleteMethodItem;
+    private JMenuItem renameMethodItem;
+    private JMenuItem changeParametersItem;
+    private JMenuItem deleteParameterItem;
+    private JMenuItem addRelationshipItem;
+    private JMenuItem deleteRelationshipItem;
+    private JMenuItem changeRelationshipItem;
+
     public UmlGuiController() {
         umlEditorModel = new UmlEditorModel();
         umlEditor = new UmlEditor(umlEditorModel);
@@ -85,219 +100,265 @@ public class UmlGuiController extends JFrame {
         // Create the menu bar
         JMenuBar menuBar = new JMenuBar();
 
-        // Create the "Class" menu
-        JMenu classMenu = new JMenu("Class");
-        addMenuItem(classMenu, "Add Class", e -> showAddClassPanel());
-        addMenuItem(classMenu, "Delete Class", e -> showDeleteClassPanel());
-        addMenuItem(classMenu, "Rename Class", e -> showRenameClassPanel());
-        menuBar.add(classMenu);
+        // Create the "Class" menu and initialize menu items
+    JMenu classMenu = new JMenu("Class");
+    addMenuItem(classMenu, "Add Class", e -> showAddClassPanel());
+    deleteClassItem = addMenuItem(classMenu, "Delete Class", e -> showDeleteClassPanel());
+    renameClassItem = addMenuItem(classMenu, "Rename Class", e -> showRenameClassPanel());
+    menuBar.add(classMenu);
 
-        // Create the "Field" menu
-        JMenu fieldMenu = new JMenu("Field");
-        addMenuItem(fieldMenu, "Add Field", e -> showAddFieldPanel());
-        addMenuItem(fieldMenu, "Delete Field", e -> showDeleteFieldPanel());
-        addMenuItem(fieldMenu, "Rename Field", e -> showRenameFieldPanel());
-        menuBar.add(fieldMenu);
+    // Create the "Field" menu and initialize menu items
+    JMenu fieldMenu = new JMenu("Field");
+    addFieldItem = addMenuItem(fieldMenu, "Add Field", e -> showAddFieldPanel());
+    deleteFieldItem = addMenuItem(fieldMenu, "Delete Field", e -> showDeleteFieldPanel());
+    renameFieldItem = addMenuItem(fieldMenu, "Rename Field", e -> showRenameFieldPanel());
+    menuBar.add(fieldMenu);
 
-        // Create the "Method" menu
-        JMenu methodMenu = new JMenu("Method");
-        addMenuItem(methodMenu, "Add Method", e -> showAddMethodPanel());
-        addMenuItem(methodMenu, "Delete Method", e -> showDeleteMethodPanel());
-        addMenuItem(methodMenu, "Rename Method", e -> showRenameMethodPanel());
-        addMenuItem(methodMenu, "Change Parameters", e -> showChangeParameterPanel());
-        addMenuItem(methodMenu, "Delete Parameter", e -> showDeleteParameterPanel());
-        menuBar.add(methodMenu);
+    // Create the "Method" menu and initialize menu items
+    JMenu methodMenu = new JMenu("Method");
+    addMethodItem = addMenuItem(methodMenu, "Add Method", e -> showAddMethodPanel());
+    deleteMethodItem = addMenuItem(methodMenu, "Delete Method", e -> showDeleteMethodPanel());
+    renameMethodItem = addMenuItem(methodMenu, "Rename Method", e -> showRenameMethodPanel());
+    changeParametersItem = addMenuItem(methodMenu, "Change Parameters", e -> showChangeParameterPanel());
+    deleteParameterItem = addMenuItem(methodMenu, "Delete Parameter", e -> showDeleteParameterPanel());
+    menuBar.add(methodMenu);
 
-        // Create the "Relationship" menu
-        JMenu relationshipMenu = new JMenu("Relationship");
-        addMenuItem(relationshipMenu, "Add Relationship", e -> showAddRelationshipPanel());
-        addMenuItem(relationshipMenu, "Delete Relationship", e -> showDeleteRelationshipPanel());
-        addMenuItem(relationshipMenu, "Change Relationship", e -> showChangeRelationshipTypePanel());
-        menuBar.add(relationshipMenu);
+    // Create the "Relationship" menu and initialize menu items
+    JMenu relationshipMenu = new JMenu("Relationship");
+    addRelationshipItem = addMenuItem(relationshipMenu, "Add Relationship", e -> showAddRelationshipPanel());
+    deleteRelationshipItem = addMenuItem(relationshipMenu, "Delete Relationship", e -> showDeleteRelationshipPanel());
+    changeRelationshipItem = addMenuItem(relationshipMenu, "Change Relationship", e -> showChangeRelationshipTypePanel());
+    menuBar.add(relationshipMenu);
 
-        // Create the "List" menu
-        JMenu listMenu = new JMenu("List");
-        addMenuItem(listMenu, "List Classes", e -> showListClassesPanel());
-        addMenuItem(listMenu, "List Relationships", e -> showListRelationshipsPanel());
-        menuBar.add(listMenu);
+    // Create the "Project" menu and initialize menu items
+    JMenu projectMenu = new JMenu("Project");
+    addMenuItem(projectMenu, "Save UML Project", e -> showSaveProjectPanel());
+    addMenuItem(projectMenu, "Load UML Project", e -> showLoadProjectPanel());
+    menuBar.add(projectMenu);
 
-        // Create the "Project" menu
-        JMenu projectMenu = new JMenu("Project");
-        addMenuItem(projectMenu, "Save UML Project", e -> showSaveProjectPanel());
-        addMenuItem(projectMenu, "Load UML Project", e -> showLoadProjectPanel());
-        menuBar.add(projectMenu);
+    // Create the "List" menu
+    JMenu listMenu = new JMenu("List");
+    addMenuItem(listMenu, "List Classes", e -> showListClassesPanel());
+    addMenuItem(listMenu, "List Relationships", e -> showListRelationshipsPanel());
+    menuBar.add(listMenu);
 
-        // Set the menu bar
-        setJMenuBar(menuBar);
+
+    // Set the menu bar
+    setJMenuBar(menuBar);
+
+    // Initially update button states
+    updateButtonStates();
     }
 
-    // Helper method to add menu items to a menu
-    private void addMenuItem(JMenu menu, String title, ActionListener action) {
+    // Helper method to create menu items and add to the menu
+    private JMenuItem addMenuItem(JMenu menu, String title, ActionListener action) {
         JMenuItem menuItem = new JMenuItem(title);
         menuItem.addActionListener(action);
         menu.add(menuItem);
+        return menuItem;
     }
 
+    private void updateButtonStates() {
+        boolean hasClasses = !umlEditorModel.getClasses().isEmpty(); // Check if there are any classes
+        boolean hasFields = hasClasses && !umlEditorModel.getClasses().values().iterator().next().getFields().isEmpty(); // Check if there are fields in the first class
+        boolean hasMethods = hasClasses && !umlEditorModel.getClasses().values().iterator().next().getMethods().isEmpty(); // Check if there are methods in the first class
+        boolean hasRelationships = !umlEditorModel.getRelationships().isEmpty(); // Check if there are any relationships
+    
+        // Enable/disable relevant items
+        deleteClassItem.setEnabled(hasClasses);
+        renameClassItem.setEnabled(hasClasses);
+    
+        // Field menu items
+        addFieldItem.setEnabled(hasClasses); // Enable "Add Field" if there's at least one class
+        deleteFieldItem.setEnabled(hasFields); // Enable "Delete Field" if there are fields in the class
+        renameFieldItem.setEnabled(hasFields); // Enable "Rename Field" if there are fields in the class
+    
+        // Method menu items
+        addMethodItem.setEnabled(hasClasses); // Enable "Add Method" if there's at least one class
+        deleteMethodItem.setEnabled(hasMethods); // Enable "Delete Method" if there are methods in the class
+        renameMethodItem.setEnabled(hasMethods); // Enable "Rename Method" if there are methods in the class
+    
+        // Relationship menu items
+        addRelationshipItem.setEnabled(hasClasses); // Enable "Add Relationship" if there's at least one class
+        deleteRelationshipItem.setEnabled(hasRelationships); // Enable "Delete Relationship" if there are relationships
+    
+        // Other related items
+        changeRelationshipItem.setEnabled(hasRelationships); // Enable "Change Relationship" if there are relationships
+        changeParametersItem.setEnabled(hasMethods); // Enable "Change Parameters" if there are methods in the class
+        deleteParameterItem.setEnabled(hasMethods); // Enable "Delete Parameter" if there are methods in the class
+    }
+    
     private void showAddClassPanel() {
-        // Create a new JDialog
         JDialog dialog = new JDialog(this, "Add Class", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
-        // Create the add class panel with input fields
+    
         JPanel addClassPanel = new JPanel();
         addClassPanel.setLayout(new BoxLayout(addClassPanel, BoxLayout.Y_AXIS));
         addClassPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding around the panel
-
+    
         JTextField classNameField = new JTextField(15); // Adjust width
         addClassPanel.add(new JLabel("Class Name:"));
         addClassPanel.add(Box.createVerticalStrut(5)); // Add space between label and text field
         addClassPanel.add(classNameField);
         addClassPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-
-        // Create the Submit button
+    
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             String className = classNameField.getText();
-            if (umlEditorModel.addClass(className)) {
-                outputArea.append("Class '" + className + "' added.\n");
-                addClassRectangle(className); // Draw rectangle for the new class
+            
+            // Generate random X and Y positions
+            Random random = new Random();
+            int xPosition = random.nextInt(500); // Change range as needed
+            int yPosition = random.nextInt(500); // Change range as needed
+    
+            if (umlEditorModel.addClass(className, new Point(xPosition, yPosition))) {
+                outputArea.append("Class '" + className + "' added at position (" + xPosition + ", " + yPosition + ").\n");
+                addClassRectangle(className, xPosition, yPosition); // Draw rectangle for the new class
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
+                updateButtonStates(); // Update button states after adding
             } else {
                 outputArea.append("Failed to add class '" + className + "'.\n");
             }
-            classNameField.setText("");
             dialog.dispose(); // Close the dialog after submission
         });
-
-        // Add the submit button to the panel
+    
         addClassPanel.add(submitButton);
-
-        // Add the panel to the dialog, set size, and center it
         dialog.getContentPane().add(addClassPanel);
         dialog.pack();
-        dialog.setSize(300, 150); // Set a preferred size
+        dialog.setSize(300, 150); // Adjust size to accommodate the class name field
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
-
+    
     private void showDeleteClassPanel() {
         JDialog dialog = new JDialog(this, "Delete Class", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
+    
         JPanel deleteClassPanel = new JPanel();
         deleteClassPanel.setLayout(new BoxLayout(deleteClassPanel, BoxLayout.Y_AXIS));
         deleteClassPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
-
-        JTextField deleteClassField = new JTextField(15); // Adjust width
-        deleteClassPanel.add(new JLabel("Class Name to Delete:"));
-        deleteClassPanel.add(Box.createVerticalStrut(5)); // Add space between label and text field
-        deleteClassPanel.add(deleteClassField);
-        deleteClassPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-
+    
+        // Get class names from the model
+        String[] classNames = umlEditorModel.getClassNames(); 
+    
+        // Create a combo box for selecting the class to delete
+        JComboBox<String> classComboBox = new JComboBox<>(classNames);
+        deleteClassPanel.add(new JLabel("Select Class to Delete:"));
+        deleteClassPanel.add(classComboBox);
+    
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            String className = deleteClassField.getText();
+            String className = (String) classComboBox.getSelectedItem(); // Get selected class name
             if (umlEditorModel.deleteClass(className)) {
                 outputArea.append("Class '" + className + "' deleted.\n");
                 removeClassRectangle(className);
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
+                updateButtonStates(); // Update button states after deletion
             } else {
                 outputArea.append("Failed to delete class '" + className + "'.\n");
             }
-            deleteClassField.setText("");
             dialog.dispose();
         });
-
+    
         deleteClassPanel.add(submitButton);
         dialog.getContentPane().add(deleteClassPanel);
         dialog.pack();
-        dialog.setSize(300, 150); // Set a preferred size
+        dialog.setSize(300, 150);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
+    
 
     private void showRenameClassPanel() {
         JDialog dialog = new JDialog(this, "Rename Class", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
+    
         JPanel renameClassPanel = new JPanel();
         renameClassPanel.setLayout(new BoxLayout(renameClassPanel, BoxLayout.Y_AXIS));
-        renameClassPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
-
-        JTextField oldClassNameField = new JTextField(15); // Adjust width
-        JTextField newClassNameField = new JTextField(15); // Adjust width
-
+        renameClassPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+        // Get class names from the model
+        String[] classNames = umlEditorModel.getClassNames(); 
+    
+        // Create a combo box for selecting the old class name
+        JComboBox<String> oldClassComboBox = new JComboBox<>(classNames);
+        JTextField newClassNameField = new JTextField(15);
+    
         renameClassPanel.add(new JLabel("Old Class Name:"));
-        renameClassPanel.add(Box.createVerticalStrut(5));
-        renameClassPanel.add(oldClassNameField);
-        renameClassPanel.add(Box.createVerticalStrut(10)); // Add space between fields
+        renameClassPanel.add(oldClassComboBox);
         renameClassPanel.add(new JLabel("New Class Name:"));
-        renameClassPanel.add(Box.createVerticalStrut(5));
         renameClassPanel.add(newClassNameField);
-        renameClassPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-
+    
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            String oldName = oldClassNameField.getText();
+            String oldName = (String) oldClassComboBox.getSelectedItem(); // Get selected old class name
             String newName = newClassNameField.getText();
             if (umlEditorModel.renameClass(oldName, newName)) {
                 outputArea.append("Class '" + oldName + "' renamed to '" + newName + "'.\n");
                 renameClassRectangle(oldName, newName);
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
+                updateButtonStates(); // Update button states after renaming
             } else {
                 outputArea.append("Failed to rename class from '" + oldName + "' to '" + newName + "'.\n");
             }
-            oldClassNameField.setText("");
-            newClassNameField.setText("");
             dialog.dispose();
         });
-
+    
         renameClassPanel.add(submitButton);
         dialog.getContentPane().add(renameClassPanel);
         dialog.pack();
-        dialog.setSize(350, 200); // Set a preferred size
+        dialog.setSize(350, 200);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
-
+    
+    
     private void showAddFieldPanel() {
         JDialog dialog = new JDialog(this, "Add Field", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
+    
         JPanel addFieldPanel = new JPanel();
         addFieldPanel.setLayout(new BoxLayout(addFieldPanel, BoxLayout.Y_AXIS));
         addFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
-
-        JTextField classNameField = new JTextField(15); // Adjust width
+    
+        // Get class names from the model
+        String[] classNames = umlEditorModel.getClassNames(); // Assuming getClassNames() returns String[]
+    
+        // Combo box for selecting the class name
+        JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
         JTextField fieldNameField = new JTextField(15); // Adjust width
+    
         addFieldPanel.add(new JLabel("Class Name:"));
         addFieldPanel.add(Box.createVerticalStrut(5));
-        addFieldPanel.add(classNameField);
+        addFieldPanel.add(classNameComboBox);
         addFieldPanel.add(Box.createVerticalStrut(10)); // Add space between fields
         addFieldPanel.add(new JLabel("Field Name:"));
         addFieldPanel.add(Box.createVerticalStrut(5));
         addFieldPanel.add(fieldNameField);
         addFieldPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-
+    
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            String className = classNameField.getText();
+            String className = (String) classNameComboBox.getSelectedItem(); // Get selected class name
             String fieldName = fieldNameField.getText();
+            
+            // Assuming you have a method to add the field
             if (umlEditor.addField(className, fieldName)) {
                 outputArea.append("Field '" + fieldName + "' added to class '" + className + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
+                updateButtonStates(); // Update button states after adding the field
             } else {
                 outputArea.append("Failed to add field '" + fieldName + "' to class '" + className + "'.\n");
             }
-            classNameField.setText("");
-            fieldNameField.setText("");
+    
+            fieldNameField.setText(""); // Clear the field
             dialog.dispose();
         });
-
+    
         addFieldPanel.add(submitButton);
         dialog.getContentPane().add(addFieldPanel);
         dialog.pack();
@@ -305,30 +366,47 @@ public class UmlGuiController extends JFrame {
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
-
+    
     private void showDeleteFieldPanel() {
         JDialog dialog = new JDialog(this, "Delete Field", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
+    
         JPanel deleteFieldPanel = new JPanel();
         deleteFieldPanel.setLayout(new BoxLayout(deleteFieldPanel, BoxLayout.Y_AXIS));
-        deleteFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
-
-        JTextField classNameField = new JTextField(15); // Adjust width
-        JTextField fieldNameField = new JTextField(15); // Adjust width
+        deleteFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+        // Combo box for class names
+        JComboBox<String> classNameComboBox = new JComboBox<>();
+        for (String className : umlEditorModel.getClassNames()) {
+            classNameComboBox.addItem(className);
+        }
+        
+        // Combo box for field names
+        JComboBox<String> fieldNameComboBox = new JComboBox<>();
+        // Populate field combo box based on selected class
+        classNameComboBox.addActionListener(e -> {
+            fieldNameComboBox.removeAllItems(); // Clear previous fields
+            String selectedClass = (String) classNameComboBox.getSelectedItem();
+            if (selectedClass != null) {
+                for (String fieldName : umlEditor.getFields(selectedClass)) {
+                    fieldNameComboBox.addItem(fieldName);
+                }
+            }
+        });
+    
         deleteFieldPanel.add(new JLabel("Class Name:"));
         deleteFieldPanel.add(Box.createVerticalStrut(5));
-        deleteFieldPanel.add(classNameField);
-        deleteFieldPanel.add(Box.createVerticalStrut(10)); // Add space between fields
+        deleteFieldPanel.add(classNameComboBox);
+        deleteFieldPanel.add(Box.createVerticalStrut(10)); // Space between fields
         deleteFieldPanel.add(new JLabel("Field Name:"));
         deleteFieldPanel.add(Box.createVerticalStrut(5));
-        deleteFieldPanel.add(fieldNameField);
-        deleteFieldPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-
+        deleteFieldPanel.add(fieldNameComboBox);
+        deleteFieldPanel.add(Box.createVerticalStrut(10)); // Space before the button
+    
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            String className = classNameField.getText();
-            String fieldName = fieldNameField.getText();
+            String className = (String) classNameComboBox.getSelectedItem();
+            String fieldName = (String) fieldNameComboBox.getSelectedItem();
             if (umlEditor.deleteField(className, fieldName)) {
                 outputArea.append("Field '" + fieldName + "' deleted from class '" + className + "'.\n");
                 drawingPanel.revalidate();
@@ -336,15 +414,13 @@ public class UmlGuiController extends JFrame {
             } else {
                 outputArea.append("Failed to delete field '" + fieldName + "' from class '" + className + "'.\n");
             }
-            classNameField.setText("");
-            fieldNameField.setText("");
             dialog.dispose();
         });
-
+    
         deleteFieldPanel.add(submitButton);
         dialog.getContentPane().add(deleteFieldPanel);
         dialog.pack();
-        dialog.setSize(300, 200); // Set a preferred size
+        dialog.setSize(300, 200); // Set preferred size
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
@@ -352,70 +428,90 @@ public class UmlGuiController extends JFrame {
     private void showRenameFieldPanel() {
         JDialog dialog = new JDialog(this, "Rename Field", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
+    
         JPanel renameFieldPanel = new JPanel();
         renameFieldPanel.setLayout(new BoxLayout(renameFieldPanel, BoxLayout.Y_AXIS));
-        renameFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
-
-        JTextField classNameField = new JTextField(15); // Adjust width
-        JTextField oldFieldNameField = new JTextField(15); // Adjust width
-        JTextField newFieldNameField = new JTextField(15); // Adjust width
+        renameFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+        // Combo box for class names
+        JComboBox<String> classNameComboBox = new JComboBox<>();
+        for (String className : umlEditorModel.getClassNames()) {
+            classNameComboBox.addItem(className);
+        }
+    
+        // Combo box for old field names
+        JComboBox<String> oldFieldNameComboBox = new JComboBox<>();
+        // Populate field combo box based on selected class
+        classNameComboBox.addActionListener(e -> {
+            oldFieldNameComboBox.removeAllItems(); // Clear previous fields
+            String selectedClass = (String) classNameComboBox.getSelectedItem();
+            if (selectedClass != null) {
+                for (String fieldName : umlEditor.getFields(selectedClass)) {
+                    oldFieldNameComboBox.addItem(fieldName);
+                }
+            }
+        });
+    
+        JTextField newFieldNameField = new JTextField(15); // Text field for the new field name
+    
         renameFieldPanel.add(new JLabel("Class Name:"));
         renameFieldPanel.add(Box.createVerticalStrut(5));
-        renameFieldPanel.add(classNameField);
+        renameFieldPanel.add(classNameComboBox);
         renameFieldPanel.add(Box.createVerticalStrut(10));
         renameFieldPanel.add(new JLabel("Old Field Name:"));
         renameFieldPanel.add(Box.createVerticalStrut(5));
-        renameFieldPanel.add(oldFieldNameField);
+        renameFieldPanel.add(oldFieldNameComboBox);
         renameFieldPanel.add(Box.createVerticalStrut(10));
         renameFieldPanel.add(new JLabel("New Field Name:"));
         renameFieldPanel.add(Box.createVerticalStrut(5));
         renameFieldPanel.add(newFieldNameField);
-        renameFieldPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-
+        renameFieldPanel.add(Box.createVerticalStrut(10));
+    
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            String className = classNameField.getText();
-            String oldFieldName = oldFieldNameField.getText();
+            String className = (String) classNameComboBox.getSelectedItem();
+            String oldFieldName = (String) oldFieldNameComboBox.getSelectedItem();
             String newFieldName = newFieldNameField.getText();
+    
             if (umlEditor.renameField(className, oldFieldName, newFieldName)) {
-                outputArea.append("Field '" + oldFieldName + "' renamed to '" + newFieldName + "' in class '"
-                        + className + "'.\n");
+                outputArea.append("Field '" + oldFieldName + "' renamed to '" + newFieldName + "' in class '" + className + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
             } else {
-                outputArea.append("Failed to rename field '" + oldFieldName + "' to '" + newFieldName + "' in class '"
-                        + className + "'.\n");
+                outputArea.append("Failed to rename field '" + oldFieldName + "' to '" + newFieldName + "' in class '" + className + "'.\n");
             }
-            classNameField.setText("");
-            oldFieldNameField.setText("");
-            newFieldNameField.setText("");
+    
             dialog.dispose();
         });
-
+    
         renameFieldPanel.add(submitButton);
         dialog.getContentPane().add(renameFieldPanel);
         dialog.pack();
-        dialog.setSize(350, 250); // Set a preferred size
+        dialog.setSize(350, 250); // Set preferred size
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
+    
 
     private void showAddMethodPanel() {
         JDialog dialog = new JDialog(this, "Add Method", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
+    
         JPanel addMethodPanel = new JPanel();
         addMethodPanel.setLayout(new BoxLayout(addMethodPanel, BoxLayout.Y_AXIS));
         addMethodPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
-
-        JTextField classNameField = new JTextField(15); // Adjust width
+    
+        // Get class names from the model
+        String[] classNames = umlEditorModel.getClassNames(); 
+    
+        // Create a combo box for selecting the old class name
+        JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
         JTextField methodNameField = new JTextField(15); // Adjust width
         JTextField parameterListField = new JTextField(15); // Adjust width
-
+    
         addMethodPanel.add(new JLabel("Class Name:"));
         addMethodPanel.add(Box.createVerticalStrut(5));
-        addMethodPanel.add(classNameField);
+        addMethodPanel.add(classNameComboBox);
         addMethodPanel.add(Box.createVerticalStrut(10));
         addMethodPanel.add(new JLabel("Method Name:"));
         addMethodPanel.add(Box.createVerticalStrut(5));
@@ -425,32 +521,36 @@ public class UmlGuiController extends JFrame {
         addMethodPanel.add(Box.createVerticalStrut(5));
         addMethodPanel.add(parameterListField);
         addMethodPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-
+    
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            String className = classNameField.getText();
+            String className = (String) classNameComboBox.getSelectedItem();
             String methodName = methodNameField.getText();
             LinkedHashSet<String> paraList = parseParameterList(parameterListField.getText());
+    
             if (umlEditor.addMethod(className, methodName, paraList)) {
                 outputArea.append("Method '" + methodName + "' added to class '" + className + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
+                updateButtonStates(); // Update button states after adding the method
             } else {
                 outputArea.append("Failed to add method '" + methodName + "' to class '" + className + "'.\n");
             }
-            classNameField.setText("");
+    
+            // Clear input fields and close dialog after submission
             methodNameField.setText("");
             parameterListField.setText("");
-            dialog.dispose(); // Close dialog after submission
+            dialog.dispose();
         });
+    
         addMethodPanel.add(submitButton);
-
+    
         dialog.add(addMethodPanel);
         dialog.pack();
         dialog.setLocationRelativeTo(this); // Center dialog
         dialog.setVisible(true);
     }
-
+    
     private void showDeleteMethodPanel() {
         JDialog dialog = new JDialog(this, "Delete Method", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -500,7 +600,7 @@ public class UmlGuiController extends JFrame {
         dialog.setLocationRelativeTo(this); // Center dialog
         dialog.setVisible(true);
     }
-
+    
     private void showRenameMethodPanel() {
         JDialog dialog = new JDialog(this, "Rename Method", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -695,42 +795,46 @@ public class UmlGuiController extends JFrame {
         JPanel addRelationshipPanel = new JPanel();
         addRelationshipPanel.setLayout(new BoxLayout(addRelationshipPanel, BoxLayout.Y_AXIS));
         addRelationshipPanel.setBorder(new EmptyBorder(10, 10, 10, 10)); // Set padding
-
-        JTextField sourceField = new JTextField(10);
-        JTextField destinationField = new JTextField(10);
-
+    
+        // Sample class names for the combo boxes (replace these with actual class names)
+        String[] availableClasses = umlEditorModel.getClassNames();
+    
+        // Create combo boxes for source and destination classes
+        JComboBox<String> sourceComboBox = new JComboBox<>(availableClasses);
+        JComboBox<String> destinationComboBox = new JComboBox<>(availableClasses);
+        
         // Create a combo box for RelationshipType
         String[] relationshipTypes = { "REALIZATION", "AGGREGATION", "COMPOSITION", "INHERITANCE" };
         JComboBox<String> typeComboBox = new JComboBox<>(relationshipTypes);
-
+    
         // Set alignment for each component to the left
         JLabel sourceLabel = new JLabel("Source Class:");
         sourceLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        sourceField.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        sourceComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+    
         JLabel destinationLabel = new JLabel("Destination Class:");
         destinationLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        destinationField.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        destinationComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+    
         JLabel typeLabel = new JLabel("Relationship Type:");
         typeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         typeComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+    
         // Add components to the panel
         addRelationshipPanel.add(sourceLabel);
-        addRelationshipPanel.add(sourceField);
+        addRelationshipPanel.add(sourceComboBox);
         addRelationshipPanel.add(destinationLabel);
-        addRelationshipPanel.add(destinationField);
+        addRelationshipPanel.add(destinationComboBox);
         addRelationshipPanel.add(typeLabel);
         addRelationshipPanel.add(typeComboBox);
-
+    
         JButton submitButton = new JButton("Submit");
         submitButton.setAlignmentX(Component.LEFT_ALIGNMENT); // Align button to the left
         submitButton.addActionListener(e -> {
-            String source = sourceField.getText();
-            String destination = destinationField.getText();
+            String source = (String) sourceComboBox.getSelectedItem(); // Get selected source class
+            String destination = (String) destinationComboBox.getSelectedItem(); // Get selected destination class
             String typeString = (String) typeComboBox.getSelectedItem();
-
+    
             // Convert selected item to enum
             RelationshipType type;
             try {
@@ -739,23 +843,26 @@ public class UmlGuiController extends JFrame {
                 outputArea.append("Invalid relationship type: '" + typeString + "'. Please use a valid type.\n");
                 return;
             }
-
+    
             if (umlEditorModel.addRelationship(source, destination, type)) {
                 outputArea.append(
                         "Added relationship from '" + source + "' to '" + destination + "' of type '" + type + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
+                updateButtonStates(); // Update button states after adding the relationship
             } else {
                 outputArea.append("Failed to add relationship from '" + source + "' to '" + destination + "'.\n");
             }
-            // Clear the fields
-            sourceField.setText("");
-            destinationField.setText("");
+            
+            // Clear the selections
+            sourceComboBox.setSelectedIndex(0);
+            destinationComboBox.setSelectedIndex(0);
             typeComboBox.setSelectedIndex(0);
         });
-
+    
+        // Add the submit button to the panel
         addRelationshipPanel.add(submitButton);
-
+    
         // Show the panel in a dialog without OK button
         JDialog dialog = new JDialog(this, "Add Relationship", true);
         dialog.getContentPane().add(addRelationshipPanel);
@@ -763,173 +870,163 @@ public class UmlGuiController extends JFrame {
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
+    
+    
 
     private void showDeleteRelationshipPanel() {
         JPanel deleteRelationshipPanel = new JPanel();
         deleteRelationshipPanel.setLayout(new BoxLayout(deleteRelationshipPanel, BoxLayout.Y_AXIS));
         deleteRelationshipPanel.setBorder(new EmptyBorder(10, 10, 10, 10)); // Set padding
-
-        JTextField sourceField = new JTextField(10);
-        JTextField destinationField = new JTextField(10);
-
+    
+        // Assuming umlEditorModel.getClassNames() returns an array of class names
+        String[] classNames = umlEditorModel.getClassNames();
+        JComboBox<String> sourceComboBox = new JComboBox<>(classNames);
+        JComboBox<String> destinationComboBox = new JComboBox<>(classNames);
+    
         // Create a combo box for RelationshipType
         String[] relationshipTypes = { "REALIZATION", "AGGREGATION", "COMPOSITION", "INHERITANCE" };
         JComboBox<String> typeComboBox = new JComboBox<>(relationshipTypes);
-
+    
         // Create and align labels and fields
         JLabel sourceLabel = new JLabel("Source Class:");
         sourceLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        sourceField.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        sourceComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+    
         JLabel destinationLabel = new JLabel("Destination Class:");
         destinationLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        destinationField.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        destinationComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+    
         JLabel typeLabel = new JLabel("Relationship Type:");
         typeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         typeComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+    
         // Add components to the panel
         deleteRelationshipPanel.add(sourceLabel);
-        deleteRelationshipPanel.add(sourceField);
+        deleteRelationshipPanel.add(sourceComboBox);
         deleteRelationshipPanel.add(destinationLabel);
-        deleteRelationshipPanel.add(destinationField);
+        deleteRelationshipPanel.add(destinationComboBox);
         deleteRelationshipPanel.add(typeLabel);
         deleteRelationshipPanel.add(typeComboBox);
-
+    
         JButton submitButton = new JButton("Submit");
-        submitButton.setAlignmentX(Component.LEFT_ALIGNMENT); // Align button to the left
+        submitButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         submitButton.addActionListener(e -> {
-            String source = sourceField.getText();
-            String destination = destinationField.getText();
+            String source = (String) sourceComboBox.getSelectedItem();
+            String destination = (String) destinationComboBox.getSelectedItem();
             String typeString = (String) typeComboBox.getSelectedItem();
-
+    
             RelationshipType type;
-            // Attempt to convert the string to RelationshipType
             try {
                 type = RelationshipType.valueOf(typeString);
             } catch (IllegalArgumentException ex) {
                 outputArea.append("Invalid relationship type: '" + typeString + "'. Please use a valid type.\n");
                 return;
             }
-
+    
             if (umlEditorModel.deleteRelationship(source, destination, type)) {
-                outputArea.append("Deleted relationship of type '" + type + "' between '" + source + "' and '"
-                        + destination + "'.\n");
+                outputArea.append("Deleted relationship of type '" + type + "' between '" + source + "' and '" + destination + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
             } else {
-                outputArea
-                        .append("Failed to delete relationship between '" + source + "' and '" + destination + "'.\n");
+                outputArea.append("Failed to delete relationship between '" + source + "' and '" + destination + "'.\n");
             }
-
-            // Clear input fields
-            sourceField.setText("");
-            destinationField.setText("");
-            typeComboBox.setSelectedIndex(0);
+    
         });
-
+    
         deleteRelationshipPanel.add(submitButton);
-
-        // Show the panel in a dialog without OK button
+    
+        // Show the panel in a dialog
         JDialog dialog = new JDialog(this, "Delete Relationship", true);
         dialog.getContentPane().add(deleteRelationshipPanel);
         dialog.pack();
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
-
+    
     private void showChangeRelationshipTypePanel() {
         JPanel changeRelationshipTypePanel = new JPanel();
         changeRelationshipTypePanel.setLayout(new BoxLayout(changeRelationshipTypePanel, BoxLayout.Y_AXIS));
-        changeRelationshipTypePanel.setBorder(new EmptyBorder(10, 10, 10, 10)); // Set padding
-
-        JTextField sourceField = new JTextField(10);
-        JTextField destinationField = new JTextField(10);
-
-        // Create combo boxes for Current and New Relationship Type
+        changeRelationshipTypePanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+    
+        // Assuming umlEditorModel.getClassNames() returns an array of class names
+        String[] classNames = umlEditorModel.getClassNames();
+        JComboBox<String> sourceComboBox = new JComboBox<>(classNames);
+        JComboBox<String> destinationComboBox = new JComboBox<>(classNames);
+    
+        // Combo boxes for current and new relationship types
         String[] relationshipTypes = { "REALIZATION", "AGGREGATION", "COMPOSITION", "INHERITANCE" };
         JComboBox<String> currentTypeComboBox = new JComboBox<>(relationshipTypes);
         JComboBox<String> newTypeComboBox = new JComboBox<>(relationshipTypes);
-
-        // Create and align labels and fields
+    
         JLabel sourceLabel = new JLabel("Source Class:");
         sourceLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        sourceField.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        sourceComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+    
         JLabel destinationLabel = new JLabel("Destination Class:");
         destinationLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        destinationField.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        destinationComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+    
         JLabel currentTypeLabel = new JLabel("Current Relationship Type:");
         currentTypeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         currentTypeComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+    
         JLabel newTypeLabel = new JLabel("New Relationship Type:");
         newTypeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         newTypeComboBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        // Add components to the panel
+    
         changeRelationshipTypePanel.add(sourceLabel);
-        changeRelationshipTypePanel.add(sourceField);
+        changeRelationshipTypePanel.add(sourceComboBox);
         changeRelationshipTypePanel.add(destinationLabel);
-        changeRelationshipTypePanel.add(destinationField);
+        changeRelationshipTypePanel.add(destinationComboBox);
         changeRelationshipTypePanel.add(currentTypeLabel);
         changeRelationshipTypePanel.add(currentTypeComboBox);
         changeRelationshipTypePanel.add(newTypeLabel);
         changeRelationshipTypePanel.add(newTypeComboBox);
-
+    
         JButton submitButton = new JButton("Submit");
-        submitButton.setAlignmentX(Component.LEFT_ALIGNMENT); // Align button to the left
+        submitButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         submitButton.addActionListener(e -> {
-            String source = sourceField.getText();
-            String destination = destinationField.getText();
+            String source = (String) sourceComboBox.getSelectedItem();
+            String destination = (String) destinationComboBox.getSelectedItem();
             String currentTypeString = (String) currentTypeComboBox.getSelectedItem();
             String newTypeString = (String) newTypeComboBox.getSelectedItem();
-
+    
             RelationshipType currentType;
             RelationshipType newType;
-
-            // Try to convert strings to RelationshipType enums
+    
             try {
                 currentType = RelationshipType.valueOf(currentTypeString);
             } catch (IllegalArgumentException ex) {
-                outputArea.append(
-                        "Invalid current relationship type: '" + currentTypeString + "'. Please use a valid type.\n");
+                outputArea.append("Invalid current relationship type: '" + currentTypeString + "'.\n");
                 return;
             }
-
+    
             try {
                 newType = RelationshipType.valueOf(newTypeString);
             } catch (IllegalArgumentException ex) {
-                outputArea.append("Invalid new relationship type: '" + newTypeString + "'. Please use a valid type.\n");
+                outputArea.append("Invalid new relationship type: '" + newTypeString + "'.\n");
                 return;
             }
-
+    
             if (umlEditorModel.changeRelationshipType(source, destination, currentType, newType)) {
-                outputArea.append("Changed relationship type from '" + currentType + "' to '" + newType + "' between '"
-                        + source + "' and '" + destination + "'.\n");
+                outputArea.append("Changed relationship type from '" + currentType + "' to '" + newType + "' between '" + source + "' and '" + destination + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
             } else {
-                outputArea.append(
-                        "Failed to change relationship type between '" + source + "' and '" + destination + "'.\n");
+                outputArea.append("Failed to change relationship type between '" + source + "' and '" + destination + "'.\n");
             }
-            sourceField.setText("");
-            destinationField.setText("");
-            currentTypeComboBox.setSelectedIndex(0);
-            newTypeComboBox.setSelectedIndex(0);
+    
         });
-
+    
         changeRelationshipTypePanel.add(submitButton);
-
-        // Show the panel in a dialog without OK button
+    
         JDialog dialog = new JDialog(this, "Change Relationship Type", true);
         dialog.getContentPane().add(changeRelationshipTypePanel);
         dialog.pack();
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
+    
 
     private void showListClassesPanel() {
         // Clear the output area before displaying the classes
@@ -957,65 +1054,59 @@ public class UmlGuiController extends JFrame {
         if (option == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             try {
-                JsonUtils.save(umlEditorModel, file.getAbsolutePath());
+                JsonUtils.save(umlEditorModel, file.getAbsolutePath()); // Ensure save method includes positions
                 outputArea.append("Project saved successfully to " + file.getAbsolutePath() + ".\n");
             } catch (IOException ex) {
                 outputArea.append("Failed to save project: " + ex.getMessage() + "\n");
             }
         }
     }
-
+    
     private void showLoadProjectPanel() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showOpenDialog(null);
         if (option == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             try {
-                umlEditorModel = JsonUtils.load(file.getAbsolutePath());
-                outputArea.append("Project loaded successfully from " + file.getAbsolutePath() + ".\n");
-
+                umlEditorModel = JsonUtils.load(file.getAbsolutePath()); // Load the model
+    
                 // Clear previous class positions
                 classPositions.clear();
-
+    
                 // Populate classPositions based on the loaded UML editor
                 for (Map.Entry<String, UmlClass> entry : umlEditorModel.getClasses().entrySet()) {
                     String className = entry.getKey();
-                    // Set initial positions for the classes (you may need to adjust this logic)
-                    classPositions.put(className, new Point(100, 100)); // Set positions as needed
+                    
+                    // Load the position from the UmlClass if it exists
+                    Point position = entry.getValue().getPosition(); // Assuming you have a getPosition() method in UmlClass
+                    if (position != null) {
+                        classPositions.put(className, position);
+                    } else {
+                        // If no position is set, you can set a default one
+                        classPositions.put(className, new Point(100, 100)); // Adjust as needed
+                    }
                 }
-
+    
                 // Repaint the panel to show loaded classes and relationships
                 drawingPanel.repaint();
+                
+                // Update button states after loading the project
+                updateButtonStates(); // Ensure buttons are updated based on loaded data
+                
+                outputArea.append("Project loaded successfully from " + file.getAbsolutePath() + ".\n");
             } catch (IOException ex) {
                 outputArea.append("Failed to load project: " + ex.getMessage() + "\n");
             }
         }
     }
-
-    private void addClassRectangle(String className) {
-        Random random = new Random();
-        int x, y;
-
-        // Generate random positions while avoiding overlap
-        boolean overlap;
-        do {
-            overlap = false;
-            x = random.nextInt(drawingPanel.getWidth() - 120); // Adjust width to avoid overflow
-            y = random.nextInt(drawingPanel.getHeight() - 70); // Adjust height to avoid overflow
-
-            // Check for overlap with existing positions
-            for (Point point : classPositions.values()) {
-                if (Math.abs(point.x - x) < 120 && Math.abs(point.y - y) < 70) { // Adjust distance to your rectangle
-                                                                                 // size
-                    overlap = true;
-                    break;
-                }
-            }
-        } while (overlap);
-
-        classPositions.put(className, new Point(x, y)); // Store position
+    
+    private void addClassRectangle(String className, int x, int y) {
+        // Store the specified position in the classPositions map
+        classPositions.put(className, new Point(x, y)); 
+    
         drawingPanel.repaint(); // Repaint the drawing panel to show the new rectangle
     }
+    
 
     private void removeClassRectangle(String className) {
         classPositions.remove(className); // Remove the class position
@@ -1052,14 +1143,15 @@ public class UmlGuiController extends JFrame {
                         }
                     }
                 }
-
+        
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    selectedClassName = null; // Clear selection on mouse release
-                    dragStartPoint = null; // Clear drag start point
+                    // Clear selection on mouse release
+                    selectedClassName = null;
+                    dragStartPoint = null;
                 }
             });
-
+        
             addMouseMotionListener(new MouseMotionAdapter() {
                 @Override
                 public void mouseDragged(MouseEvent e) {
@@ -1072,6 +1164,10 @@ public class UmlGuiController extends JFrame {
                             int newX = oldPosition.x + (currentPoint.x - dragStartPoint.x);
                             int newY = oldPosition.y + (currentPoint.y - dragStartPoint.y);
                             classPositions.put(selectedClassName, new Point(newX, newY)); // Update the position
+        
+                            // Update the position in the model as well
+                            umlEditorModel.updateClassPosition(selectedClassName, new Point(newX, newY)); // Update model
+        
                             dragStartPoint = currentPoint; // Update the drag start point for smooth dragging
                             repaint(); // Repaint the panel to show the updated position
                         }
@@ -1079,6 +1175,8 @@ public class UmlGuiController extends JFrame {
                 }
             });
         }
+        
+        
 
         @Override
         protected void paintComponent(Graphics g) {
