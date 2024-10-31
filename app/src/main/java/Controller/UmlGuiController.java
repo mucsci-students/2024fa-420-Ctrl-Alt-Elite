@@ -364,26 +364,43 @@ public class UmlGuiController extends JFrame {
     private void showDeleteFieldPanel() {
         JDialog dialog = new JDialog(this, "Delete Field", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
+    
         JPanel deleteFieldPanel = new JPanel();
         deleteFieldPanel.setLayout(new BoxLayout(deleteFieldPanel, BoxLayout.Y_AXIS));
-        deleteFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
-
-        JTextField classNameField = new JTextField(15); // Adjust width
-        JTextField fieldNameField = new JTextField(15); // Adjust width
+        deleteFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+        // Combo box for class names
+        JComboBox<String> classNameComboBox = new JComboBox<>();
+        for (String className : umlEditorModel.getClassNames()) {
+            classNameComboBox.addItem(className);
+        }
+        
+        // Combo box for field names
+        JComboBox<String> fieldNameComboBox = new JComboBox<>();
+        // Populate field combo box based on selected class
+        classNameComboBox.addActionListener(e -> {
+            fieldNameComboBox.removeAllItems(); // Clear previous fields
+            String selectedClass = (String) classNameComboBox.getSelectedItem();
+            if (selectedClass != null) {
+                for (String fieldName : umlEditor.getFields(selectedClass)) {
+                    fieldNameComboBox.addItem(fieldName);
+                }
+            }
+        });
+    
         deleteFieldPanel.add(new JLabel("Class Name:"));
         deleteFieldPanel.add(Box.createVerticalStrut(5));
-        deleteFieldPanel.add(classNameField);
-        deleteFieldPanel.add(Box.createVerticalStrut(10)); // Add space between fields
+        deleteFieldPanel.add(classNameComboBox);
+        deleteFieldPanel.add(Box.createVerticalStrut(10)); // Space between fields
         deleteFieldPanel.add(new JLabel("Field Name:"));
         deleteFieldPanel.add(Box.createVerticalStrut(5));
-        deleteFieldPanel.add(fieldNameField);
-        deleteFieldPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-
+        deleteFieldPanel.add(fieldNameComboBox);
+        deleteFieldPanel.add(Box.createVerticalStrut(10)); // Space before the button
+    
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            String className = classNameField.getText();
-            String fieldName = fieldNameField.getText();
+            String className = (String) classNameComboBox.getSelectedItem();
+            String fieldName = (String) fieldNameComboBox.getSelectedItem();
             if (umlEditor.deleteField(className, fieldName)) {
                 outputArea.append("Field '" + fieldName + "' deleted from class '" + className + "'.\n");
                 drawingPanel.revalidate();
@@ -391,70 +408,85 @@ public class UmlGuiController extends JFrame {
             } else {
                 outputArea.append("Failed to delete field '" + fieldName + "' from class '" + className + "'.\n");
             }
-            classNameField.setText("");
-            fieldNameField.setText("");
             dialog.dispose();
         });
-
+    
         deleteFieldPanel.add(submitButton);
         dialog.getContentPane().add(deleteFieldPanel);
         dialog.pack();
-        dialog.setSize(300, 200); // Set a preferred size
+        dialog.setSize(300, 200); // Set preferred size
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
+    
 
     private void showRenameFieldPanel() {
         JDialog dialog = new JDialog(this, "Rename Field", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
+    
         JPanel renameFieldPanel = new JPanel();
         renameFieldPanel.setLayout(new BoxLayout(renameFieldPanel, BoxLayout.Y_AXIS));
-        renameFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
-
-        JTextField classNameField = new JTextField(15); // Adjust width
-        JTextField oldFieldNameField = new JTextField(15); // Adjust width
-        JTextField newFieldNameField = new JTextField(15); // Adjust width
+        renameFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+        // Combo box for class names
+        JComboBox<String> classNameComboBox = new JComboBox<>();
+        for (String className : umlEditorModel.getClassNames()) {
+            classNameComboBox.addItem(className);
+        }
+    
+        // Combo box for old field names
+        JComboBox<String> oldFieldNameComboBox = new JComboBox<>();
+        // Populate field combo box based on selected class
+        classNameComboBox.addActionListener(e -> {
+            oldFieldNameComboBox.removeAllItems(); // Clear previous fields
+            String selectedClass = (String) classNameComboBox.getSelectedItem();
+            if (selectedClass != null) {
+                for (String fieldName : umlEditor.getFields(selectedClass)) {
+                    oldFieldNameComboBox.addItem(fieldName);
+                }
+            }
+        });
+    
+        JTextField newFieldNameField = new JTextField(15); // Text field for the new field name
+    
         renameFieldPanel.add(new JLabel("Class Name:"));
         renameFieldPanel.add(Box.createVerticalStrut(5));
-        renameFieldPanel.add(classNameField);
+        renameFieldPanel.add(classNameComboBox);
         renameFieldPanel.add(Box.createVerticalStrut(10));
         renameFieldPanel.add(new JLabel("Old Field Name:"));
         renameFieldPanel.add(Box.createVerticalStrut(5));
-        renameFieldPanel.add(oldFieldNameField);
+        renameFieldPanel.add(oldFieldNameComboBox);
         renameFieldPanel.add(Box.createVerticalStrut(10));
         renameFieldPanel.add(new JLabel("New Field Name:"));
         renameFieldPanel.add(Box.createVerticalStrut(5));
         renameFieldPanel.add(newFieldNameField);
-        renameFieldPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-
+        renameFieldPanel.add(Box.createVerticalStrut(10));
+    
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            String className = classNameField.getText();
-            String oldFieldName = oldFieldNameField.getText();
+            String className = (String) classNameComboBox.getSelectedItem();
+            String oldFieldName = (String) oldFieldNameComboBox.getSelectedItem();
             String newFieldName = newFieldNameField.getText();
+    
             if (umlEditor.renameField(className, oldFieldName, newFieldName)) {
-                outputArea.append("Field '" + oldFieldName + "' renamed to '" + newFieldName + "' in class '"
-                        + className + "'.\n");
+                outputArea.append("Field '" + oldFieldName + "' renamed to '" + newFieldName + "' in class '" + className + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
             } else {
-                outputArea.append("Failed to rename field '" + oldFieldName + "' to '" + newFieldName + "' in class '"
-                        + className + "'.\n");
+                outputArea.append("Failed to rename field '" + oldFieldName + "' to '" + newFieldName + "' in class '" + className + "'.\n");
             }
-            classNameField.setText("");
-            oldFieldNameField.setText("");
-            newFieldNameField.setText("");
+    
             dialog.dispose();
         });
-
+    
         renameFieldPanel.add(submitButton);
         dialog.getContentPane().add(renameFieldPanel);
         dialog.pack();
-        dialog.setSize(350, 250); // Set a preferred size
+        dialog.setSize(350, 250); // Set preferred size
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
+    
 
     private void showAddMethodPanel() {
         JDialog dialog = new JDialog(this, "Add Method", true);
