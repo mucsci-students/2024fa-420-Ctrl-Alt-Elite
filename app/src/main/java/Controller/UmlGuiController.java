@@ -552,7 +552,6 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
     
-
     private void showDeleteMethodPanel() {
         JDialog dialog = new JDialog(this, "Delete Method", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -602,7 +601,7 @@ public class UmlGuiController extends JFrame {
         dialog.setLocationRelativeTo(this); // Center dialog
         dialog.setVisible(true);
     }
-
+    
     private void showRenameMethodPanel() {
         JDialog dialog = new JDialog(this, "Rename Method", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
