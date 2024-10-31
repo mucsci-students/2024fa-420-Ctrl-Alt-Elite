@@ -424,7 +424,6 @@ public class UmlGuiController extends JFrame {
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
-    
 
     private void showRenameFieldPanel() {
         JDialog dialog = new JDialog(this, "Rename Field", true);
