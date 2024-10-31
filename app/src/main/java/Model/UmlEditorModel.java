@@ -5,28 +5,34 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.awt.Point;
 
 /**
- * A class that holds the classes and relationships data structures for a UML Editor
+ * A class that holds the classes and relationships data structures for a UML
+ * Editor
  */
 public class UmlEditorModel {
     /** A map to store UML classes by their name */
     private Map<String, UmlClass> classes;
 
     /** List to store all the relationships created */
-    private List<UmlRelationship> relationships;  
+    private List<UmlRelationship> relationships;
 
-/*----------------------------------------------------------------------------------------------------------------*/
+    /** A map to store the positions of UML classes by their name */
+    private Map<String, Point> classPositions;
+
+    /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
      * A model that holds the classes and relationships for the UML Editor.
      */
-    public UmlEditorModel () {
+    public UmlEditorModel() {
         this.classes = new HashMap<>();
         this.relationships = new ArrayList<>();
+        this.classPositions = new HashMap<>(); // Initialize the classPositions map
     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
     /**
      * Retrieves a UML class by name.
      * 
@@ -36,7 +42,7 @@ public class UmlEditorModel {
     public UmlClass getClass(String name) {
         return classes.get(name);
     }
-    
+
     /**
      * Get all of the UML classes.
      * 
@@ -48,12 +54,13 @@ public class UmlEditorModel {
 
     /**
      * Method to get class names as an array of strings
+     * 
      * @return An array of class names
      */
     public String[] getClassNames() {
         return classes.keySet().toArray(new String[0]); // Convert key set to an array
     }
-    
+
     /**
      * Set all of the UML classes.
      * 
@@ -61,7 +68,7 @@ public class UmlEditorModel {
      */
     public void setClasses(Map<String, UmlClass> classes) {
         this.classes = classes;
-        
+
     }
 
     /**
@@ -82,7 +89,29 @@ public class UmlEditorModel {
         this.relationships = relationships;
     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    public void updateClassPosition(String className, Point position) {
+        if (classes.containsKey(className)) {
+            // Update the position in the model
+            classPositions.put(className, position); // Assuming you have a map for positions in the model
+            UmlClass umlClass = classes.get(className);
+            if (umlClass != null) {
+                // Set the position in the UmlClass object if needed
+                umlClass.setPosition(position); // Ensure UmlClass has a setPosition method
+            }
+        }
+    }
+
+    /**
+     * Get the position of a class by name.
+     * 
+     * @param className The name of the class.
+     * @return The position of the class.
+     */
+    public Point getClassPosition(String className) {
+        return classPositions.get(className);
+    }
 
     /**
      * Returns a UML class from the Map of classes given a name.
@@ -94,7 +123,7 @@ public class UmlEditorModel {
         if (name == null || name.isEmpty()) {
             return null;
         }
-        
+
         return classes.get(name);
     }
 
@@ -102,16 +131,17 @@ public class UmlEditorModel {
      * Return weather a class of a certain name exists in the Map of classes.
      * 
      * @param className The name of the class.
-     * @return {@code true} if the class name exists in the Map of classes, {@code false} otherwise.
+     * @return {@code true} if the class name exists in the Map of classes,
+     *         {@code false} otherwise.
      */
     public boolean classExist(String className) {
         if (className == null || className.isEmpty()) {
             return false;
         }
-        
+
         return classes.containsKey(className);
     }
-    
+
     /**
      * Returns the values from the classes Map.
      * 
@@ -121,21 +151,41 @@ public class UmlEditorModel {
         return classes.values();
     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    /**
+     * Adds a new class to the Map if the class does not already exist
+     * and the name of the class is not null or empty.
+     * 
+     * @param name     The name of the new class to add.
+     * @param position The initial position of the new class.
+     * @return {@code true} if the class was added, {@code false} otherwise.
+     */
+    public boolean addClass(String name, Point position) {
+        // Return false if name is null, empty, class already exists, or the name has
+        // white space
+        if (classes.containsKey(name) || name == null || name.isEmpty() || name.contains(" ")) {
+            return false;
+        }
+
+        classes.put(name, new UmlClass(name, position)); // Pass the position to the UmlClass constructor
+        return true;
+    }
 
     /**
      * Adds a new class to the Map if the class dose not already exist
-     *  and the name of the class is not null or empty.
+     * and the name of the class is not null or empty.
      * 
      * @param name The name of the new class to add.
      * @return {@code true} if the class was added, {@code false} otherwise.
      */
     public boolean addClass(String name) {
-        // Return false if name is null, empty, class already exists, or the name has white space
+        // Return false if name is null, empty, class already exists, or the name has
+        // white space
         if (classes.containsKey(name) || name == null || name.isEmpty() || name.contains(" ")) {
             return false;
         }
-        
+
         classes.put(name, new UmlClass(name));
         return true;
     }
@@ -150,7 +200,7 @@ public class UmlEditorModel {
         if (name == null || name.isEmpty()) {
             return false;
         }
-        
+
         if (classes.containsKey(name)) {
             classes.remove(name);
             // Remove relationships involving the class
@@ -162,19 +212,20 @@ public class UmlEditorModel {
 
     /**
      * Rename a class in the Map to a new name if it doesn't already exist
-     *  and the name is not null or empty.
+     * and the name is not null or empty.
      * 
      * @param oldName The class's old name.
      * @param newName The class's new name.
      * @return {@code true} if the class was renamed, {@code false} otherwise.
      */
     public boolean renameClass(String oldName, String newName) {
-        // Check for null or empty newName, if oldName exists, if the new name already exists
-        //  and if the new name has white space
+        // Check for null or empty newName, if oldName exists, if the new name already
+        // exists
+        // and if the new name has white space
         if (newName == null || newName.isEmpty()
-            || !classes.containsKey(oldName) 
-            || classes.containsKey(newName) 
-            || newName.contains(" ")) {
+                || !classes.containsKey(oldName)
+                || classes.containsKey(newName)
+                || newName.contains(" ")) {
             return false; // Invalid conditions
         }
 
@@ -197,22 +248,23 @@ public class UmlEditorModel {
         return true;
     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
      * Adds a new relationship to the list of relationships.
      * 
-     * @param source The source entity.
+     * @param source      The source entity.
      * @param destination The destination entity.
-     * @param type The type of the relationship.
-     * @return {@code true} if the relationship was added, {@code false} if the relationship was not added.
+     * @param type        The type of the relationship.
+     * @return {@code true} if the relationship was added, {@code false} if the
+     *         relationship was not added.
      */
     public boolean addRelationship(String source, String destination, RelationshipType type) {
         // If any of the parameters are empty, return false.
         if (source.isEmpty() || destination.isEmpty() || type == null) {
             return false;
         }
-        
+
         // Check that both classes exist.
         if (!classExist(source) || !classExist(destination)) {
             return false;
@@ -235,18 +287,18 @@ public class UmlEditorModel {
      * Deletes an existing relationship from the list.
      * It looks for a relationship matching the given source, destination, and type.
      * 
-     * @param source The source entity.
+     * @param source      The source entity.
      * @param destination The destination entity.
-     * @param type The type of the relationship.
-     * @return {@code true} if the relationship could be deleted, 
-     *          {@code false} if the relationship could not be deleted. 
+     * @param type        The type of the relationship.
+     * @return {@code true} if the relationship could be deleted,
+     *         {@code false} if the relationship could not be deleted.
      */
     public boolean deleteRelationship(String source, String destination, RelationshipType type) {
         // If any of the parameters are empty, return false.
         if (source.isEmpty() || destination.isEmpty() || type == null) {
             return false;
         }
-        
+
         // Finds the relationship and deletes it.
         UmlRelationship relationship = findRelationship(source, destination, type);
         if (relationship != null) {
@@ -260,17 +312,19 @@ public class UmlEditorModel {
     /**
      * Changes the type of an existing relationship in the list of relationships.
      * 
-     * @param source The source entity.
+     * @param source      The source entity.
      * @param destination The destination entity.
-     * @param newType The new type to change the relationship to.
-     * @return {@code true} if the relationship was changed, {@code false} if the relationship could not be changed.
+     * @param newType     The new type to change the relationship to.
+     * @return {@code true} if the relationship was changed, {@code false} if the
+     *         relationship could not be changed.
      */
-    public boolean changeRelationshipType(String source, String destination, RelationshipType currentType, RelationshipType newType) {
+    public boolean changeRelationshipType(String source, String destination, RelationshipType currentType,
+            RelationshipType newType) {
         // If any of the parameters are empty, return false.
         if (source.isEmpty() || destination.isEmpty() || currentType == null || newType == null) {
             return false;
         }
-        
+
         // Finds the relationship and changes its type to the new type.
         UmlRelationship relationship = findRelationship(source, destination, currentType);
         if (relationship != null) {
@@ -285,16 +339,17 @@ public class UmlEditorModel {
     /**
      * New helper method that checks source, destination, and type
      * 
-     * @param source The source entity.
+     * @param source      The source entity.
      * @param destination The destination entity.
-     * @param type The type of the relationship.
-     * @return The UmlRelationship object that was being searched for, {@code null} otherwise.
+     * @param type        The type of the relationship.
+     * @return The UmlRelationship object that was being searched for, {@code null}
+     *         otherwise.
      */
     public UmlRelationship findRelationship(String source, String destination, RelationshipType type) {
         for (UmlRelationship relationship : relationships) {
             if (relationship.getSource().equals(source) &&
-                relationship.getDestination().equals(destination) &&
-                relationship.getType() == type) { // Check for relationship type
+                    relationship.getDestination().equals(destination) &&
+                    relationship.getType() == type) { // Check for relationship type
                 return relationship; // Return the found relationship
             }
         }

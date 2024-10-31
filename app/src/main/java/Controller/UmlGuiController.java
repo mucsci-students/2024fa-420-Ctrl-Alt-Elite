@@ -191,23 +191,29 @@ public class UmlGuiController extends JFrame {
     private void showAddClassPanel() {
         JDialog dialog = new JDialog(this, "Add Class", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
+    
         JPanel addClassPanel = new JPanel();
         addClassPanel.setLayout(new BoxLayout(addClassPanel, BoxLayout.Y_AXIS));
         addClassPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding around the panel
-
+    
         JTextField classNameField = new JTextField(15); // Adjust width
         addClassPanel.add(new JLabel("Class Name:"));
         addClassPanel.add(Box.createVerticalStrut(5)); // Add space between label and text field
         addClassPanel.add(classNameField);
         addClassPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-
+    
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             String className = classNameField.getText();
-            if (umlEditorModel.addClass(className)) {
-                outputArea.append("Class '" + className + "' added.\n");
-                addClassRectangle(className); // Draw rectangle for the new class
+            
+            // Generate random X and Y positions
+            Random random = new Random();
+            int xPosition = random.nextInt(500); // Change range as needed
+            int yPosition = random.nextInt(500); // Change range as needed
+    
+            if (umlEditorModel.addClass(className, new Point(xPosition, yPosition))) {
+                outputArea.append("Class '" + className + "' added at position (" + xPosition + ", " + yPosition + ").\n");
+                addClassRectangle(className, xPosition, yPosition); // Draw rectangle for the new class
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
                 updateButtonStates(); // Update button states after adding
@@ -216,15 +222,15 @@ public class UmlGuiController extends JFrame {
             }
             dialog.dispose(); // Close the dialog after submission
         });
-
+    
         addClassPanel.add(submitButton);
         dialog.getContentPane().add(addClassPanel);
         dialog.pack();
-        dialog.setSize(300, 150); // Set a preferred size
+        dialog.setSize(300, 150); // Adjust size to accommodate the class name field
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
-
+    
     private void showDeleteClassPanel() {
         JDialog dialog = new JDialog(this, "Delete Class", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -1050,22 +1056,21 @@ public class UmlGuiController extends JFrame {
         if (option == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             try {
-                JsonUtils.save(umlEditorModel, file.getAbsolutePath());
+                JsonUtils.save(umlEditorModel, file.getAbsolutePath()); // Ensure save method includes positions
                 outputArea.append("Project saved successfully to " + file.getAbsolutePath() + ".\n");
             } catch (IOException ex) {
                 outputArea.append("Failed to save project: " + ex.getMessage() + "\n");
             }
         }
     }
-
+    
     private void showLoadProjectPanel() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showOpenDialog(null);
         if (option == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             try {
-                umlEditorModel = JsonUtils.load(file.getAbsolutePath());
-                outputArea.append("Project loaded successfully from " + file.getAbsolutePath() + ".\n");
+                umlEditorModel = JsonUtils.load(file.getAbsolutePath()); // Load the model
     
                 // Clear previous class positions
                 classPositions.clear();
@@ -1073,8 +1078,15 @@ public class UmlGuiController extends JFrame {
                 // Populate classPositions based on the loaded UML editor
                 for (Map.Entry<String, UmlClass> entry : umlEditorModel.getClasses().entrySet()) {
                     String className = entry.getKey();
-                    // Set initial positions for the classes (you may need to adjust this logic)
-                    classPositions.put(className, new Point(100, 100)); // Set positions as needed
+                    
+                    // Load the position from the UmlClass if it exists
+                    Point position = entry.getValue().getPosition(); // Assuming you have a getPosition() method in UmlClass
+                    if (position != null) {
+                        classPositions.put(className, position);
+                    } else {
+                        // If no position is set, you can set a default one
+                        classPositions.put(className, new Point(100, 100)); // Adjust as needed
+                    }
                 }
     
                 // Repaint the panel to show loaded classes and relationships
@@ -1083,37 +1095,20 @@ public class UmlGuiController extends JFrame {
                 // Update button states after loading the project
                 updateButtonStates(); // Ensure buttons are updated based on loaded data
                 
+                outputArea.append("Project loaded successfully from " + file.getAbsolutePath() + ".\n");
             } catch (IOException ex) {
                 outputArea.append("Failed to load project: " + ex.getMessage() + "\n");
             }
         }
     }
     
-
-    private void addClassRectangle(String className) {
-        Random random = new Random();
-        int x, y;
-
-        // Generate random positions while avoiding overlap
-        boolean overlap;
-        do {
-            overlap = false;
-            x = random.nextInt(drawingPanel.getWidth() - 120); // Adjust width to avoid overflow
-            y = random.nextInt(drawingPanel.getHeight() - 70); // Adjust height to avoid overflow
-
-            // Check for overlap with existing positions
-            for (Point point : classPositions.values()) {
-                if (Math.abs(point.x - x) < 120 && Math.abs(point.y - y) < 70) { // Adjust distance to your rectangle
-                                                                                 // size
-                    overlap = true;
-                    break;
-                }
-            }
-        } while (overlap);
-
-        classPositions.put(className, new Point(x, y)); // Store position
+    private void addClassRectangle(String className, int x, int y) {
+        // Store the specified position in the classPositions map
+        classPositions.put(className, new Point(x, y)); 
+    
         drawingPanel.repaint(); // Repaint the drawing panel to show the new rectangle
     }
+    
 
     private void removeClassRectangle(String className) {
         classPositions.remove(className); // Remove the class position
@@ -1150,14 +1145,15 @@ public class UmlGuiController extends JFrame {
                         }
                     }
                 }
-
+        
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    selectedClassName = null; // Clear selection on mouse release
-                    dragStartPoint = null; // Clear drag start point
+                    // Clear selection on mouse release
+                    selectedClassName = null;
+                    dragStartPoint = null;
                 }
             });
-
+        
             addMouseMotionListener(new MouseMotionAdapter() {
                 @Override
                 public void mouseDragged(MouseEvent e) {
@@ -1170,6 +1166,10 @@ public class UmlGuiController extends JFrame {
                             int newX = oldPosition.x + (currentPoint.x - dragStartPoint.x);
                             int newY = oldPosition.y + (currentPoint.y - dragStartPoint.y);
                             classPositions.put(selectedClassName, new Point(newX, newY)); // Update the position
+        
+                            // Update the position in the model as well
+                            umlEditorModel.updateClassPosition(selectedClassName, new Point(newX, newY)); // Update model
+        
                             dragStartPoint = currentPoint; // Update the drag start point for smooth dragging
                             repaint(); // Repaint the panel to show the updated position
                         }
@@ -1177,6 +1177,8 @@ public class UmlGuiController extends JFrame {
                 }
             });
         }
+        
+        
 
         @Override
         protected void paintComponent(Graphics g) {

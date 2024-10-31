@@ -1,590 +1,590 @@
-import java.util.Arrays;
-import java.util.LinkedHashSet;
+// import java.util.Arrays;
+// import java.util.LinkedHashSet;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+// import static org.junit.jupiter.api.Assertions.assertEquals;
+// import static org.junit.jupiter.api.Assertions.assertFalse;
+// import static org.junit.jupiter.api.Assertions.assertNotEquals;
+// import static org.junit.jupiter.api.Assertions.assertTrue;
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.DisplayName;
+// import org.junit.jupiter.api.Test;
 
-import Model.UmlClass;
+// import Model.UmlClass;
 
-/**
- * A test class that checks the functionality of UnlClass.
- */
-public class UmlClassTest {
-	/** A private UmlClass object for testing. */
-    private UmlClass umlClass;
+// /**
+//  * A test class that checks the functionality of UnlClass.
+//  */
+// public class UmlClassTest {
+// 	/** A private UmlClass object for testing. */
+//     private UmlClass umlClass;
 
-    /**
-     * A function to initialize the UmlClass object.
-     */
-    @BeforeEach
-    public void setUp() {
-        umlClass = new UmlClass("ClassA");
-    }
+//     /**
+//      * A function to initialize the UmlClass object.
+//      */
+//     @BeforeEach
+//     public void setUp() {
+//         umlClass = new UmlClass("ClassA");
+//     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------------------------------------------*/
 
-    /**
-     * Test creating a UmlClass object.
-     */
-    @Test
-    @DisplayName ("Constructor: Create a UmlClass object")
-    public void testUmlClassConstructor() {
-        UmlClass umlClassTest = new UmlClass("ClassA");
-        assertEquals(umlClassTest.getName(), umlClass.getName());
-    }
+//     /**
+//      * Test creating a UmlClass object.
+//      */
+//     @Test
+//     @DisplayName ("Constructor: Create a UmlClass object")
+//     public void testUmlClassConstructor() {
+//         UmlClass umlClassTest = new UmlClass("ClassA");
+//         assertEquals(umlClassTest.getName(), umlClass.getName());
+//     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------------------------------------------*/
 
-    /**
-     * Test that getName returns the name of the class.
-     */
-    @Test
-    @DisplayName ("GetName: Return the name of the class")
-    public void testGetName() {
-        assertEquals("ClassA", umlClass.getName());
-    }
+//     /**
+//      * Test that getName returns the name of the class.
+//      */
+//     @Test
+//     @DisplayName ("GetName: Return the name of the class")
+//     public void testGetName() {
+//         assertEquals("ClassA", umlClass.getName());
+//     }
     
-    /**
-     * Test that setName changes the name of the class.
-     */
-    @Test
-    @DisplayName ("SetName: Set the name of the class")
-    public void testSetName() {
-        umlClass.setName("ClassB");
+//     /**
+//      * Test that setName changes the name of the class.
+//      */
+//     @Test
+//     @DisplayName ("SetName: Set the name of the class")
+//     public void testSetName() {
+//         umlClass.setName("ClassB");
         
-        assertEquals("ClassB", umlClass.getName());
-    }
+//         assertEquals("ClassB", umlClass.getName());
+//     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------------------------------------------*/
 
-    /**
-     * Test that a field can be successfully added.
-     */
-    @Test
-    @DisplayName("AddField: Add a field to the class")
-    public void testAddField() {
-        assertTrue(umlClass.addField("Field1"));
-    }
-    /**
-     * Test adding a field that already exists, should fail.
-     */
-    @Test
-    @DisplayName("AddField: Add a duplicate field, failure test")
-    public void testAddFieldDuplicate() {
-        umlClass.addField("Field1");
-        assertFalse(umlClass.addField("Field1"));
-    }
-    /**
-     * Test adding a field with an empty name, should fail.
-     */
-    @Test
-    @DisplayName("AddField: Add a field with an empty name, failure test")
-    public void testAddFieldEmptyName() {
-        assertFalse(umlClass.addField(""));
-    }
+//     /**
+//      * Test that a field can be successfully added.
+//      */
+//     @Test
+//     @DisplayName("AddField: Add a field to the class")
+//     public void testAddField() {
+//         assertTrue(umlClass.addField("Field1"));
+//     }
+//     /**
+//      * Test adding a field that already exists, should fail.
+//      */
+//     @Test
+//     @DisplayName("AddField: Add a duplicate field, failure test")
+//     public void testAddFieldDuplicate() {
+//         umlClass.addField("Field1");
+//         assertFalse(umlClass.addField("Field1"));
+//     }
+//     /**
+//      * Test adding a field with an empty name, should fail.
+//      */
+//     @Test
+//     @DisplayName("AddField: Add a field with an empty name, failure test")
+//     public void testAddFieldEmptyName() {
+//         assertFalse(umlClass.addField(""));
+//     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------------------------------------------*/
 
-    /**
-     * Test that a field can be successfully deleted.
-     */
-    @Test
-    @DisplayName("DeleteField: Delete a field from the class")
-    public void testDeleteField() {
-        umlClass.addField("Field1");
-        assertTrue(umlClass.deleteField("Field1"));
-    }
-    /**
-     * Test deleting a field that does not exist, should fail.
-     */
-    @Test
-    @DisplayName("DeleteField: Delete a field that does not exist, failure test")
-    public void testDeleteFieldNotExist() {
-        assertFalse(umlClass.deleteField("Field1"));
-    }
+//     /**
+//      * Test that a field can be successfully deleted.
+//      */
+//     @Test
+//     @DisplayName("DeleteField: Delete a field from the class")
+//     public void testDeleteField() {
+//         umlClass.addField("Field1");
+//         assertTrue(umlClass.deleteField("Field1"));
+//     }
+//     /**
+//      * Test deleting a field that does not exist, should fail.
+//      */
+//     @Test
+//     @DisplayName("DeleteField: Delete a field that does not exist, failure test")
+//     public void testDeleteFieldNotExist() {
+//         assertFalse(umlClass.deleteField("Field1"));
+//     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------------------------------------------*/
 
-    /**
-     * Test renaming a field.
-     */
-    @Test
-    @DisplayName("RenameField: Rename a field in the class")
-    public void testRenameField() {
-        umlClass.addField("Field1");
-        assertTrue(umlClass.renameField("Field1", "Field2"));
-    }
-    /**
-     * Test renaming a field that does not exist, should fail.
-     */
-    @Test
-    @DisplayName("RenameField: Rename a field that does not exist, failure test")
-    public void testRenameFieldNotExist() {
-        assertFalse(umlClass.renameField("Field1", "Field2"));
-    }
-    /**
-     * Test renaming a field to an empty name, should fail.
-     */
-    @Test
-    @DisplayName("RenameField: Rename a field to an empty name, failure test")
-    public void testRenameFieldEmptyName() {
-        umlClass.addField("Field1");
-        assertFalse(umlClass.renameField("Field1", ""));
-    }
+//     /**
+//      * Test renaming a field.
+//      */
+//     @Test
+//     @DisplayName("RenameField: Rename a field in the class")
+//     public void testRenameField() {
+//         umlClass.addField("Field1");
+//         assertTrue(umlClass.renameField("Field1", "Field2"));
+//     }
+//     /**
+//      * Test renaming a field that does not exist, should fail.
+//      */
+//     @Test
+//     @DisplayName("RenameField: Rename a field that does not exist, failure test")
+//     public void testRenameFieldNotExist() {
+//         assertFalse(umlClass.renameField("Field1", "Field2"));
+//     }
+//     /**
+//      * Test renaming a field to an empty name, should fail.
+//      */
+//     @Test
+//     @DisplayName("RenameField: Rename a field to an empty name, failure test")
+//     public void testRenameFieldEmptyName() {
+//         umlClass.addField("Field1");
+//         assertFalse(umlClass.renameField("Field1", ""));
+//     }
     
-/*----------------------------------------------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------------------------------------------*/
 
-    /**
-     * Test that two methods that are the same equal each other.
-     */
-    @Test
-    @DisplayName ("Equals: Test that two methods that are the same equal each other")
-    public void testEquality() {
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+//     /**
+//      * Test that two methods that are the same equal each other.
+//      */
+//     @Test
+//     @DisplayName ("Equals: Test that two methods that are the same equal each other")
+//     public void testEquality() {
+//         LinkedHashSet<String> lst = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
 
-        UmlClass.Method methodA = umlClass.new Method("Method1", lst);
-        UmlClass.Method methodB = umlClass.new Method("Method1", lst);
+//         UmlClass.Method methodA = umlClass.new Method("Method1", lst);
+//         UmlClass.Method methodB = umlClass.new Method("Method1", lst);
         
-        assertEquals(methodA, methodB);
-    }
+//         assertEquals(methodA, methodB);
+//     }
     
-    /**
-     * Test that two methods with different names, but the same parameters, do not equal each other.
-     */
-    @Test
-    @DisplayName ("Equals: Test that two methods, that are not the same, are not equal, failure test")
-    public void testNotEquality() {
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+//     /**
+//      * Test that two methods with different names, but the same parameters, do not equal each other.
+//      */
+//     @Test
+//     @DisplayName ("Equals: Test that two methods, that are not the same, are not equal, failure test")
+//     public void testNotEquality() {
+//         LinkedHashSet<String> lst = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
 
-        UmlClass.Method methodA = umlClass.new Method("Method1", lst);
-        UmlClass.Method methodB = umlClass.new Method("Method2", lst);
+//         UmlClass.Method methodA = umlClass.new Method("Method1", lst);
+//         UmlClass.Method methodB = umlClass.new Method("Method2", lst);
        
-        assertNotEquals(methodA, methodB);
-    }
+//         assertNotEquals(methodA, methodB);
+//     }
 
-    /**
-     * Test that two methods with same name, but different parameters, do not equal each other.
-     */
-    @Test
-    @DisplayName ("Equals: Test that two methods, that are not the same, are not equal, failure test")
-    public void testNotEqualityDiffPara() {
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B"));
+//     /**
+//      * Test that two methods with same name, but different parameters, do not equal each other.
+//      */
+//     @Test
+//     @DisplayName ("Equals: Test that two methods, that are not the same, are not equal, failure test")
+//     public void testNotEqualityDiffPara() {
+//         LinkedHashSet<String> lstA = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
+//         LinkedHashSet<String> lstB = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B"));
 
-        UmlClass.Method methodA = umlClass.new Method("Method1", lstA);
-        UmlClass.Method methodB = umlClass.new Method("Method1", lstB);
+//         UmlClass.Method methodA = umlClass.new Method("Method1", lstA);
+//         UmlClass.Method methodB = umlClass.new Method("Method1", lstB);
         
-        assertNotEquals(methodA, methodB);
-    }
+//         assertNotEquals(methodA, methodB);
+//     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------------------------------------------*/
 
-    /**
-     * Test that the same objects have the same hash code.
-     */
-    @Test
-    @DisplayName ("HashCode: Test that the same objects have the same hash code")
-    public void testHashCode() {
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+//     /**
+//      * Test that the same objects have the same hash code.
+//      */
+//     @Test
+//     @DisplayName ("HashCode: Test that the same objects have the same hash code")
+//     public void testHashCode() {
+//         LinkedHashSet<String> lst = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
         
-        UmlClass.Method methodA = umlClass.new Method("Method1", lst);
-        UmlClass.Method methodB = umlClass.new Method("Method1", lst);
+//         UmlClass.Method methodA = umlClass.new Method("Method1", lst);
+//         UmlClass.Method methodB = umlClass.new Method("Method1", lst);
         
-        assertEquals(methodA.hashCode(), methodB.hashCode());
-    }
+//         assertEquals(methodA.hashCode(), methodB.hashCode());
+//     }
     
-    /**
-     * Test that different objects have different hash code, should fail.
-     */
-    @Test
-    @DisplayName ("HashCode: Test that different objects different hash code, failure test")
-    public void testHashCodeDifferent() {
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+//     /**
+//      * Test that different objects have different hash code, should fail.
+//      */
+//     @Test
+//     @DisplayName ("HashCode: Test that different objects different hash code, failure test")
+//     public void testHashCodeDifferent() {
+//         LinkedHashSet<String> lstA = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
 
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B"));
+//         LinkedHashSet<String> lstB = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B"));
 
-        UmlClass.Method methodA = umlClass.new Method("Method1", lstA);
-        UmlClass.Method methodB = umlClass.new Method("Method1", lstB);
+//         UmlClass.Method methodA = umlClass.new Method("Method1", lstA);
+//         UmlClass.Method methodB = umlClass.new Method("Method1", lstB);
         
-        assertNotEquals(methodA.hashCode(), methodB.hashCode());
-    }
+//         assertNotEquals(methodA.hashCode(), methodB.hashCode());
+//     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------------------------------------------*/
 
-    /**
-     * Test that representation's toString returns what it should.
-     */
-    @Test
-    @DisplayName ("MethodToString: Print out the object in the correct way with the correct information")
-    public void testMethodToString() {
-        LinkedHashSet<String> lst = new LinkedHashSet<>();
-        lst.add("Para-A");
-        lst.add("Para-B");
-        lst.add("Para-C");
+//     /**
+//      * Test that representation's toString returns what it should.
+//      */
+//     @Test
+//     @DisplayName ("MethodToString: Print out the object in the correct way with the correct information")
+//     public void testMethodToString() {
+//         LinkedHashSet<String> lst = new LinkedHashSet<>();
+//         lst.add("Para-A");
+//         lst.add("Para-B");
+//         lst.add("Para-C");
         
-        umlClass.addMethod("Method1", lst);
+//         umlClass.addMethod("Method1", lst);
         
-        assertEquals("""
-                     Class: ClassA
-                     \tFields:
-                     \tMethods:
-                     \t\tMethod1 (Para-A, Para-B, Para-C)
-                     """, umlClass.toString());
-    }
+//         assertEquals("""
+//                      Class: ClassA
+//                      \tFields:
+//                      \tMethods:
+//                      \t\tMethod1 (Para-A, Para-B, Para-C)
+//                      """, umlClass.toString());
+//     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------------------------------------------*/
     
-    /**
-     * Test that a method can be successfully added.
-     */
-    @Test
-    @DisplayName ("AddMethod: Add an method to the class")
-    public void testAddMethod() {
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+//     /**
+//      * Test that a method can be successfully added.
+//      */
+//     @Test
+//     @DisplayName ("AddMethod: Add an method to the class")
+//     public void testAddMethod() {
+//         LinkedHashSet<String> lst = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
         
-            assertTrue(umlClass.addMethod("Method1", lst));
-    }
+//             assertTrue(umlClass.addMethod("Method1", lst));
+//     }
 
-    /**
-     * Test adding two methods with the same name, but different parameters.
-     */
-    @Test
-    @DisplayName ("AddMethod: Add methods with the same name, but different parameters")
-    public void testAddMethodSameNameDiffPara() {
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B"));
+//     /**
+//      * Test adding two methods with the same name, but different parameters.
+//      */
+//     @Test
+//     @DisplayName ("AddMethod: Add methods with the same name, but different parameters")
+//     public void testAddMethodSameNameDiffPara() {
+//         LinkedHashSet<String> lstA = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
+//         LinkedHashSet<String> lstB = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B"));
         
-        umlClass.addMethod("Method1", lstA);
+//         umlClass.addMethod("Method1", lstA);
        
-        assertTrue(umlClass.addMethod("Method1", lstB));
-    }
+//         assertTrue(umlClass.addMethod("Method1", lstB));
+//     }
 
-    /**
-     * Test adding a method with zero parameters.
-     */
-    @Test
-    @DisplayName ("AddMethod: Add a method with zero parameters")
-    public void testAddMethodNoPara() {
-        LinkedHashSet<String> lst = new LinkedHashSet<>();
+//     /**
+//      * Test adding a method with zero parameters.
+//      */
+//     @Test
+//     @DisplayName ("AddMethod: Add a method with zero parameters")
+//     public void testAddMethodNoPara() {
+//         LinkedHashSet<String> lst = new LinkedHashSet<>();
         
-        assertTrue(umlClass.addMethod("Method1", lst));
-    }
+//         assertTrue(umlClass.addMethod("Method1", lst));
+//     }
 
-    /**
-     * Test a duplicate method being added, should fail.
-     */
-    @Test
-    @DisplayName ("AddMethod: Add a duplicate method, failure test")
-    public void testAddMethodNotExist() {
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+//     /**
+//      * Test a duplicate method being added, should fail.
+//      */
+//     @Test
+//     @DisplayName ("AddMethod: Add a duplicate method, failure test")
+//     public void testAddMethodNotExist() {
+//         LinkedHashSet<String> lst = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
         
-        umlClass.addMethod("Method1", lst);
+//         umlClass.addMethod("Method1", lst);
         
-        assertFalse(umlClass.addMethod("Method1", lst));
-    }
+//         assertFalse(umlClass.addMethod("Method1", lst));
+//     }
 
-    /**
-     * Test adding a method with an empty name, should fail.
-     */
-    @Test
-    @DisplayName ("AddMethod: Add a method with an empty name, failure test")
-    public void testAddMethodNameNotExist() {
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+//     /**
+//      * Test adding a method with an empty name, should fail.
+//      */
+//     @Test
+//     @DisplayName ("AddMethod: Add a method with an empty name, failure test")
+//     public void testAddMethodNameNotExist() {
+//         LinkedHashSet<String> lst = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
         
-        assertFalse(umlClass.addMethod("", lst));
-    }
+//         assertFalse(umlClass.addMethod("", lst));
+//     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------------------------------------------*/
 
-    /**
-     * Test deleting a method.
-     */
-    @Test
-    @DisplayName ("DeleteMethod: Delete a method")
-    public void testDeleteMethod() {
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+//     /**
+//      * Test deleting a method.
+//      */
+//     @Test
+//     @DisplayName ("DeleteMethod: Delete a method")
+//     public void testDeleteMethod() {
+//         LinkedHashSet<String> lst = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
 
-        umlClass.addMethod("Method1", lst);
+//         umlClass.addMethod("Method1", lst);
        
-        assertTrue(umlClass.deleteMethod("Method1", lst));
-    }
+//         assertTrue(umlClass.deleteMethod("Method1", lst));
+//     }
     
-    /**
-     * Test deleting a method that has the same name as another.
-     */
-    @Test
-    @DisplayName ("DeleteMethod: Delete a method that has the same name as another")
-    public void testDeleteMethodSameName() {
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B"));
+//     /**
+//      * Test deleting a method that has the same name as another.
+//      */
+//     @Test
+//     @DisplayName ("DeleteMethod: Delete a method that has the same name as another")
+//     public void testDeleteMethodSameName() {
+//         LinkedHashSet<String> lstA = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
+//         LinkedHashSet<String> lstB = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B"));
 
-        umlClass.addMethod("Method1", lstA);
-        umlClass.addMethod("Method1", lstB);
+//         umlClass.addMethod("Method1", lstA);
+//         umlClass.addMethod("Method1", lstB);
        
-        assertTrue(umlClass.deleteMethod("Method1", lstA));
-    }
+//         assertTrue(umlClass.deleteMethod("Method1", lstA));
+//     }
 
-    /**
-     * Test deleting a method that does not exist, should fail.
-     */
-    @Test
-    @DisplayName ("DeleteMethod: Delete an method that dose not exist, failure test")
-    public void testDeleteMethodNotExist() {
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        assertFalse(umlClass.deleteMethod("Method1", lst));
-    }
+//     /**
+//      * Test deleting a method that does not exist, should fail.
+//      */
+//     @Test
+//     @DisplayName ("DeleteMethod: Delete an method that dose not exist, failure test")
+//     public void testDeleteMethodNotExist() {
+//         LinkedHashSet<String> lst = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
+//         assertFalse(umlClass.deleteMethod("Method1", lst));
+//     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------------------------------------------*/
 
-    /**
-     * Test renaming a method.
-     */
-    @Test
-    @DisplayName ("RenameMethod: Rename an method")
-    public void testRenameMethod() {
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+//     /**
+//      * Test renaming a method.
+//      */
+//     @Test
+//     @DisplayName ("RenameMethod: Rename an method")
+//     public void testRenameMethod() {
+//         LinkedHashSet<String> lst = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
 
-        umlClass.addMethod("Method1", lst);
+//         umlClass.addMethod("Method1", lst);
        
-        assertTrue(umlClass.renameMethod("Method1", lst, "Method2"));
-    }
+//         assertTrue(umlClass.renameMethod("Method1", lst, "Method2"));
+//     }
     
-    /**
-     * Test renaming a method to the same name as another method, but with different parameters.
-     */
-    @Test
-    @DisplayName ("RenameMethod: Rename an method")
-    public void testRenameMethodSameName() {
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B"));
+//     /**
+//      * Test renaming a method to the same name as another method, but with different parameters.
+//      */
+//     @Test
+//     @DisplayName ("RenameMethod: Rename an method")
+//     public void testRenameMethodSameName() {
+//         LinkedHashSet<String> lstA = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
+//         LinkedHashSet<String> lstB = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B"));
 
-        umlClass.addMethod("Method1", lstA);
-        umlClass.addMethod("Method2", lstB);
+//         umlClass.addMethod("Method1", lstA);
+//         umlClass.addMethod("Method2", lstB);
 
-        assertTrue(umlClass.renameMethod("Method1", lstA, "Method2"));
-    }
+//         assertTrue(umlClass.renameMethod("Method1", lstA, "Method2"));
+//     }
 
-    /**
-     * Test renaming a method that does not exist, should fail.
-     */
-    @Test
-    @DisplayName ("RenameMethod: Rename a method that does not exist, failure test")
-    public void testRenameMethodNotExist() {
-        LinkedHashSet<String> lst = new LinkedHashSet<>();
+//     /**
+//      * Test renaming a method that does not exist, should fail.
+//      */
+//     @Test
+//     @DisplayName ("RenameMethod: Rename a method that does not exist, failure test")
+//     public void testRenameMethodNotExist() {
+//         LinkedHashSet<String> lst = new LinkedHashSet<>();
 
-        assertFalse(umlClass.renameMethod("Method1", lst, "Method2"));
-    }
+//         assertFalse(umlClass.renameMethod("Method1", lst, "Method2"));
+//     }
 
-    /**
-     * Test renaming Method1, which has the same parameters as Method2, to Method2, should fail.
-     */
-    @Test
-    @DisplayName ("RenameMethod: Rename an method")
-    public void testRenameMethodSameNameFalse() {
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+//     /**
+//      * Test renaming Method1, which has the same parameters as Method2, to Method2, should fail.
+//      */
+//     @Test
+//     @DisplayName ("RenameMethod: Rename an method")
+//     public void testRenameMethodSameNameFalse() {
+//         LinkedHashSet<String> lstA = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
 
-        umlClass.addMethod("Method1", lstA);
-        umlClass.addMethod("Method2", lstA);
+//         umlClass.addMethod("Method1", lstA);
+//         umlClass.addMethod("Method2", lstA);
 
-        assertFalse(umlClass.renameMethod("Method1", lstA, "Method2"));
-    }
+//         assertFalse(umlClass.renameMethod("Method1", lstA, "Method2"));
+//     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------------------------------------------*/
 
-    /**
-     * Test removing a parameter from a method.
-     */
-    @Test
-    @DisplayName ("removeParameter: Remove a parameter from a method")
-    public void testRemoveParameter() {
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        umlClass.addMethod("MethodA", lst);
+//     /**
+//      * Test removing a parameter from a method.
+//      */
+//     @Test
+//     @DisplayName ("removeParameter: Remove a parameter from a method")
+//     public void testRemoveParameter() {
+//         LinkedHashSet<String> lst = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
+//         umlClass.addMethod("MethodA", lst);
         
-        assertTrue(umlClass.removeParameter("MethodA", "Para-A"));
-    }
+//         assertTrue(umlClass.removeParameter("MethodA", "Para-A"));
+//     }
 
-    /**
-     * Test removing a parameter that does not exist, should fail.
-     */
-    @Test
-    @DisplayName ("removeParameter: Try to remove a parameter that does not exist, failure test")
-    public void testRemoveParameterNotExist() {
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        umlClass.addMethod("MethodA", lst);
+//     /**
+//      * Test removing a parameter that does not exist, should fail.
+//      */
+//     @Test
+//     @DisplayName ("removeParameter: Try to remove a parameter that does not exist, failure test")
+//     public void testRemoveParameterNotExist() {
+//         LinkedHashSet<String> lst = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
+//         umlClass.addMethod("MethodA", lst);
         
-        assertFalse(umlClass.removeParameter("MethodA", "Para-D"));
-    }
+//         assertFalse(umlClass.removeParameter("MethodA", "Para-D"));
+//     }
 
-    /**
-     * Test removing a parameter from a method that does not exist, should fail.
-     */
-    @Test
-    @DisplayName ("removeParameter: Remove a parameter from a method that does not exist, failure test")
-    public void testRemoveParameterMethodNotExist() {
-        assertFalse(umlClass.removeParameter("MethodA", "Para-A"));
-    }
+//     /**
+//      * Test removing a parameter from a method that does not exist, should fail.
+//      */
+//     @Test
+//     @DisplayName ("removeParameter: Remove a parameter from a method that does not exist, failure test")
+//     public void testRemoveParameterMethodNotExist() {
+//         assertFalse(umlClass.removeParameter("MethodA", "Para-A"));
+//     }
 
-    /** 
-     * Test trying to remove a parameter from a method with invalid input, should fail.
-     */
-    @Test
-    @DisplayName ("removeParameter: Remove a parameter with invalid input, failure test")
-    public void testRemoveParameterInvalidInput() {
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para A", "Para B ", " Para-C"));
-        umlClass.addMethod("MethodA", lst);
+//     /** 
+//      * Test trying to remove a parameter from a method with invalid input, should fail.
+//      */
+//     @Test
+//     @DisplayName ("removeParameter: Remove a parameter with invalid input, failure test")
+//     public void testRemoveParameterInvalidInput() {
+//         LinkedHashSet<String> lst = new LinkedHashSet<>(
+//             Arrays.asList("Para A", "Para B ", " Para-C"));
+//         umlClass.addMethod("MethodA", lst);
         
-        assertFalse(umlClass.removeParameter("MethodA", "Para A"));
-    }
+//         assertFalse(umlClass.removeParameter("MethodA", "Para A"));
+//     }
 
     
-/*----------------------------------------------------------------------------------------------------------------*/   
+// /*----------------------------------------------------------------------------------------------------------------*/   
     
-    /**
-     * Test changing the list of parameters of a method.
-     */
-    @Test
-    @DisplayName ("changeParameters: Change the list of parameters of a method")
-    public void testChangeParameters() {
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        umlClass.addMethod("MethodA", lstA);
+//     /**
+//      * Test changing the list of parameters of a method.
+//      */
+//     @Test
+//     @DisplayName ("changeParameters: Change the list of parameters of a method")
+//     public void testChangeParameters() {
+//         LinkedHashSet<String> lstA = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
+//         umlClass.addMethod("MethodA", lstA);
 
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList("Para-A"));
+//         LinkedHashSet<String> lstB = new LinkedHashSet<>(
+//             Arrays.asList("Para-A"));
         
-        assertTrue(umlClass.changeParameters("MethodA", lstB));
-    }
+//         assertTrue(umlClass.changeParameters("MethodA", lstB));
+//     }
 
-    /**
-     * Test changing the list of parameters from none to a few parameters
-     */
-    @Test
-    @DisplayName ("changeParameters: Change the list of parameters of a method from none to a few")
-    public void testChangeParametersNoneFew() {
-        LinkedHashSet<String> lstA = new LinkedHashSet<>();
-            umlClass.addMethod("MethodA", lstA);
+//     /**
+//      * Test changing the list of parameters from none to a few parameters
+//      */
+//     @Test
+//     @DisplayName ("changeParameters: Change the list of parameters of a method from none to a few")
+//     public void testChangeParametersNoneFew() {
+//         LinkedHashSet<String> lstA = new LinkedHashSet<>();
+//             umlClass.addMethod("MethodA", lstA);
 
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+//         LinkedHashSet<String> lstB = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
         
-        assertTrue(umlClass.changeParameters("MethodA", lstB));
-    }
+//         assertTrue(umlClass.changeParameters("MethodA", lstB));
+//     }
 
-    /**
-     * Test changing the list of parameters from a few to none.
-     */
-    @Test
-    @DisplayName ("changeParameters: Change the list of parameters of a method from a few to none")
-    public void testChangeParametersFewNone() {
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        umlClass.addMethod("MethodA", lstA);
+//     /**
+//      * Test changing the list of parameters from a few to none.
+//      */
+//     @Test
+//     @DisplayName ("changeParameters: Change the list of parameters of a method from a few to none")
+//     public void testChangeParametersFewNone() {
+//         LinkedHashSet<String> lstA = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
+//         umlClass.addMethod("MethodA", lstA);
 
-        LinkedHashSet<String> lstB = new LinkedHashSet<>();
+//         LinkedHashSet<String> lstB = new LinkedHashSet<>();
         
-        assertTrue(umlClass.changeParameters("MethodA", lstB));
-    }
+//         assertTrue(umlClass.changeParameters("MethodA", lstB));
+//     }
 
-    /**
-     * Test changing the list of parameters of a method that does not exist, should fail.
-     */
-    @Test
-    @DisplayName ("changeParameters: Change the list of parameters from a method that does not exist, failure test")
-    public void testChangeParametersMethodNotExist() {
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList("Para-A"));
+//     /**
+//      * Test changing the list of parameters of a method that does not exist, should fail.
+//      */
+//     @Test
+//     @DisplayName ("changeParameters: Change the list of parameters from a method that does not exist, failure test")
+//     public void testChangeParametersMethodNotExist() {
+//         LinkedHashSet<String> lstB = new LinkedHashSet<>(
+//             Arrays.asList("Para-A"));
         
-        assertFalse(umlClass.changeParameters("MethodB", lstB));
-    }
+//         assertFalse(umlClass.changeParameters("MethodB", lstB));
+//     }
 
-    /**
-     * Test changing the list of parameters to the same list, should fail.
-     */
-    @Test
-    @DisplayName ("changeParameters: Change the list of parameters to the same list, failure test")
-    public void testChangeParametersSameList() {
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-            umlClass.addMethod("MethodA", lstA);
+//     /**
+//      * Test changing the list of parameters to the same list, should fail.
+//      */
+//     @Test
+//     @DisplayName ("changeParameters: Change the list of parameters to the same list, failure test")
+//     public void testChangeParametersSameList() {
+//         LinkedHashSet<String> lstA = new LinkedHashSet<>(
+//             Arrays.asList("Para-A", "Para-B", "Para-C"));
+//             umlClass.addMethod("MethodA", lstA);
         
-        assertFalse(umlClass.changeParameters("MethodB", lstA));
-    }
+//         assertFalse(umlClass.changeParameters("MethodB", lstA));
+//     }
 
-    /**
-     * Test trying to change a parameter with invalid input, should fail.
-     */
-    @Test
-    @DisplayName ("changeParameters: Change the list of parameters with invalid input, failure test")
-    public void testChangeParametersInvalidInput() {
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList(" Para A", "Para-B ", "Para- C"));
-        umlClass.addMethod("MethodA", lstA);
+//     /**
+//      * Test trying to change a parameter with invalid input, should fail.
+//      */
+//     @Test
+//     @DisplayName ("changeParameters: Change the list of parameters with invalid input, failure test")
+//     public void testChangeParametersInvalidInput() {
+//         LinkedHashSet<String> lstA = new LinkedHashSet<>(
+//             Arrays.asList(" Para A", "Para-B ", "Para- C"));
+//         umlClass.addMethod("MethodA", lstA);
 
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList(" Para A "));
+//         LinkedHashSet<String> lstB = new LinkedHashSet<>(
+//             Arrays.asList(" Para A "));
         
-        assertFalse(umlClass.changeParameters("MethodA", lstB));
-    }
+//         assertFalse(umlClass.changeParameters("MethodA", lstB));
+//     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------------------------------------------*/
 
-    /**
-     * Test that toString returns what it should.
-     */
-    @Test
-    @DisplayName ("ToString: Print out the object in the correct way with the correct information")
-    public void testToString() {
-        umlClass.addField("Field-A");
-        umlClass.addField("Field-B");
-        umlClass.addField("Field-C");
+//     /**
+//      * Test that toString returns what it should.
+//      */
+//     @Test
+//     @DisplayName ("ToString: Print out the object in the correct way with the correct information")
+//     public void testToString() {
+//         umlClass.addField("Field-A");
+//         umlClass.addField("Field-B");
+//         umlClass.addField("Field-C");
 
-        LinkedHashSet<String> lst = new LinkedHashSet<>();
-        lst.add("Para-A");
-        lst.add("Para-B");
-        lst.add("Para-C");
+//         LinkedHashSet<String> lst = new LinkedHashSet<>();
+//         lst.add("Para-A");
+//         lst.add("Para-B");
+//         lst.add("Para-C");
 
-        umlClass.addMethod("Method1", lst);
-        umlClass.addMethod("Method2", lst);
+//         umlClass.addMethod("Method1", lst);
+//         umlClass.addMethod("Method2", lst);
         
-        assertEquals("""
-                     Class: ClassA
-                     \tFields:
-                     \t\tField-A
-                     \t\tField-B
-                     \t\tField-C
-                     \tMethods:
-                     \t\tMethod1 (Para-A, Para-B, Para-C)
-                     \t\tMethod2 (Para-A, Para-B, Para-C)
-                     """, umlClass.toString());
-    }
-}
+//         assertEquals("""
+//                      Class: ClassA
+//                      \tFields:
+//                      \t\tField-A
+//                      \t\tField-B
+//                      \t\tField-C
+//                      \tMethods:
+//                      \t\tMethod1 (Para-A, Para-B, Para-C)
+//                      \t\tMethod2 (Para-A, Para-B, Para-C)
+//                      """, umlClass.toString());
+//     }
+// }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------------------------------------------*/

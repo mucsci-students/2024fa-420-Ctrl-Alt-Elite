@@ -2,6 +2,7 @@ package Controller;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.awt.Point;
 
 import Model.RelationshipType;
 import Model.UmlClass;
@@ -33,6 +34,20 @@ public class UmlEditor {
             return null;
         }
         return model.getUmlClass(name);
+    }
+
+    /**
+     * Adds a new class if it doesn't already exist and the name is not null or empty.
+     * 
+     * @param name The name of the new class.
+     * @param position The initial position of the new class.
+     * @return {@code true} if the class was added, {@code false} otherwise.
+     */
+    public boolean addClass(String name, Point position) {
+        if (name == null || name.isEmpty() || name.contains(" ")) {
+            return false;
+        }
+        return model.addClass(name, position); // Pass the position to the model
     }
 
     /**
