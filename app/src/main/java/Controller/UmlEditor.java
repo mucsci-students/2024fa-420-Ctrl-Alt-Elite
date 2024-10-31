@@ -207,10 +207,10 @@ public class UmlEditor {
 /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
-     * Remove a parameter, or multiple, from a method.
+     * Remove a parameter from a method.
      * 
      * @param className  The name of the class in which the method belongs.
-     * @param methodName The name of the method in which the parameters belong.
+     * @param methodName The name of the method in which the parameter belongs.
      * @param paraName   The name of the parameter to remove.
      * @return {@code true} if the parameter was removed, {@code false} otherwise.
      */

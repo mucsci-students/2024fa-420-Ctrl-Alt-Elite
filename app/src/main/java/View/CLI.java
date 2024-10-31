@@ -29,7 +29,7 @@ public class CLI {
         System.out.println("add-method - Add a method to a class");
         System.out.println("delete-method - Delete a method from a class");
         System.out.println("rename-method - Rename a method in a class");
-        System.out.println("remove-parameter - Remove one or multiple parameters from a method");
+        System.out.println("remove-parameter - Remove a parameter from a method");
         System.out.println("change-parameter - Replace all parameters for a method");
         System.out.println("add-relationship - Add a relationship between classes");
         System.out.println("delete-relationship - Delete a relationship between classes");

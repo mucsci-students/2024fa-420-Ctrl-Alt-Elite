@@ -334,37 +334,24 @@ public class UmlCliController {
     
     /**
      * Handles removing a parameter from a method by prompting the user for class name,
-     * method name, and parameter names, and then removing the parameter from the method.
+     * method name, and parameter name, and then removing the parameter from the method.
      */
     public void handleRemoveParameter() {
-        // Removes a parameter, or many parameters, from a method
-        view.displayMessage("Enter the name of the class of the method with the parameters to remove: ");
+        // Removes a parameter from a method
+        view.displayMessage("Enter the name of the class of the method with the parameter to remove: ");
         String classToRemoveParameter = scanner.nextLine().trim();
-        view.displayMessage("Enter the name of the method with the parameters to remove: ");
-        String methodOfParameters = scanner.nextLine().trim();
+        view.displayMessage("Enter the name of the method with the parameter to remove: ");
+        String methodOfParameter = scanner.nextLine().trim();
 
-        view.displayMessage("How many parameters would you like to remove (1, 2, 3, etc.): ");
-        int numToRemove;
-        try {
-            numToRemove = scanner.nextInt();
-        } catch (Exception e) {
-            view.displayMessage(
-                    "Parameter number to remove entered improperly. Please enter a numeral for the parameter count (0, 1, 2, etc.).");
-            scanner.nextLine(); // Clear the scanner buffer
-            return; // Exit the method
-        }
-        scanner.nextLine(); // Clear the buffer after reading the integer
+        //scanner.nextLine(); // Clear the buffer after reading the integer
 
-        for (int i = 0; i < numToRemove; i++) {
-            view.displayMessage("Enter the name of the parameter to remove: ");
-            String paraName = scanner.nextLine().trim();
+        view.displayMessage("Enter the name of the parameter to remove: ");
+        String paraName = scanner.nextLine().trim();
 
-            if (umlEditor.removeParameter(classToRemoveParameter, methodOfParameters, paraName)) {
-                view.displayMessage("Parameter '" + paraName + "' was removed from '" + methodOfParameters + "'.");
-            } else {
-                view.displayMessage("Failed to remove parameter. Name may be invalid, or class does not exist.");
-                break; // Exit the loop on failure
-            }
+        if (umlEditor.removeParameter(classToRemoveParameter, methodOfParameter, paraName)) {
+            view.displayMessage("Parameter '" + paraName + "' was removed from '" + methodOfParameter + "'.");
+        } else {
+            view.displayMessage("Failed to remove parameter. Name may be invalid, or class does not exist.");
         }
     }
 

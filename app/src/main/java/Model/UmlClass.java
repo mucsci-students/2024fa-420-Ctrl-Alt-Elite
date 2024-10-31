@@ -404,11 +404,13 @@ public class UmlClass {
      *         if it could not be removed.
      */
     public boolean removeParameter(String methodName, String paraName) {
-        // If any of the parameters are invalid, return false.
+        // If any of the function parameters are invalid, return false.
         if (methodName.isEmpty() || paraName.isEmpty()) {
             return false;
         }
 
+        // Loop through the methods, find the one we need,
+        //  and remove the parameter
         for (Method method : methods) {
             if (method.getName().equals(methodName)) {
                 return method.removeParameter(paraName);
