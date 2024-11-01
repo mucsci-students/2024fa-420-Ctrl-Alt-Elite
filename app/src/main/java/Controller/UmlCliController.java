@@ -1,6 +1,7 @@
 package Controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Scanner;
 
@@ -223,27 +224,14 @@ public class UmlCliController {
         String classToAddMethod = scanner.nextLine().trim();
         view.displayMessage("Enter the method name: ");
         String methodName = scanner.nextLine().trim();
-
-        int paraNum;
-        view.displayMessage("Enter the number(0, 1, 2, etc.) of parameters for the method: ");
-        try {
-            paraNum = scanner.nextInt();
-        } catch (Exception e) {
-            view.displayMessage(
-                    "Parameter number entered improperly. Please enter a numeral for the parameter count (0, 1, 2, etc.).");
-            scanner.nextLine(); // Clear the buffer
-            return;
-        }
-        scanner.nextLine(); // Clear the buffer
-
+        view.displayMessage("Enter the parameters for the method (p1, p2, p3, etc.): ");
+        String parameters = scanner.nextLine().trim();
+        
         LinkedHashSet<String> paraList = new LinkedHashSet<>();
-        for (int i = 1; i <= paraNum; i++) {
-            view.displayMessage("Enter the name of parameter " + i + ": ");
-            String paraName = scanner.nextLine().trim();
-            if (!paraList.add(paraName)) {
-                view.displayMessage("Parameter name invalid, please try again.");
-                i--; // Decrement i to repeat this iteration
-            }
+        if (!parameters.trim().isEmpty()) {
+            Arrays.stream(parameters.split(","))
+                    .map(String::trim)
+                    .forEach(paraList::add);
         }
 
         if (umlEditor.addMethod(classToAddMethod, methodName, paraList)) {
@@ -342,9 +330,6 @@ public class UmlCliController {
         String classToRemoveParameter = scanner.nextLine().trim();
         view.displayMessage("Enter the name of the method with the parameter to remove: ");
         String methodOfParameter = scanner.nextLine().trim();
-
-        //scanner.nextLine(); // Clear the buffer after reading the integer
-
         view.displayMessage("Enter the name of the parameter to remove: ");
         String paraName = scanner.nextLine().trim();
 
@@ -365,25 +350,14 @@ public class UmlCliController {
         String classToChangeParameter = scanner.nextLine().trim();
         view.displayMessage("Enter the name of the method with the parameters to change: ");
         String methodToChangeParameters = scanner.nextLine().trim();
-
-        view.displayMessage(
-                "Enter the new number (0, 1, 2, etc.) of parameters for '" + methodToChangeParameters + "': ");
-        int newParaNum;
-        try {
-            newParaNum = scanner.nextInt();
-        } catch (Exception e) {
-            view.displayMessage(
-                    "Parameter number entered improperly. Please enter a numeral for the parameter count (0, 1, 2, etc.).");
-            scanner.nextLine(); // Clear the scanner buffer
-            return; // Exit the method
-        }
-        scanner.nextLine(); // Clear the buffer after reading the integer
-
+        view.displayMessage("Enter the new parameters for the method (p1, p2, p3, etc.): ");
+        String parameters = scanner.nextLine().trim();
+        
         LinkedHashSet<String> newParaList = new LinkedHashSet<>();
-        for (int i = 1; i <= newParaNum; i++) {
-            view.displayMessage("Enter the name of parameter " + i + ": ");
-            String paraName = scanner.nextLine().trim();
-            newParaList.add(paraName);
+        if (!parameters.trim().isEmpty()) {
+            Arrays.stream(parameters.split(","))
+                    .map(String::trim)
+                    .forEach(newParaList::add);
         }
 
         if (umlEditor.changeParameters(classToChangeParameter, methodToChangeParameters, newParaList)) {
