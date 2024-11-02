@@ -142,7 +142,6 @@ public class UmlGuiController extends JFrame {
         addMenuItem(listMenu, "List Relationships", e -> showListRelationshipsPanel());
         menuBar.add(listMenu);
 
-
         // Set the menu bar
         setJMenuBar(menuBar);
 
@@ -551,18 +550,22 @@ public class UmlGuiController extends JFrame {
     private void showDeleteMethodPanel() {
         JDialog dialog = new JDialog(this, "Delete Method", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
+    
         JPanel deleteMethodPanel = new JPanel();
         deleteMethodPanel.setLayout(new BoxLayout(deleteMethodPanel, BoxLayout.Y_AXIS));
         deleteMethodPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
-
-        JTextField classNameField = new JTextField(15); // Adjust width
+    
+        // Get class names from the model
+        String[] classNames = umlEditorModel.getClassNames(); // Assuming getClassNames() returns a list of class names as a String array
+    
+        // Create a combo box for selecting the class name
+        JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
         JTextField methodNameField = new JTextField(15); // Adjust width
         JTextField parameterListField = new JTextField(15); // Adjust width
-
+    
         deleteMethodPanel.add(new JLabel("Class Name:"));
         deleteMethodPanel.add(Box.createVerticalStrut(5));
-        deleteMethodPanel.add(classNameField);
+        deleteMethodPanel.add(classNameComboBox);
         deleteMethodPanel.add(Box.createVerticalStrut(10));
         deleteMethodPanel.add(new JLabel("Method Name:"));
         deleteMethodPanel.add(Box.createVerticalStrut(5));
@@ -572,12 +575,13 @@ public class UmlGuiController extends JFrame {
         deleteMethodPanel.add(Box.createVerticalStrut(5));
         deleteMethodPanel.add(parameterListField);
         deleteMethodPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-
+    
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            String className = classNameField.getText();
+            String className = (String) classNameComboBox.getSelectedItem();
             String methodName = methodNameField.getText();
             LinkedHashSet<String> paraList = parseParameterList(parameterListField.getText());
+    
             if (umlEditor.deleteMethod(className, methodName, paraList)) {
                 outputArea.append("Method '" + methodName + "' deleted from class '" + className + "'.\n");
                 drawingPanel.revalidate();
@@ -585,13 +589,15 @@ public class UmlGuiController extends JFrame {
             } else {
                 outputArea.append("Failed to delete method '" + methodName + "' from class '" + className + "'.\n");
             }
-            classNameField.setText("");
+    
+            // Clear input fields and close dialog after submission
             methodNameField.setText("");
             parameterListField.setText("");
-            dialog.dispose(); // Close dialog after submission
+            dialog.dispose();
         });
+    
         deleteMethodPanel.add(submitButton);
-
+    
         dialog.add(deleteMethodPanel);
         dialog.pack();
         dialog.setLocationRelativeTo(this); // Center dialog
@@ -601,19 +607,23 @@ public class UmlGuiController extends JFrame {
     private void showRenameMethodPanel() {
         JDialog dialog = new JDialog(this, "Rename Method", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
+    
         JPanel renameMethodPanel = new JPanel();
         renameMethodPanel.setLayout(new BoxLayout(renameMethodPanel, BoxLayout.Y_AXIS));
         renameMethodPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
-
-        JTextField classNameField = new JTextField(15); // Adjust width
+    
+        // Get class names from the model
+        String[] classNames = umlEditorModel.getClassNames();
+    
+        // Create a combo box for selecting the class name
+        JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
         JTextField oldMethodNameField = new JTextField(15); // Adjust width
         JTextField newMethodNameField = new JTextField(15); // Adjust width
         JTextField parameterListField = new JTextField(15); // Adjust width
-
+    
         renameMethodPanel.add(new JLabel("Class Name:"));
         renameMethodPanel.add(Box.createVerticalStrut(5));
-        renameMethodPanel.add(classNameField);
+        renameMethodPanel.add(classNameComboBox);
         renameMethodPanel.add(Box.createVerticalStrut(10));
         renameMethodPanel.add(new JLabel("Old Method Name:"));
         renameMethodPanel.add(Box.createVerticalStrut(5));
@@ -627,35 +637,36 @@ public class UmlGuiController extends JFrame {
         renameMethodPanel.add(Box.createVerticalStrut(5));
         renameMethodPanel.add(parameterListField);
         renameMethodPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-
+    
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            String className = classNameField.getText();
+            String className = (String) classNameComboBox.getSelectedItem();
             String oldName = oldMethodNameField.getText();
             String newName = newMethodNameField.getText();
             LinkedHashSet<String> paraList = parseParameterList(parameterListField.getText());
+    
             if (umlEditor.renameMethod(className, oldName, paraList, newName)) {
-                outputArea.append(
-                        "Method '" + oldName + "' renamed to '" + newName + "' in class '" + className + "'.\n");
+                outputArea.append("Method '" + oldName + "' renamed to '" + newName + "' in class '" + className + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
             } else {
-                outputArea.append("Failed to rename method '" + oldName + "' to '" + newName + "' in class '"
-                        + className + "'.\n");
+                outputArea.append("Failed to rename method '" + oldName + "' to '" + newName + "' in class '" + className + "'.\n");
             }
-            classNameField.setText("");
+    
+            // Clear input fields and close dialog after submission
             oldMethodNameField.setText("");
             newMethodNameField.setText("");
             parameterListField.setText("");
-            dialog.dispose(); // Close dialog after submission
+            dialog.dispose();
         });
+    
         renameMethodPanel.add(submitButton);
-
+    
         dialog.add(renameMethodPanel);
         dialog.pack();
         dialog.setLocationRelativeTo(this); // Center dialog
         dialog.setVisible(true);
-    }
+    }    
 
     private LinkedHashSet<String> parseParameterList(String input) {
         LinkedHashSet<String> parameters = new LinkedHashSet<>();
@@ -683,14 +694,18 @@ public class UmlGuiController extends JFrame {
         deleteParameterPanel.setLayout(new BoxLayout(deleteParameterPanel, BoxLayout.Y_AXIS));
         deleteParameterPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
 
-        JTextField classNameField = new JTextField(10);
+        // Get class names from the model
+        String[] classNames = umlEditorModel.getClassNames();
+    
+        // Create a combo box for selecting the class name
+        JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
         JTextField methodNameField = new JTextField(10);
         JTextField parameterNameField = new JTextField(10);
 
         deleteParameterPanel.add(new JLabel("Class Name:"));
-        deleteParameterPanel.add(Box.createVerticalStrut(5)); // Add space
-        deleteParameterPanel.add(classNameField);
-        deleteParameterPanel.add(Box.createVerticalStrut(10)); // Add space
+        deleteParameterPanel.add(Box.createVerticalStrut(5));
+        deleteParameterPanel.add(classNameComboBox);
+        deleteParameterPanel.add(Box.createVerticalStrut(10));
         deleteParameterPanel.add(new JLabel("Method Name:"));
         deleteParameterPanel.add(Box.createVerticalStrut(5)); // Add space
         deleteParameterPanel.add(methodNameField);
@@ -702,7 +717,7 @@ public class UmlGuiController extends JFrame {
 
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            String className = classNameField.getText();
+            String className = (String) classNameComboBox.getSelectedItem();
             String methodName = methodNameField.getText();
             String parameterName = parameterNameField.getText();
             if (umlEditor.removeParameter(className, methodName, parameterName)) {
@@ -714,7 +729,7 @@ public class UmlGuiController extends JFrame {
                 outputArea.append("Failed to delete parameter '" + parameterName + "' from method '" + methodName
                         + "' in class '" + className + "'.\n");
             }
-            classNameField.setText("");
+            
             methodNameField.setText("");
             parameterNameField.setText("");
         });
@@ -735,13 +750,17 @@ public class UmlGuiController extends JFrame {
         changeParameterPanel.setLayout(new BoxLayout(changeParameterPanel, BoxLayout.Y_AXIS));
         changeParameterPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
 
-        JTextField changeParameterClassField = new JTextField(10);
+        // Get class names from the model
+        String[] classNames = umlEditorModel.getClassNames();
+    
+        // Create a combo box for selecting the class name
+        JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
         JTextField changeParameterMethodField = new JTextField(10);
         JTextField changeParameterNewParamsField = new JTextField(10);
 
-        changeParameterPanel.add(new JLabel("Class Name for Parameter Change:"));
-        changeParameterPanel.add(Box.createVerticalStrut(5)); // Add space
-        changeParameterPanel.add(changeParameterClassField);
+        changeParameterPanel.add(new JLabel("Class Name:"));
+        changeParameterPanel.add(Box.createVerticalStrut(5));
+        changeParameterPanel.add(classNameComboBox);
         changeParameterPanel.add(Box.createVerticalStrut(10)); // Add space
         changeParameterPanel.add(new JLabel("Method Name:"));
         changeParameterPanel.add(Box.createVerticalStrut(5)); // Add space
@@ -754,7 +773,7 @@ public class UmlGuiController extends JFrame {
 
         JButton changeParameterButton = new JButton("Change Parameters");
         changeParameterButton.addActionListener(e -> {
-            String className = changeParameterClassField.getText();
+            String className = (String) classNameComboBox.getSelectedItem();
             String methodName = changeParameterMethodField.getText();
             String newParametersInput = changeParameterNewParamsField.getText();
 
@@ -775,7 +794,6 @@ public class UmlGuiController extends JFrame {
                         "Failed to change parameters of method '" + methodName + "' in class '" + className + "'.\n");
             }
 
-            changeParameterClassField.setText("");
             changeParameterMethodField.setText("");
             changeParameterNewParamsField.setText("");
         });
