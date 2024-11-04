@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -299,7 +300,7 @@ public class UmlCliController {
         String classToRenameMethod = chooseClass(action); // Call helper to find the class's name
         if (classToRenameMethod == null) { return; } // Stop if chooseClass found an error.
 
-        String methodAction = "delete"; // The action that this function will take
+        String methodAction = "rename"; // The action that this function will take
         Method oldMethodName = chooseMethod(classToRenameMethod, methodAction); // Call helper to find the class's name
         if (oldMethodName == null) { return; } // Stop if chooseMethod found an error.
 
@@ -318,18 +319,22 @@ public class UmlCliController {
      * Handles removing a parameter from a method by prompting the user for class name,
      * method name, and parameter name, and then removing the parameter from the method.
      */
-    //TODO list classes, list methods, list parameters
     public void handleRemoveParameter() {
         // Removes a parameter from a method
-        view.displayMessage("Enter the name of the class of the method with the parameter to remove: ");
-        String classToRemoveParameter = scanner.nextLine().trim();
-        view.displayMessage("Enter the name of the method with the parameter to remove: ");
-        String methodOfParameter = scanner.nextLine().trim();
-        view.displayMessage("Enter the name of the parameter to remove: ");
-        String paraName = scanner.nextLine().trim();
+        String action = "remove the parameter from"; // The action that this function will take
+        String classToRemoveParameter = chooseClass(action); // Call helper to find the class's name
+        if (classToRemoveParameter == null) { return; } // Stop if chooseClass found an error.
 
-        if (umlEditor.removeParameter(classToRemoveParameter, methodOfParameter, paraName)) {
-            view.displayMessage("Parameter '" + paraName + "' was removed from '" + methodOfParameter + "'.");
+        String methodAction = "remove"; // The action that this function will take
+        Method methodOfParameter = chooseMethod(classToRemoveParameter, methodAction); // Call helper to find the class's name
+        if (methodOfParameter == null) { return; } // Stop if chooseMethod found an error.
+
+        String parameterAction = "remove"; // The action that this function will take
+        String paraName = chooseParameter(methodOfParameter, parameterAction); // Call helper to find the class's name
+        if (paraName == null) { return; } // Stop if chooseParameter found an error.
+
+        if (umlEditor.removeParameter(classToRemoveParameter, methodOfParameter.getName(), paraName)) {
+            view.displayMessage("Parameter '" + paraName + "' was removed from '" + methodOfParameter.getName() + "'.");
         } else {
             view.displayMessage("Failed to remove parameter. Name may be invalid, or class does not exist.");
         }
@@ -371,7 +376,6 @@ public class UmlCliController {
      * Handles adding a relationship between two classes by prompting the user for source class,
      * destination class, and relationship type, and then adding the relationship to the UML editor.
      */
-    //TODO list realationship types
     public void handleAddRelationship() {
         // Adds a relationship between two classes
         String sourceAction = "be the source class"; // The action that this function will take
@@ -382,19 +386,9 @@ public class UmlCliController {
         String destination = chooseClass(destinationAction); // Call helper to find the class's name
         if (destination == null) { return; } // Stop if chooseClass found an error.
 
-        RelationshipType type = null;
-        while (type == null) {
-            view.displayMessage(
-                    "Enter the type of relationship (Aggregation, Composition, Inheritance, or Realization): ");
-            String inputType = scanner.nextLine().trim().toUpperCase();
-
-            try {
-                type = RelationshipType.valueOf(inputType);
-            } catch (IllegalArgumentException e) {
-                view.displayMessage(
-                        "Invalid relationship type. Please enter one of the following: Aggregation, Composition, Inheritance, or Realization.");
-            }
-        }
+        String typeAction = "add"; // The action that this function will take
+        RelationshipType type = chooseRelationshipType(typeAction); // Call helper to find the class's name
+        if (type == null) { return; } // Stop if chooseRelationshipType found an error.
 
         if (umlEditor.addRelationship(source, destination, type)) {
             view.displayMessage("Relationship from '" + source + "' to '" + destination + "' has been added.");
@@ -407,31 +401,16 @@ public class UmlCliController {
      * Handles deleting a relationship between two classes by prompting the user
      * for source class and destination class, and then deleting the relationship.
      */
-    //TODO list relaitonships, list realationship types
     public void handleDeleteRelationship() {
         // Deletes a relationship between two classes
-        view.displayMessage("Enter the source class: ");
-        String deleteSource = scanner.nextLine().trim();
-        view.displayMessage("Enter the destination class: ");
-        String deleteDestination = scanner.nextLine().trim();
+        String relationshipAction = "delete"; // The action that this function will take
+        UmlRelationship relationship = chooseRelationship(relationshipAction); // Call helper to find the class's name
+        if (relationship == null) { return; } // Stop if chooseRelationship found an error.
 
-        RelationshipType type1 = null;
-        while (type1 == null) {
+        if (umlEditor.deleteRelationship(relationship.getSource(), relationship.getDestination(), relationship.getType())) {
             view.displayMessage(
-                    "Enter the type of relationship (Aggregation, Composition, Inheritance, or Realization): ");
-            String inputTyp = scanner.nextLine().trim().toUpperCase();
-
-            try {
-                type1 = RelationshipType.valueOf(inputTyp);
-            } catch (IllegalArgumentException e) {
-                view.displayMessage(
-                        "Invalid relationship type. Please enter one of the following: Aggregation, Composition, Inheritance, or Realization.");
-            }
-        }
-
-        if (umlEditor.deleteRelationship(deleteSource, deleteDestination, type1)) {
-            view.displayMessage(
-                    "Relationship from '" + deleteSource + "' to '" + deleteDestination + "' has been deleted.");
+                    "Relationship from '" + relationship.getSource() + "' to '" + relationship.getDestination() 
+                        + "' of type '" + relationship.getType() + "' has been deleted.");
         } else {
             view.displayMessage("Failed to delete relationship.");
         }
@@ -442,47 +421,22 @@ public class UmlCliController {
      * Prompts the user for the source class, destination class, 
      * the current relationship type, and the new relationship type.
      */
-    //TODO list relaitonships, list realationship types
     public void handleChangeRelationshipType() {
-        // Get the source class
-        view.displayMessage("Enter the source class: ");
-        String sourceToChange = scanner.nextLine().trim();
+        // Get the relationship
+        String relationshipAction = "change the type of"; // The action that this function will take
+        UmlRelationship relationship = chooseRelationship(relationshipAction); // Call helper to find the class's name
+        if (relationship == null) { return; } // Stop if chooseRelationship found an error.
 
-        // Get the destination class
-        view.displayMessage("Enter the destination class: ");
-        String destinationToChange = scanner.nextLine().trim();
-
-        // Ask for the current relationship type
-        RelationshipType currentType = null;
-        while (currentType == null) {
-            view.displayMessage(
-                    "Enter the current relationship type (Aggregation, Composition, Inheritance, or Realization): ");
-            String currentTypeInput = scanner.nextLine().trim().toUpperCase();
-
-            try {
-                currentType = RelationshipType.valueOf(currentTypeInput);
-            } catch (IllegalArgumentException e) {
-                view.displayMessage("Invalid relationship type. Please try again.");
-            }
-        }
+        RelationshipType currentType = relationship.getType();
 
         // Ask for the new relationship type
-        RelationshipType newType = null;
-        while (newType == null) {
-            view.displayMessage(
-                    "Enter the new relationship type (Aggregation, Composition, Inheritance, or Realization): ");
-            String newTypeInput = scanner.nextLine().trim().toUpperCase();
-
-            try {
-                newType = RelationshipType.valueOf(newTypeInput);
-            } catch (IllegalArgumentException e) {
-                view.displayMessage("Invalid relationship type. Please try again.");
-            }
-        }
+        String newTypeAction = "change to"; // The action that this function will take
+        RelationshipType newType = chooseRelationshipType(newTypeAction); // Call helper to find the class's name
+        if (newType == null) { return; } // Stop if chooseRelationshipType found an error.
 
         // Call the method to change the relationship type
-        if (umlEditor.changeRelationshipType(sourceToChange, destinationToChange, currentType, newType)) {
-            view.displayMessage("Relationship between '" + sourceToChange + "' and '" + destinationToChange
+        if (umlEditor.changeRelationshipType(relationship.getSource(), relationship.getDestination(), relationship.getType(), newType)) {
+            view.displayMessage("Relationship between '" + relationship.getSource() + "' and '" + relationship.getDestination()
                     + "' has been changed from '" + currentType + "' to '" + newType + "'.");
         } else {
             view.displayMessage("Failed to change relationship type. It may not exist or already exists.");
@@ -596,6 +550,12 @@ public class UmlCliController {
         }
         scanner.nextLine(); // Clear the buffer
 
+        if (classIndex > displayIndex || classIndex < 0) {
+            view.displayMessage(
+                "Class number does not exist.");
+            return null;
+        }
+
         return keys[(classIndex - 1)];
     }
 
@@ -634,6 +594,12 @@ public class UmlCliController {
         }
         scanner.nextLine(); // Clear the buffer
 
+        if (fieldIndex > displayIndex || fieldIndex < 0) {
+            view.displayMessage(
+                "Field number does not exist.");
+            return null;
+        }
+
         return fields[(fieldIndex - 1)];
     }
     
@@ -668,10 +634,16 @@ public class UmlCliController {
         }
         scanner.nextLine(); // Clear the buffer
 
+        if (methodIndex > displayIndex || methodIndex < 0) {
+            view.displayMessage(
+                "Method number does not exist.");
+            return null;
+        }
+
         return methodList.get(methodIndex - 1);
     }
 
-    private String chooseParameter(Method method) {
+    private String chooseParameter(Method method, String action) {
         if (method == null) {
             view.displayMessage("There are no methods to choose from.");
             return null;
@@ -679,22 +651,103 @@ public class UmlCliController {
 
         LinkedHashSet<String> parameters = method.getParameters();
         if (parameters.isEmpty()) {
-            view.displayMessage("There are no fields to choose from.");
+            view.displayMessage("There are no parameters to choose from.");
             return null;
         }
 
+        view.displayMessage("Select the number of the parameter to " + action + ": ");
+        String[] paras = new String[parameters.size()];
+        int index = 0;
+        int displayIndex = 1;
+        for ( String para : parameters) {
+            paras[index] = para;
+            view.displayMessage("\t" + displayIndex + ". " + paras[index]);
+            index++;
+            displayIndex++;
+        }
+        
+        int parameterIndex;
+        try {
+            parameterIndex = scanner.nextInt();
+        } catch (Exception e) {
+            view.displayMessage(
+                "Parameter number entered improperly. Please enter a number that corresponds to a parameter (1, 2, 3, etc.).");
+            scanner.nextLine(); // Clear the buffer
+            return null;
+        }
+        scanner.nextLine(); // Clear the buffer
+        
+        if (parameterIndex > displayIndex || parameterIndex < 0) {
+            view.displayMessage(
+                "Parameter number does not exist.");
+            return null;
+        }
 
-        return 0;
+        return paras[(parameterIndex - 1)];
     }
 
-    private int chooseRelationship() {
-        
-        return 0;
+    private UmlRelationship chooseRelationship(String action) {
+        List<UmlRelationship> relationships = model.getRelationships();
+        if (relationships.isEmpty()) {
+            view.displayMessage("There are no relationships to choose from.");
+            return null;
+        }
+
+        view.displayMessage("Select the number of the relationship to " + action + ": ");
+        int displayIndex = 1;
+        for (UmlRelationship rel : relationships) {
+            view.displayMessage("\t" + displayIndex + ". " + rel.toString());
+            displayIndex++;
+        }
+
+        int relationshipIndex;
+        try {
+            relationshipIndex = scanner.nextInt();
+        } catch (Exception e) {
+            view.displayMessage(
+                "Relationship number entered improperly. Please enter a number that corresponds to a relationship (1, 2, 3, etc.).");
+            scanner.nextLine(); // Clear the buffer
+            return null;
+        }
+        scanner.nextLine(); // Clear the buffer
+
+        if (relationshipIndex > displayIndex || relationshipIndex < 0) {
+            view.displayMessage(
+                "Relationship number does not exist.");
+            return null;
+        }
+
+        return relationships.get(relationshipIndex - 1);
     }
 
-    private int chooseRelationshipType() {
+    private RelationshipType chooseRelationshipType(String action) {
+        RelationshipType types[] = RelationshipType.values();
         
-        return 0;
+        view.displayMessage("Select the number of the type to " + action + ": ");
+        int displayIndex = 1;
+        for (RelationshipType type : types) {
+            view.displayMessage("\t" + displayIndex + ". " + type);
+            displayIndex++;
+        }
+
+        int typeIndex;
+        try {
+            typeIndex = scanner.nextInt();
+        } catch (Exception e) {
+            view.displayMessage(
+                "Number entered improperly. Please enter a number that corresponds to a type (1, 2, 3, etc.).");
+            scanner.nextLine(); // Clear the buffer
+            return null;
+        }
+        scanner.nextLine(); // Clear the buffer
+        
+        if (typeIndex > displayIndex || typeIndex < 0) {
+            view.displayMessage(
+                "Parameter number does not exist.");
+            return null;
+        }
+
+        return types[(typeIndex - 1)];
     }
 
 
