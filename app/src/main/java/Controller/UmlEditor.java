@@ -81,6 +81,19 @@ public class UmlEditor {
         return model.renameClass(oldName, newName);
     }
 
+    /**
+     * Retrieves a UML class given a name.
+     * 
+     * @param name The name of the UML class to retrieve.
+     * @return The UML class if found, {@code null} otherwise.
+     */
+    public UmlClass getClass(String name) {
+        if (name == null || name.isEmpty()) {
+            return null;
+        }
+        return model.getUmlClass(name);
+    }
+
     /*----------------------------------------------------------------------------------------------------------------*/
     /*                                            FIELD MANAGEMENT METHODS                                            */
     /*----------------------------------------------------------------------------------------------------------------*/

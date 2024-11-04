@@ -187,6 +187,7 @@ public class UmlGuiController extends JFrame {
         deleteParameterItem.setEnabled(hasMethods); // Enable "Delete Parameter" if there are methods in the class
     }
     
+    // Add Class Panel
     private void showAddClassPanel() {
         JDialog dialog = new JDialog(this, "Add Class", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -230,6 +231,7 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
     
+    // Delete Class Panel
     private void showDeleteClassPanel() {
         JDialog dialog = new JDialog(this, "Delete Class", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -269,6 +271,7 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
 
+    // Rename Class Panel
     private void showRenameClassPanel() {
         JDialog dialog = new JDialog(this, "Rename Class", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -313,6 +316,7 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     } 
     
+    // Add Field Panel
     private void showAddFieldPanel() {
         JDialog dialog = new JDialog(this, "Add Field", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -364,6 +368,7 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
     
+    // Delete Field Panel
     private void showDeleteFieldPanel() {
         JDialog dialog = new JDialog(this, "Delete Field", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -422,6 +427,7 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
 
+    // Rename Field Panel
     private void showRenameFieldPanel() {
         JDialog dialog = new JDialog(this, "Rename Field", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -489,6 +495,7 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
     
+    // Add Method Panel
     private void showAddMethodPanel() {
         JDialog dialog = new JDialog(this, "Add Method", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -547,6 +554,7 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
     
+    // Delete Method Panel
     private void showDeleteMethodPanel() {
         JDialog dialog = new JDialog(this, "Delete Method", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -604,6 +612,7 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
     
+    // Rename Method Panel
     private void showRenameMethodPanel() {
         JDialog dialog = new JDialog(this, "Rename Method", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -668,6 +677,7 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }    
 
+    // Helper Function
     private LinkedHashSet<String> parseParameterList(String input) {
         LinkedHashSet<String> parameters = new LinkedHashSet<>();
 
@@ -686,6 +696,7 @@ public class UmlGuiController extends JFrame {
         return parameters;
     }
 
+    // Delete Parameter Panel
     private void showDeleteParameterPanel() {
         JDialog dialog = new JDialog(this, "Delete Parameter", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -742,6 +753,7 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
 
+    // Change Parameter Panel
     private void showChangeParameterPanel() {
         JDialog dialog = new JDialog(this, "Change Method Parameters", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -806,6 +818,7 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
 
+    // Add Relationship Panel
     private void showAddRelationshipPanel() {
         JPanel addRelationshipPanel = new JPanel();
         addRelationshipPanel.setLayout(new BoxLayout(addRelationshipPanel, BoxLayout.Y_AXIS));
@@ -886,6 +899,7 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
 
+    // Delete Relationship Panel
     private void showDeleteRelationshipPanel() {
         JPanel deleteRelationshipPanel = new JPanel();
         deleteRelationshipPanel.setLayout(new BoxLayout(deleteRelationshipPanel, BoxLayout.Y_AXIS));
@@ -956,6 +970,7 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
     
+    // Change Relationship Panel
     private void showChangeRelationshipTypePanel() {
         JPanel changeRelationshipTypePanel = new JPanel();
         changeRelationshipTypePanel.setLayout(new BoxLayout(changeRelationshipTypePanel, BoxLayout.Y_AXIS));
@@ -1040,6 +1055,7 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
 
+    // List Classes Panel
     private void showListClassesPanel() {
         // Clear the output area before displaying the classes
         outputArea.setText(""); // Assuming you have an outputArea to display the classes
@@ -1050,6 +1066,7 @@ public class UmlGuiController extends JFrame {
         }
     }
 
+    // List Relationships Panel
     private void showListRelationshipsPanel() {
         // Clear the output area before displaying the relationships
         outputArea.setText(""); // Assuming you have an outputArea to display the relationships
@@ -1060,6 +1077,7 @@ public class UmlGuiController extends JFrame {
         }
     }
 
+    // Save Project Panel
     private void showSaveProjectPanel() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showSaveDialog(null);
@@ -1074,6 +1092,7 @@ public class UmlGuiController extends JFrame {
         }
     }
     
+    // Load Project Panel
     private void showLoadProjectPanel() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showOpenDialog(null);
