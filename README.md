@@ -33,13 +33,21 @@ This project results from a large-stakes, group assessment in the capstone cours
    ./gradlew build
 ```
 ### Step 4: Run the Program
-+ On Windows
++ On Windows (CLI)
 ```sh
-   .\gradlew run --console=plain
+   .\gradlew run --console=plain --args="--cli"
 ```
-+ On macOS/Linux
++ On Windows (GUI)
 ```sh
-   ./gradlew run --console=plain
+   .\gradlew run 
+```
++ On macOS/Linux (CLI)
+```sh
+   .\gradlew run --console=plain --args="--cli"
+```
++ On macOS/Linux (GUI)
+```sh
+   ./gradlew run 
 ```
 ## Dependencies
 To run this project, ensure you have the following installed on your machine:
