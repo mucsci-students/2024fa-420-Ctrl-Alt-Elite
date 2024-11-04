@@ -1,10 +1,13 @@
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,6 +42,20 @@ public class UmlClassTest {
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
+
+    @Test
+    public void testGetMethods() {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("int", "P1");
+        parameters.put("void", "P2");
+        String returnType = "void";
+
+        umlClass.addMethod("Method1", parameters, returnType);
+        assertEquals("ClassA", umlClass.getName());
+    }
+
+
+
 
     /**
      * Test that getName returns the name of the class.

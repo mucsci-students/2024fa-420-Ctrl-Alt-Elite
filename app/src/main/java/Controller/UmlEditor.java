@@ -1,7 +1,7 @@
 package Controller;
 
 import java.awt.Point;
-import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import Model.RelationshipType;
@@ -164,7 +164,7 @@ public class UmlEditor {
      * @param returnType The return type of the method.
      * @return {@code true} if the method was added, {@code false} otherwise.
      */
-    public boolean addMethod(String className, String methodName, LinkedHashSet<String> paraList, String returnType) {
+    public boolean addMethod(String className, String methodName, Map<String, String> paraList, String returnType) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.addMethod(methodName, paraList, returnType);
@@ -181,7 +181,7 @@ public class UmlEditor {
      * @param returnType The return type of the method.
      * @return {@code true} if the method was deleted, {@code false} otherwise.
      */
-    public boolean deleteMethod(String className, String methodName, LinkedHashSet<String> paraList, String returnType) {
+    public boolean deleteMethod(String className, String methodName, Map<String, String> paraList, String returnType) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.deleteMethod(methodName, paraList, returnType);
@@ -199,7 +199,7 @@ public class UmlEditor {
      * @param newName   The new name of the method.
      * @return {@code true} if the method was renamed, {@code false} otherwise.
      */
-    public boolean renameMethod(String className, String oldName, LinkedHashSet<String> paraList, String returnType, String newName) {
+    public boolean renameMethod(String className, String oldName, Map<String, String> paraList, String returnType, String newName) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.renameMethod(oldName, paraList, returnType, newName);
@@ -214,13 +214,15 @@ public class UmlEditor {
      * 
      * @param className  The name of the class in which the method belongs.
      * @param methodName The name of the method in which the parameter belongs.
+     * @param parameters The parameters of the method.
+     * @param returnType The return type of the method.
      * @param paraName   The name of the parameter to remove.
      * @return {@code true} if the parameter was removed, {@code false} otherwise.
      */
-    public boolean removeParameter(String className, String methodName, String paraName) {
+    public boolean removeParameter(String className, String methodName, Map<String, String> parameters, String returnType, String paraName) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
-            return umlClass.removeParameter(methodName, paraName);
+            return umlClass.removeParameter(methodName, parameters, returnType, paraName);
         }
         return false;
     }
@@ -230,13 +232,16 @@ public class UmlEditor {
      * 
      * @param className  The name of the class in which the parameters belong.
      * @param methodName The name of the method in which the parameters belong.
-     * @param parameters The new list of parameters for the method.
+     * @param oldParameters The old list of parameters.
+     * @param returnType The return type of the method.
+     * @param newParameters The new list of parameters for the method.
      * @return {@code true} if the parameters were changed, {@code false} otherwise.
      */
-    public boolean changeParameters(String className, String methodName, LinkedHashSet<String> parameters) {
+    public boolean changeParameters(String className, String methodName, Map<String, String> oldParameters, 
+                                        String returnType, Map<String, String> newParameters) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
-            return umlClass.changeParameters(methodName, parameters);
+            return umlClass.changeParameters(methodName, oldParameters, returnType, newParameters);
         }
         return false;
     }

@@ -2,7 +2,7 @@ package Controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -250,14 +250,17 @@ public class UmlCliController {
         
         view.displayMessage("Enter the method name: ");
         String methodName = scanner.nextLine().trim();
-        view.displayMessage("Enter the parameters for the method (p1, p2, etc.): ");
+        view.displayMessage("Enter the parameters for the method (void p1, int p2, etc.): ");
         String parameters = scanner.nextLine().trim();
         
-        LinkedHashSet<String> paraList = new LinkedHashSet<>();
+        Map<String, String> paraList = new HashMap<>();
         if (!parameters.trim().isEmpty()) {
-            Arrays.stream(parameters.split(","))
-                    .map(String::trim)
-                    .forEach(paraList::add);
+            String[] splitParameters = parameters.split(",");
+            for (String parameter : splitParameters) {
+                parameter = parameter.trim();
+                String[] splitSpace = parameter.split(" ");
+                paraList.put(splitSpace[0], splitSpace[1]);
+            }
         }
 
         view.displayMessage("Enter the method return type (void, int, etc.): ");
@@ -328,7 +331,7 @@ public class UmlCliController {
         String classToRemoveParameter = chooseClass(action); // Call helper to find the class's name
         if (classToRemoveParameter == null) { return; } // Stop if chooseClass found an error.
 
-        String methodAction = "remove"; // The action that this function will take
+        String methodAction = "remove the parameter from"; // The action that this function will take
         Method methodOfParameter = chooseMethod(classToRemoveParameter, methodAction); // Call helper to find the class's name
         if (methodOfParameter == null) { return; } // Stop if chooseMethod found an error.
 
@@ -336,7 +339,8 @@ public class UmlCliController {
         String paraName = chooseParameter(methodOfParameter, parameterAction); // Call helper to find the class's name
         if (paraName == null) { return; } // Stop if chooseParameter found an error.
 
-        if (umlEditor.removeParameter(classToRemoveParameter, methodOfParameter.getName(), paraName)) {
+        if (umlEditor.removeParameter(classToRemoveParameter, methodOfParameter.getName(), methodOfParameter.getParameters(), 
+                                        methodOfParameter.getReturnType(), paraName)) {
             view.displayMessage("Parameter '" + paraName + "' was removed from '" + methodOfParameter.getName() + "'.");
         } else {
             view.displayMessage("Failed to remove parameter. Name may be invalid, or class does not exist.");
@@ -357,17 +361,20 @@ public class UmlCliController {
         Method methodToChangeParameters = chooseMethod(classToChangeParameter, methodAction); // Call helper to find the class's name
         if (methodToChangeParameters == null) { return; } // Stop if chooseMethod found an error.
 
-        view.displayMessage("Enter the new parameters for the method (p1, p2, p3, etc.): ");
+        view.displayMessage("Enter the new parameters for the method (void p1, int p2, etc.): ");
         String parameters = scanner.nextLine().trim();
         
-        LinkedHashSet<String> newParaList = new LinkedHashSet<>();
+        Map<String, String> newParaList = new HashMap<>();
         if (!parameters.trim().isEmpty()) {
-            Arrays.stream(parameters.split(","))
-                    .map(String::trim)
-                    .forEach(newParaList::add);
+            String[] splitParameters = parameters.split(",");
+            for (String parameter : splitParameters) {
+                String[] splitSpace = parameter.split(" ");
+                newParaList.put(splitSpace[0], splitSpace[1]);
+            }
         }
 
-        if (umlEditor.changeParameters(classToChangeParameter, methodToChangeParameters.getName(), newParaList)) {
+        if (umlEditor.changeParameters(classToChangeParameter, methodToChangeParameters.getName(), methodToChangeParameters.getParameters(), 
+                                        methodToChangeParameters.getReturnType(), newParaList)) {
             view.displayMessage("Method '" + methodToChangeParameters.getName() + "' had its parameters changed.");
         } else {
             view.displayMessage(
@@ -535,8 +542,8 @@ public class UmlCliController {
         String[] keys = new String[map.size()];
         int index = 0;
         int displayIndex = 1;
-        for (Map.Entry<String, UmlClass> mapEntry : map.entrySet()) {
-            keys[index] = mapEntry.getKey();
+        for (Map.Entry<String, UmlClass> element : map.entrySet()) {
+            keys[index] = element.getKey();
             view.displayMessage("\t" + displayIndex + ". " + keys[index]);
             index++;
             displayIndex++;
@@ -652,20 +659,23 @@ public class UmlCliController {
             return null;
         }
 
-        LinkedHashSet<String> parameters = method.getParameters();
+        Map<String, String> parameters = method.getParameters();
         if (parameters.isEmpty()) {
             view.displayMessage("There are no parameters to choose from.");
             return null;
         }
 
         view.displayMessage("Select the number of the parameter to " + action + ": ");
-        String[] paras = new String[parameters.size()];
-        int index = 0;
+        String[][] paras = new String[parameters.size()][parameters.size()];
+       
+        int keyIndex = 0;
         int displayIndex = 1;
-        for ( String para : parameters) {
-            paras[index] = para;
-            view.displayMessage("\t" + displayIndex + ". " + paras[index]);
-            index++;
+        for (Map.Entry<String, String> element : parameters.entrySet()) {
+            paras[keyIndex][0] = element.getKey();
+            paras[keyIndex][1] = element.getValue();
+            view.displayMessage("\t" + displayIndex + ". " + paras[keyIndex][0] + " " + paras[keyIndex][1]);
+            
+            keyIndex++;
             displayIndex++;
         }
         
@@ -686,7 +696,7 @@ public class UmlCliController {
             return null;
         }
 
-        return paras[(parameterIndex - 1)];
+        return paras[(parameterIndex - 1)][1];
     }
 
     private UmlRelationship chooseRelationship(String action) {
