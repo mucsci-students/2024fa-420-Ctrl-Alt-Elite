@@ -1,13 +1,16 @@
 package Controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Scanner;
 
 import Model.JsonUtils;
 import Model.RelationshipType;
 import Model.UmlClass;
+import Model.UmlClass.Method;
 import Model.UmlEditorModel;
 import Model.UmlRelationship;
 import View.CLI;
@@ -21,7 +24,7 @@ public class UmlCliController {
 
     //Fields
     private UmlEditorModel model;
-    private final UmlEditor umlEditor;
+    private UmlEditor umlEditor;
     private final CLI view;
     private final Scanner scanner;
     
@@ -80,7 +83,7 @@ public class UmlCliController {
                 case "remove-parameter":
                     handleRemoveParameter();
                     break;
-                case "change-parameter":
+                case "change-parameters":
                     handleChangeParameter();
                     break;
                 case "add-relationship":
@@ -141,12 +144,14 @@ public class UmlCliController {
      */
     public void handleDeleteClass() {
         // Delete a class from the UML editor
-        view.displayMessage("Enter the name of the class to delete: ");
-        String classToDelete = scanner.nextLine().trim();
+        String action = "delete"; // The action that this function will take
+        String classToDelete = chooseClass(action); // Call helper to find the class's name
+        if (classToDelete == null) { return; } // Stop if chooseClass found an error.
+
         if (umlEditor.deleteClass(classToDelete)) {
-            view.displayMessage("Class '" + classToDelete + "' has been deleted.");
+            view.displayMessage("Class '" + classToDelete + "' has been deleted."); // Success
         } else {
-            view.displayMessage("Failed to delete class. Name may be invalid or does not exist.");
+            view.displayMessage("Failed to delete class. Name may be invalid or does not exist."); // Fail
         }
     }
 
@@ -155,10 +160,13 @@ public class UmlCliController {
      */
     public void handleRenameClass() {
         // Rename an existing class
-        view.displayMessage("Enter the class name to rename: ");
-        String oldClassName = scanner.nextLine().trim();
+        String action = "rename"; // The action that this function will take
+        String oldClassName = chooseClass(action); // Call helper to find the class's name
+        if (oldClassName == null) { return; } // Stop if chooseClass found an error.
+
         System.out.println("Enter the new class name: ");
         String newClassName = scanner.nextLine().trim();
+
         if (umlEditor.renameClass(oldClassName, newClassName)) {
             view.displayMessage("Class '" + oldClassName + "' has been renamed to '" + newClassName + "'.");
         } else {
@@ -170,10 +178,14 @@ public class UmlCliController {
      * Handles the 'add-field' command by prompting the user for a class and field name and adding the field to the class.
      */
     public void handleAddField() {
-        view.displayMessage("Enter the name of the class to add the field to: ");
-        String classToAddField = scanner.nextLine().trim();
+        // Add a field to a class
+        String action = "add the field to"; // The action that this function will take
+        String classToAddField = chooseClass(action); // Call helper to find the class's name
+        if (classToAddField == null) { return; } // Stop if chooseClass found an error.
+
         view.displayMessage("Enter the field name: ");
         String fieldName = scanner.nextLine().trim();
+
         if (umlEditor.addField(classToAddField, fieldName)) {
             view.displayMessage("Field '" + fieldName + "' added to class '" + classToAddField + "'.");
         } else {
@@ -183,12 +195,17 @@ public class UmlCliController {
 
     /**
      * Handles the 'delete-field' command by prompting the user for a class and field name and removing the field from the class.
-     */    
+     */
     public void handleDeleteField() {
-        view.displayMessage("Enter the name of the class to delete the field from: ");
-        String classToDeleteField = scanner.nextLine().trim();
-        view.displayMessage("Enter the field name to delete: ");
-        String fieldToDelete = scanner.nextLine().trim();
+        // Delete a field from a class.
+        String classAction = "delete the field from"; // The action that this function will take
+        String classToDeleteField = chooseClass(classAction); // Call helper to find the class's name
+        if (classToDeleteField == null) { return; } // Stop if chooseClass found an error.
+
+        String fieldAction = "delete"; // The action that this function will take
+        String fieldToDelete = chooseField(classToDeleteField, fieldAction); // Call helper to find the class's name
+        if (fieldToDelete == null) { return; } // Stop if chooseField found an error.
+
         if (umlEditor.deleteField(classToDeleteField, fieldToDelete)) {
             view.displayMessage("Field '" + fieldToDelete + "' deleted from class '" + classToDeleteField + "'.");
         } else {
@@ -200,10 +217,15 @@ public class UmlCliController {
      * Handles the 'rename-field' command by prompting the user for a class and old and new field names and renaming the field.
      */
     public void handleRenameField() {
-        view.displayMessage("Enter the name of the class to rename the field in: ");
-        String classToRenameField = scanner.nextLine().trim();
-        view.displayMessage("Enter the old field name: ");
-        String oldFieldName = scanner.nextLine().trim();
+        // Rename a field
+        String classAction = "rename the field from"; // The action that this function will take
+        String classToRenameField = chooseClass(classAction); // Call helper to find the class's name
+        if (classToRenameField == null) { return; } // Stop if chooseClass found an error.
+
+        String fieldAction = "rename"; // The action that this function will take
+        String oldFieldName = chooseField(classToRenameField, fieldAction); // Call helper to find the class's name
+        if (oldFieldName == null) { return; } // Stop if chooseField found an error.
+
         view.displayMessage("Enter the new field name: ");
         String newFieldName = scanner.nextLine().trim();
         if (umlEditor.renameField(classToRenameField, oldFieldName, newFieldName)) {
@@ -220,11 +242,14 @@ public class UmlCliController {
     * method name, and parameters, and then adding the method to the UML editor.
     */    
     public void handleAddMethod() {
-        view.displayMessage("Enter the name of the class to add the method to: ");
-        String classToAddMethod = scanner.nextLine().trim();
+        // Add a method to an existing class
+        String action = "add the method to"; // The action that this function will take
+        String classToAddMethod = chooseClass(action); // Call helper to find the class's name
+        if (classToAddMethod == null) { return; } // Stop if chooseClass found an error.
+        
         view.displayMessage("Enter the method name: ");
         String methodName = scanner.nextLine().trim();
-        view.displayMessage("Enter the parameters for the method (p1, p2, p3, etc.): ");
+        view.displayMessage("Enter the parameters for the method (p1, p2, etc.): ");
         String parameters = scanner.nextLine().trim();
         
         LinkedHashSet<String> paraList = new LinkedHashSet<>();
@@ -247,32 +272,17 @@ public class UmlCliController {
      * method name, and parameters, and then deleting the method from the UML editor.
      */
     public void handleDeleteMethod() {
-        view.displayMessage("Enter the name of the class to delete the method from: ");
-        String classToDeleteMethod = scanner.nextLine().trim();
-        view.displayMessage("Enter the name of the method to delete: ");
-        String methodToDelete = scanner.nextLine().trim();
+        // Delete a method from a class
+        String action = "delete the method from"; // The action that this function will take
+        String classToDeleteMethod = chooseClass(action); // Call helper to find the class's name
+        if (classToDeleteMethod == null) { return; } // Stop if chooseClass found an error.
 
-        int paraListNum;
-        view.displayMessage("Enter the number(0, 1, 2, etc.) of parameters that belong to the method: ");
-        try {
-            paraListNum = scanner.nextInt();
-        } catch (Exception e) {
-            view.displayMessage(
-                    "Parameter number entered improperly. Please enter a numeral for the parameter count (0, 1, 2, etc.).");
-            scanner.nextLine(); // Clear the buffer
-            return;
-        }
-        scanner.nextLine(); // Clear the buffer
+        String methodAction = "delete"; // The action that this function will take
+        Method methodToDelete = chooseMethod(classToDeleteMethod, methodAction); // Call helper to find the class's name
+        if (methodToDelete == null) { return; } // Stop if chooseMethod found an error.
 
-        LinkedHashSet<String> parameterList = new LinkedHashSet<>();
-        for (int i = 1; i <= paraListNum; i++) {
-            view.displayMessage("Enter the name of parameter " + i + ": ");
-            String paraName = scanner.nextLine().trim();
-            parameterList.add(paraName);
-        }
-
-        if (umlEditor.deleteMethod(classToDeleteMethod, methodToDelete, parameterList)) {
-            view.displayMessage("Method '" + methodToDelete + "' has been deleted from class '"
+        if (umlEditor.deleteMethod(classToDeleteMethod, methodToDelete.getName(), methodToDelete.getParameters())) {
+            view.displayMessage("Method '" + methodToDelete.getName() + "' has been deleted from class '"
                     + classToDeleteMethod + "'.");
         } else {
             view.displayMessage("Failed to delete method. Name may be invalid or class does not exist.");
@@ -285,35 +295,19 @@ public class UmlCliController {
      */
     public void handleRenameMethod() {
         // Renames a method in a class
-        view.displayMessage("Enter the name of the class with the method to rename: ");
-        String classToRenameMethod = scanner.nextLine().trim();
-        view.displayMessage("Enter the current method name: ");
-        String oldMethodName = scanner.nextLine().trim();
+        String action = "rename the method from"; // The action that this function will take
+        String classToRenameMethod = chooseClass(action); // Call helper to find the class's name
+        if (classToRenameMethod == null) { return; } // Stop if chooseClass found an error.
 
-        view.displayMessage("Enter the number (0, 1, 2, etc.) of parameters that belong to the method: ");
-        int paraListNumber;
-        try {
-            paraListNumber = scanner.nextInt();
-        } catch (Exception e) {
-            view.displayMessage(
-                    "Parameter number entered improperly. Please enter a numeral for the parameter count (0, 1, 2, etc.).");
-            scanner.nextLine(); // Clear the scanner buffer
-            return; // Exit the method
-        }
-        scanner.nextLine(); // Clear the buffer after reading the integer
-
-        LinkedHashSet<String> parameters = new LinkedHashSet<>();
-        for (int i = 1; i <= paraListNumber; i++) {
-            view.displayMessage("Enter the name of parameter " + i + ": ");
-            String paraName = scanner.nextLine().trim();
-            parameters.add(paraName);
-        }
+        String methodAction = "delete"; // The action that this function will take
+        Method oldMethodName = chooseMethod(classToRenameMethod, methodAction); // Call helper to find the class's name
+        if (oldMethodName == null) { return; } // Stop if chooseMethod found an error.
 
         view.displayMessage("Enter the new method name: ");
         String newMethodName = scanner.nextLine().trim();
 
-        if (umlEditor.renameMethod(classToRenameMethod, oldMethodName, parameters, newMethodName)) {
-            view.displayMessage("Method '" + oldMethodName + "' has been renamed to '" + newMethodName + "' in class '"
+        if (umlEditor.renameMethod(classToRenameMethod, oldMethodName.getName(), oldMethodName.getParameters(), newMethodName)) {
+            view.displayMessage("Method '" + oldMethodName.getName() + "' has been renamed to '" + newMethodName + "' in class '"
                     + classToRenameMethod + "'.");
         } else {
             view.displayMessage("Failed to rename method. Name may be invalid or duplicated, or class does not exist.");
@@ -324,6 +318,7 @@ public class UmlCliController {
      * Handles removing a parameter from a method by prompting the user for class name,
      * method name, and parameter name, and then removing the parameter from the method.
      */
+    //TODO list classes, list methods, list parameters
     public void handleRemoveParameter() {
         // Removes a parameter from a method
         view.displayMessage("Enter the name of the class of the method with the parameter to remove: ");
@@ -346,10 +341,14 @@ public class UmlCliController {
      */
     public void handleChangeParameter() {
         // Replaces a list of parameters with a new list.
-        view.displayMessage("Enter the name of the class of the method with the parameters to change: ");
-        String classToChangeParameter = scanner.nextLine().trim();
-        view.displayMessage("Enter the name of the method with the parameters to change: ");
-        String methodToChangeParameters = scanner.nextLine().trim();
+        String action = "change the parameters of a method"; // The action that this function will take
+        String classToChangeParameter = chooseClass(action); // Call helper to find the class's name
+        if (classToChangeParameter == null) { return; } // Stop if chooseClass found an error.
+        
+        String methodAction = "change"; // The action that this function will take
+        Method methodToChangeParameters = chooseMethod(classToChangeParameter, methodAction); // Call helper to find the class's name
+        if (methodToChangeParameters == null) { return; } // Stop if chooseMethod found an error.
+
         view.displayMessage("Enter the new parameters for the method (p1, p2, p3, etc.): ");
         String parameters = scanner.nextLine().trim();
         
@@ -360,8 +359,8 @@ public class UmlCliController {
                     .forEach(newParaList::add);
         }
 
-        if (umlEditor.changeParameters(classToChangeParameter, methodToChangeParameters, newParaList)) {
-            view.displayMessage("Method '" + methodToChangeParameters + "' had its parameters changed.");
+        if (umlEditor.changeParameters(classToChangeParameter, methodToChangeParameters.getName(), newParaList)) {
+            view.displayMessage("Method '" + methodToChangeParameters.getName() + "' had its parameters changed.");
         } else {
             view.displayMessage(
                     "Failed to change parameters. Name or parameters may be invalid or duplicated, or class does not exist.");
@@ -372,12 +371,16 @@ public class UmlCliController {
      * Handles adding a relationship between two classes by prompting the user for source class,
      * destination class, and relationship type, and then adding the relationship to the UML editor.
      */
+    //TODO list realationship types
     public void handleAddRelationship() {
         // Adds a relationship between two classes
-        view.displayMessage("Enter the source class: ");
-        String source = scanner.nextLine().trim();
-        view.displayMessage("Enter the destination class: ");
-        String destination = scanner.nextLine().trim();
+        String sourceAction = "be the source class"; // The action that this function will take
+        String source = chooseClass(sourceAction); // Call helper to find the class's name
+        if (source == null) { return; } // Stop if chooseClass found an error.
+
+        String destinationAction = "be the destination class"; // The action that this function will take
+        String destination = chooseClass(destinationAction); // Call helper to find the class's name
+        if (destination == null) { return; } // Stop if chooseClass found an error.
 
         RelationshipType type = null;
         while (type == null) {
@@ -404,6 +407,7 @@ public class UmlCliController {
      * Handles deleting a relationship between two classes by prompting the user
      * for source class and destination class, and then deleting the relationship.
      */
+    //TODO list relaitonships, list realationship types
     public void handleDeleteRelationship() {
         // Deletes a relationship between two classes
         view.displayMessage("Enter the source class: ");
@@ -438,6 +442,7 @@ public class UmlCliController {
      * Prompts the user for the source class, destination class, 
      * the current relationship type, and the new relationship type.
      */
+    //TODO list relaitonships, list realationship types
     public void handleChangeRelationshipType() {
         // Get the source class
         view.displayMessage("Enter the source class: ");
@@ -512,6 +517,7 @@ public class UmlCliController {
 
         try {
             model = JsonUtils.load(loadFilename);
+            umlEditor = new UmlEditor(model);
             System.out.println("Data loaded from '" + loadFilename + "'.");
         } catch (IOException e) {
             System.out.println("Failed to load data: " + e.getMessage());
@@ -536,8 +542,9 @@ public class UmlCliController {
      */
     public void handleListClass() {
         // Lists the methods of a specified class
-        System.out.println("Enter the class name to list: ");
-        String listClassName = scanner.nextLine().trim();
+        String action = "list"; // The action that this function will take
+        String listClassName = chooseClass(action); // Call helper to find the class's name
+        if (listClassName == null) { return; } // Stop if chooseClass found an error.
         
         UmlClass umlClass = model.getUmlClass(listClassName);
         if (umlClass != null) {
@@ -557,5 +564,138 @@ public class UmlCliController {
             view.displayMessage(relationship.toString());
         }
     }
+
+    /*************************************************************************************************/
+    //Helper Functions
+    private String chooseClass(String action) {
+        Map<String, UmlClass> map = model.getClasses();
+        if (map.isEmpty()) {
+            view.displayMessage("There are no classes to choose from.");
+            return null;
+        }
+
+        view.displayMessage("Select the number of the class to " + action + ": ");
+        String[] keys = new String[map.size()];
+        int index = 0;
+        int displayIndex = 1;
+        for (Map.Entry<String, UmlClass> mapEntry : map.entrySet()) {
+            keys[index] = mapEntry.getKey();
+            view.displayMessage("\t" + displayIndex + ". " + keys[index]);
+            index++;
+            displayIndex++;
+        }
+        
+        int classIndex;
+        try {
+            classIndex = scanner.nextInt();
+        } catch (Exception e) {
+            view.displayMessage(
+                "Class number entered improperly. Please enter a number that corresponds to a class (1, 2, 3, etc.).");
+            scanner.nextLine(); // Clear the buffer
+            return null;
+        }
+        scanner.nextLine(); // Clear the buffer
+
+        return keys[(classIndex - 1)];
+    }
+
+    private String chooseField(String className, String action) {
+        UmlClass fieldClass = model.getClass(className);
+        if (fieldClass == null) {
+            view.displayMessage("There is no class to choose from.");
+            return null;
+        }
+
+        LinkedHashSet<String> fieldSet = fieldClass.getFields();
+        if (fieldSet.isEmpty()) {
+            view.displayMessage("There are no fields to choose from.");
+            return null;
+        }
+
+        view.displayMessage("Select the number of the field to " + action + ": ");
+        String[] fields = new String[fieldSet.size()];
+        int index = 0;
+        int displayIndex = 1;
+        for ( String field : fieldSet) {
+            fields[index] = field;
+            view.displayMessage("\t" + displayIndex + ". " + fields[index]);
+            index++;
+            displayIndex++;
+        }
+        
+        int fieldIndex;
+        try {
+            fieldIndex = scanner.nextInt();
+        } catch (Exception e) {
+            view.displayMessage(
+                "Field number entered improperly. Please enter a number that corresponds to a field (1, 2, 3, etc.).");
+            scanner.nextLine(); // Clear the buffer
+            return null;
+        }
+        scanner.nextLine(); // Clear the buffer
+
+        return fields[(fieldIndex - 1)];
+    }
+    
+    private Method chooseMethod(String className, String action) {
+        UmlClass methodClass = model.getClass(className);
+        if (methodClass == null) {
+            view.displayMessage("There is no class to choose from.");
+            return null;
+        }
+
+        ArrayList<Method> methodList = methodClass.getMethodsList();
+        if (methodList.isEmpty()) {
+            view.displayMessage("There are no methods to choose from.");
+            return null;
+        }
+
+        view.displayMessage("Select the number of the method to " + action + ": ");
+        int displayIndex = 1;
+        for (Method method : methodList) {
+            view.displayMessage("\t" + displayIndex + ". " + method.singleMethodString());
+            displayIndex++;
+        }
+
+        int methodIndex;
+        try {
+            methodIndex = scanner.nextInt();
+        } catch (Exception e) {
+            view.displayMessage(
+                "Method number entered improperly. Please enter a number that corresponds to a method (1, 2, 3, etc.).");
+            scanner.nextLine(); // Clear the buffer
+            return null;
+        }
+        scanner.nextLine(); // Clear the buffer
+
+        return methodList.get(methodIndex - 1);
+    }
+
+    private String chooseParameter(Method method) {
+        if (method == null) {
+            view.displayMessage("There are no methods to choose from.");
+            return null;
+        }
+
+        LinkedHashSet<String> parameters = method.getParameters();
+        if (parameters.isEmpty()) {
+            view.displayMessage("There are no fields to choose from.");
+            return null;
+        }
+
+
+        return 0;
+    }
+
+    private int chooseRelationship() {
+        
+        return 0;
+    }
+
+    private int chooseRelationshipType() {
+        
+        return 0;
+    }
+
 
 }

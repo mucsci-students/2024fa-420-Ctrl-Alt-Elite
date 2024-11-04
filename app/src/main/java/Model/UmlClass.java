@@ -1,16 +1,16 @@
 package Model;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.awt.Point;
 
 /**
  * Represents a UML class with a name and a list of methods.
  */
 public class UmlClass {
     private String name;
-    private final LinkedHashSet<String> fields;
-    private final ArrayList<Method> methods;
+    private LinkedHashSet<String> fields;
+    private ArrayList<Method> methods;
     private Point position; // Add position as a Point object
 
     /**
@@ -93,6 +93,15 @@ public class UmlClass {
         }
 
         return methodsList;
+    }
+
+    /**
+     * Gets the list of method objects.
+     * 
+     * @return The list of method objects for this class
+     */
+    public ArrayList<Method> getMethodsList() {
+        return methods;
     }
 
     /**
@@ -220,6 +229,29 @@ public class UmlClass {
          */
         public boolean removeParameter(String paraName) {
             return parameters.remove(paraName);
+        }
+
+        /**
+         * Returns a string representation of a single method, along with its parameters.
+         * 
+         * @return The method and its parameters as a string.
+         */
+        public String singleMethodString() {
+            StringBuilder methodString = new StringBuilder();
+            methodString.append(this.getName()).append("(");
+
+            // Add method parameters
+            Iterator<String> paramIterator = this.getParameters().iterator();
+            if (paramIterator.hasNext()) {
+                methodString.append(paramIterator.next());
+            }
+            while (paramIterator.hasNext()) {
+                methodString.append(", ").append(paramIterator.next());
+            }
+
+            methodString.append(")");
+
+            return methodString.toString();
         }
 
         /**
