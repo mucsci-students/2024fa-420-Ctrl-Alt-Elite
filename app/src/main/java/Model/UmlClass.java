@@ -162,16 +162,20 @@ public class UmlClass {
         private String name;
         /** A list of parameters. */
         private LinkedHashSet<String> parameters;
+        /** The return type of the method */
+        private String returnType;
 
         /**
          * Creates a new method with a list of parameters.
          * 
          * @param name       The name of the method as provided by the user.
          * @param parameters The parameters that belong to the method.
+         * @param returnType The return type of the method.
          */
-        public Method(String name, LinkedHashSet<String> parameters) {
+        public Method(String name, LinkedHashSet<String> parameters, String returnType) {
             this.name = name;
             this.parameters = new LinkedHashSet<>(parameters);
+            this.returnType = returnType;
         }
 
         /**
@@ -232,12 +236,32 @@ public class UmlClass {
         }
 
         /**
-         * Returns a string representation of a single method, along with its parameters.
+         * Gets the return type of the method.
          * 
-         * @return The method and its parameters as a string.
+         * @return The return type of the method.
          */
+        public String getReturnType() {
+            return returnType;
+        }
+
+        /**
+         * Set a new return type for the method.
+         * 
+         * @param newReturnType The new return type for the method.
+         */
+        public void setReturnType(String newReturnType) {
+            this.returnType = newReturnType;
+        }
+
+        /**
+         * Returns a string representation of a single method, with its return type and parameters.
+         * 
+         * @return The method, its return type, and parameters as a string.
+         */
+        //TODO test
         public String singleMethodString() {
             StringBuilder methodString = new StringBuilder();
+            methodString.append(this.getReturnType()).append(" ");
             methodString.append(this.getName()).append("(");
 
             // Add method parameters
@@ -250,7 +274,6 @@ public class UmlClass {
             }
 
             methodString.append(")");
-
             return methodString.toString();
         }
 
@@ -287,6 +310,7 @@ public class UmlClass {
             }
 
             // Compare the parameters field for equality.
+            //TODO if types are the same then they are equal
             if (parameters == null) {
                 if (other.parameters != null) {
                     return false;
@@ -311,6 +335,7 @@ public class UmlClass {
             int result = 1;
             result = prime * result + ((name == null) ? 0 : name.hashCode());
             result = prime * result + ((parameters == null) ? 0 : parameters.hashCode());
+            result = prime * result + ((returnType == null) ? 0 : returnType.hashCode());
             return result;
         }
 
@@ -321,7 +346,7 @@ public class UmlClass {
          */
         @Override
         public String toString() {
-            String string = "\tMethod: " + name;
+            String string = "\tMethod: " + returnType + " " + name;
             string = string.concat(" (");
             if (!parameters.isEmpty()) {
                 Iterator<String> iter = parameters.iterator();
@@ -341,12 +366,13 @@ public class UmlClass {
      * 
      * @param methodName The name of the method to add.
      * @param parameters The list of parameters for the method.
+     * @param returnType The return type of the method to add.
      * @return {@code true} if the method was added, {@code false} if the method
      *         already exists.
      */
-    public boolean addMethod(String methodName, LinkedHashSet<String> parameters) {
-        // The method must have a name
-        if (methodName.isEmpty() || methodName.contains(" ")) {
+    public boolean addMethod(String methodName, LinkedHashSet<String> parameters, String returnType) {
+        // The method must have a name and valid return type
+        if (methodName.isEmpty() || methodName.contains(" ") || returnType.isEmpty() || returnType.contains(" ")) {
             return false;
         }
 
@@ -359,16 +385,18 @@ public class UmlClass {
             }
         }
 
+        Method newMethod = new Method(methodName, parameters, returnType);
+
         // Loop through the methods to see if a method that equals
         // the method we are trying to create already exists.
+        //TODO test that .equals works
         for (Method method : methods) {
-            if (method.getName().equals(methodName) && method.getParameters().equals(parameters)) {
+            if (method.equals(newMethod)) {
                 return false;
             }
         }
 
         // Add the new method.
-        Method newMethod = new Method(methodName, parameters);
         return methods.add(newMethod);
     }
 
@@ -377,13 +405,16 @@ public class UmlClass {
      * 
      * @param methodName The name of the method to delete.
      * @param parameters The parameters belong to the method.
+     * @param returnType The return type of the method to delete.
      * @return {@code true} if the method was removed, {@code false} if the method
      *         was not found.
      */
-    public boolean deleteMethod(String methodName, LinkedHashSet<String> parameters) {
+    public boolean deleteMethod(String methodName, LinkedHashSet<String> parameters, String returnType) {
         // Loop through the methods to find and remove the given method.
+        Method testMethod = new Method(methodName, parameters, returnType);
+        
         for (Method method : methods) {
-            if (method.getName().equals(methodName) && method.getParameters().equals(parameters)) {
+            if (method.equals(testMethod)) {
                 return methods.remove(method);
             }
         }
@@ -396,29 +427,32 @@ public class UmlClass {
      * 
      * @param oldName    The current name of the method to rename.
      * @param parameters The parameters belonging to the method.
+     * @param returnType The return type of the method to rename.
      * @param newName    The new name of the method.
      * @return {@code true} if the method was successfully renamed, {@code false} if
      *         the new name already exists or if the 'oldname' method was not found
      */
-    public boolean renameMethod(String oldName, LinkedHashSet<String> parameters, String newName) {
+    public boolean renameMethod(String oldName, LinkedHashSet<String> parameters, String returnType, String newName) {
         // If the names are empty, if there are no methods, or if there is white space
         //  in the new name, return false.
         if (oldName.isEmpty() || newName.isEmpty() || methods.isEmpty() || newName.contains(" ")) {
             return false;
         }
 
+        Method testMethod1 = new Method(newName, parameters, returnType);
         // Loop through the methods to see if a method that equals
         // the method we are trying to create already exists.
         for (Method method : methods) {
-            if (method.getName().equals(newName) && method.getParameters().equals(parameters)) {
+            if (method.equals(testMethod1)) {
                 return false;
             }
         }
 
+        Method testMethod2 = new Method(oldName, parameters, returnType);
         // Loop through the methods and find the method with
         // the old name and replace it with the new name.
         for (Method method : methods) {
-            if (method.getName().equals(oldName) && method.getParameters().equals(parameters)) {
+            if (method.equals(testMethod2)) {
                 method.setName(newName);
                 return true;
             }
@@ -503,21 +537,13 @@ public class UmlClass {
             stringBuilder.append("\t\t").append(field).append("\n");
         }
 
+        //TODO test
         // Add Methods section
         stringBuilder.append("\tMethods:\n");
         for (Method method : methods) {
-            stringBuilder.append("\t\t").append(method.getName()).append(" (");
+            stringBuilder.append("\t\t").append(method.singleMethodString());
 
-            // Append parameters if they exist
-            Iterator<String> iter = method.getParameters().iterator();
-            if (iter.hasNext()) {
-                stringBuilder.append(iter.next());
-            }
-            while (iter.hasNext()) {
-                stringBuilder.append(", ").append(iter.next());
-            }
-
-            stringBuilder.append(")\n");
+            stringBuilder.append("\n");
         }
 
         return stringBuilder.toString();

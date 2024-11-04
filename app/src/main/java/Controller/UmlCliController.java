@@ -260,11 +260,14 @@ public class UmlCliController {
                     .forEach(paraList::add);
         }
 
-        if (umlEditor.addMethod(classToAddMethod, methodName, paraList)) {
+        view.displayMessage("Enter the method return type (void, int, etc.): ");
+        String returnType = scanner.nextLine().trim();
+
+        if (umlEditor.addMethod(classToAddMethod, methodName, paraList, returnType)) {
             view.displayMessage("Method '" + methodName + "' added to class '" + classToAddMethod + "'.");
         } else {
             view.displayMessage(
-                    "Failed to add method. Name or parameters may be invalid or duplicated, or class does not exist.");
+                    "Failed to add method. Name, return type, or parameters may be invalid or duplicated, or class does not exist.");
         }
     }
 
@@ -282,7 +285,7 @@ public class UmlCliController {
         Method methodToDelete = chooseMethod(classToDeleteMethod, methodAction); // Call helper to find the class's name
         if (methodToDelete == null) { return; } // Stop if chooseMethod found an error.
 
-        if (umlEditor.deleteMethod(classToDeleteMethod, methodToDelete.getName(), methodToDelete.getParameters())) {
+        if (umlEditor.deleteMethod(classToDeleteMethod, methodToDelete.getName(), methodToDelete.getParameters(), methodToDelete.getReturnType())) {
             view.displayMessage("Method '" + methodToDelete.getName() + "' has been deleted from class '"
                     + classToDeleteMethod + "'.");
         } else {
@@ -301,14 +304,14 @@ public class UmlCliController {
         if (classToRenameMethod == null) { return; } // Stop if chooseClass found an error.
 
         String methodAction = "rename"; // The action that this function will take
-        Method oldMethodName = chooseMethod(classToRenameMethod, methodAction); // Call helper to find the class's name
-        if (oldMethodName == null) { return; } // Stop if chooseMethod found an error.
+        Method oldMethod = chooseMethod(classToRenameMethod, methodAction); // Call helper to find the class's name
+        if (oldMethod == null) { return; } // Stop if chooseMethod found an error.
 
         view.displayMessage("Enter the new method name: ");
         String newMethodName = scanner.nextLine().trim();
 
-        if (umlEditor.renameMethod(classToRenameMethod, oldMethodName.getName(), oldMethodName.getParameters(), newMethodName)) {
-            view.displayMessage("Method '" + oldMethodName.getName() + "' has been renamed to '" + newMethodName + "' in class '"
+        if (umlEditor.renameMethod(classToRenameMethod, oldMethod.getName(), oldMethod.getParameters(), oldMethod.getReturnType(), newMethodName)) {
+            view.displayMessage("Method '" + oldMethod.getName() + "' has been renamed to '" + newMethodName + "' in class '"
                     + classToRenameMethod + "'.");
         } else {
             view.displayMessage("Failed to rename method. Name may be invalid or duplicated, or class does not exist.");
@@ -749,6 +752,4 @@ public class UmlCliController {
 
         return types[(typeIndex - 1)];
     }
-
-
 }
