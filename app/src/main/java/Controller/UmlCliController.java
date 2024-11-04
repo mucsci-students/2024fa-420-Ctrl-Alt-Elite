@@ -336,12 +336,12 @@ public class UmlCliController {
         if (methodOfParameter == null) { return; } // Stop if chooseMethod found an error.
 
         String parameterAction = "remove"; // The action that this function will take
-        String paraName = chooseParameter(methodOfParameter, parameterAction); // Call helper to find the class's name
-        if (paraName == null) { return; } // Stop if chooseParameter found an error.
+        String[] parameterPair = chooseParameter(methodOfParameter, parameterAction); // Call helper to find the class's name
+        if (parameterPair == null || parameterPair.length != 2) { return; } // Stop if chooseParameter found an error.
 
         if (umlEditor.removeParameter(classToRemoveParameter, methodOfParameter.getName(), methodOfParameter.getParameters(), 
-                                        methodOfParameter.getReturnType(), paraName)) {
-            view.displayMessage("Parameter '" + paraName + "' was removed from '" + methodOfParameter.getName() + "'.");
+                                        methodOfParameter.getReturnType(), parameterPair)) {
+            view.displayMessage("Parameter '" + parameterPair[1] + "' was removed from '" + methodOfParameter.getName() + "'.");
         } else {
             view.displayMessage("Failed to remove parameter. Name may be invalid, or class does not exist.");
         }
@@ -653,7 +653,7 @@ public class UmlCliController {
         return methodList.get(methodIndex - 1);
     }
 
-    private String chooseParameter(Method method, String action) {
+    private String[] chooseParameter(Method method, String action) {
         if (method == null) {
             view.displayMessage("There are no methods to choose from.");
             return null;
@@ -666,7 +666,7 @@ public class UmlCliController {
         }
 
         view.displayMessage("Select the number of the parameter to " + action + ": ");
-        String[][] paras = new String[parameters.size()][parameters.size()];
+        String[][] paras = new String[parameters.size() + 1][parameters.size() + 1];
        
         int keyIndex = 0;
         int displayIndex = 1;
@@ -696,7 +696,11 @@ public class UmlCliController {
             return null;
         }
 
-        return paras[(parameterIndex - 1)][1];
+        String[] parameterPair = new String[2];
+        parameterPair[0] = paras[(parameterIndex - 1)][0];
+        parameterPair[1] = paras[(parameterIndex - 1)][1];
+
+        return parameterPair;
     }
 
     private UmlRelationship chooseRelationship(String action) {

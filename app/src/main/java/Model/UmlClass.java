@@ -235,9 +235,8 @@ public class UmlClass {
          * @return {@code true} if the parameter was removed, {@code false} if the
          *         parameter could not be removed.      
          */
-        public boolean removeParameter(String paraName) {
-            String value = parameters.remove(paraName);
-            return value != null;
+        public boolean removeParameter(String[] parameterPair) {
+            return parameters.remove(parameterPair[0], parameterPair[1]);
         }
 
         /**
@@ -490,9 +489,9 @@ public class UmlClass {
      * @return {@code true} if the parameter was able to be removed, {@code false}
      *         if it could not be removed.
      */
-    public boolean removeParameter(String methodName, Map<String, String> parameters, String returnType, String paraName) {
+    public boolean removeParameter(String methodName, Map<String, String> parameters, String returnType, String[] parameterPair) {
         // If any of the function parameters are invalid, return false.
-        if (methodName.isEmpty() || paraName.isEmpty()) {
+        if (methodName.isEmpty() || parameterPair[1].isEmpty()) {
             return false;
         }
 
@@ -501,7 +500,7 @@ public class UmlClass {
         //  and remove the parameter
         for (Method method : methods) {
             if (method.equals(testMethod)) {
-                return method.removeParameter(paraName);
+                return method.removeParameter(parameterPair);
             }
         }
 

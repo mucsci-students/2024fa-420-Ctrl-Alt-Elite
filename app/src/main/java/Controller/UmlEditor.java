@@ -219,10 +219,11 @@ public class UmlEditor {
      * @param paraName   The name of the parameter to remove.
      * @return {@code true} if the parameter was removed, {@code false} otherwise.
      */
-    public boolean removeParameter(String className, String methodName, Map<String, String> parameters, String returnType, String paraName) {
+    public boolean removeParameter(String className, String methodName, Map<String, String> parameters, 
+                                    String returnType, String[] parameterPair) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
-            return umlClass.removeParameter(methodName, parameters, returnType, paraName);
+            return umlClass.removeParameter(methodName, parameters, returnType, parameterPair);
         }
         return false;
     }
