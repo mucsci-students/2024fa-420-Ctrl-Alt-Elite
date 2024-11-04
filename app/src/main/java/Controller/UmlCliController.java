@@ -368,6 +368,7 @@ public class UmlCliController {
         if (!parameters.trim().isEmpty()) {
             String[] splitParameters = parameters.split(",");
             for (String parameter : splitParameters) {
+                parameter = parameter.trim();
                 String[] splitSpace = parameter.split(" ");
                 newParaList.put(splitSpace[0], splitSpace[1]);
             }
