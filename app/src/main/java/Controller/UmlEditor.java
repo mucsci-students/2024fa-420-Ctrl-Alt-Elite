@@ -21,20 +21,9 @@ public class UmlEditor {
         this.model = model;
     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
-
-    /**
-     * Retrieves a UML class given a name.
-     * 
-     * @param name The name of the UML class to retrieve.
-     * @return The UML class if found, {@code null} otherwise.
-     */
-    public UmlClass getClass(String name) {
-        if (name == null || name.isEmpty()) {
-            return null;
-        }
-        return model.getUmlClass(name);
-    }
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*                                           CLASS MANAGEMENT METHODS                                             */
+    /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
      * Adds a new class if it doesn't already exist and the name is not null or empty.
@@ -92,7 +81,22 @@ public class UmlEditor {
         return model.renameClass(oldName, newName);
     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+    /**
+     * Retrieves a UML class given a name.
+     * 
+     * @param name The name of the UML class to retrieve.
+     * @return The UML class if found, {@code null} otherwise.
+     */
+    public UmlClass getClass(String name) {
+        if (name == null || name.isEmpty()) {
+            return null;
+        }
+        return model.getUmlClass(name);
+    }
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*                                            FIELD MANAGEMENT METHODS                                            */
+    /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
      * Retrieves the fields of a specified UML class by name
@@ -120,7 +124,6 @@ public class UmlEditor {
         System.out.println("Class '" + className + "' not found.");
         return false;
     }
-    
 
     /**
      * Delete a field from a class.
@@ -153,7 +156,9 @@ public class UmlEditor {
         return false;
     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*                                           METHOD MANAGEMENT METHODS                                            */
+    /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
      * Adds a method to a specified class.
@@ -204,7 +209,9 @@ public class UmlEditor {
         return false;
     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*                                        PARAMETER MANAGEMENT METHODS                                            */
+    /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
      * Remove a parameter from a method.
@@ -238,7 +245,9 @@ public class UmlEditor {
         return false;
     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*                                      RELATIONSHIP MANAGEMENT METHODS                                           */
+    /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
      * Adds a relationship between two classes, if both exist and are not the same.

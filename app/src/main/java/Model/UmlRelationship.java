@@ -8,7 +8,6 @@ public class UmlRelationship {
     
     /** Type of relationship (AGGREGATION, COMPOSITION, etc.). */
     private RelationshipType type;
-    
 
     /**
      * Constructor to create a new Relationship.
