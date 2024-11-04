@@ -528,14 +528,14 @@ public class UmlGuiController extends JFrame {
             String methodName = methodNameField.getText();
             LinkedHashSet<String> paraList = parseParameterList(parameterListField.getText());
     
-            // if (umlEditor.addMethod(className, methodName, paraList)) {
-            //     outputArea.append("Method '" + methodName + "' added to class '" + className + "'.\n");
-            //     drawingPanel.revalidate();
-            //     drawingPanel.repaint();
-            //     updateButtonStates(); // Update button states after adding the method
-            // } else {
-            //     outputArea.append("Failed to add method '" + methodName + "' to class '" + className + "'.\n");
-            // }
+            if (umlEditor.addMethod(className, methodName, paraList)) {
+                outputArea.append("Method '" + methodName + "' added to class '" + className + "'.\n");
+                drawingPanel.revalidate();
+                drawingPanel.repaint();
+                updateButtonStates(); // Update button states after adding the method
+            } else {
+                outputArea.append("Failed to add method '" + methodName + "' to class '" + className + "'.\n");
+            }
     
             // Clear input fields and close dialog after submission
             methodNameField.setText("");
@@ -581,13 +581,13 @@ public class UmlGuiController extends JFrame {
             String className = classNameField.getText();
             String methodName = methodNameField.getText();
             LinkedHashSet<String> paraList = parseParameterList(parameterListField.getText());
-            // if (umlEditor.deleteMethod(className, methodName, paraList)) {
-            //     outputArea.append("Method '" + methodName + "' deleted from class '" + className + "'.\n");
-            //     drawingPanel.revalidate();
-            //     drawingPanel.repaint();
-            // } else {
-            //     outputArea.append("Failed to delete method '" + methodName + "' from class '" + className + "'.\n");
-            // }
+            if (umlEditor.deleteMethod(className, methodName, paraList)) {
+                outputArea.append("Method '" + methodName + "' deleted from class '" + className + "'.\n");
+                drawingPanel.revalidate();
+                drawingPanel.repaint();
+            } else {
+                outputArea.append("Failed to delete method '" + methodName + "' from class '" + className + "'.\n");
+            }
             classNameField.setText("");
             methodNameField.setText("");
             parameterListField.setText("");
@@ -637,15 +637,15 @@ public class UmlGuiController extends JFrame {
             String oldName = oldMethodNameField.getText();
             String newName = newMethodNameField.getText();
             LinkedHashSet<String> paraList = parseParameterList(parameterListField.getText());
-            // if (umlEditor.renameMethod(className, oldName, paraList, newName)) {
-            //     outputArea.append(
-            //             "Method '" + oldName + "' renamed to '" + newName + "' in class '" + className + "'.\n");
-            //     drawingPanel.revalidate();
-            //     drawingPanel.repaint();
-            // } else {
-            //     outputArea.append("Failed to rename method '" + oldName + "' to '" + newName + "' in class '"
-            //             + className + "'.\n");
-            // }
+            if (umlEditor.renameMethod(className, oldName, paraList, newName)) {
+                outputArea.append(
+                        "Method '" + oldName + "' renamed to '" + newName + "' in class '" + className + "'.\n");
+                drawingPanel.revalidate();
+                drawingPanel.repaint();
+            } else {
+                outputArea.append("Failed to rename method '" + oldName + "' to '" + newName + "' in class '"
+                        + className + "'.\n");
+            }
             classNameField.setText("");
             oldMethodNameField.setText("");
             newMethodNameField.setText("");
@@ -708,15 +708,15 @@ public class UmlGuiController extends JFrame {
             String className = classNameField.getText();
             String methodName = methodNameField.getText();
             String parameterName = parameterNameField.getText();
-            // if (umlEditor.removeParameter(className, methodName, parameterName)) {
-            //     outputArea.append("Parameter '" + parameterName + "' deleted from method '" + methodName
-            //             + "' in class '" + className + "'.\n");
-            //     drawingPanel.revalidate();
-            //     drawingPanel.repaint();
-            // } else {
-            //     outputArea.append("Failed to delete parameter '" + parameterName + "' from method '" + methodName
-            //             + "' in class '" + className + "'.\n");
-            // }
+            if (umlEditor.removeParameter(className, methodName, parameterName)) {
+                outputArea.append("Parameter '" + parameterName + "' deleted from method '" + methodName
+                        + "' in class '" + className + "'.\n");
+                drawingPanel.revalidate();
+                drawingPanel.repaint();
+            } else {
+                outputArea.append("Failed to delete parameter '" + parameterName + "' from method '" + methodName
+                        + "' in class '" + className + "'.\n");
+            }
             classNameField.setText("");
             methodNameField.setText("");
             parameterNameField.setText("");
@@ -768,15 +768,15 @@ public class UmlGuiController extends JFrame {
                         .forEach(newParametersSet::add);
             }
 
-            // if (umlEditor.changeParameters(className, methodName, newParametersSet)) {
-            //     outputArea.append("Parameters of method '" + methodName + "' in class '" + className + "' changed to: "
-            //             + newParametersInput + ".\n");
-            //     drawingPanel.revalidate();
-            //     drawingPanel.repaint();
-            // } else {
-            //     outputArea.append(
-            //             "Failed to change parameters of method '" + methodName + "' in class '" + className + "'.\n");
-            // }
+            if (umlEditor.changeParameters(className, methodName, newParametersSet)) {
+                outputArea.append("Parameters of method '" + methodName + "' in class '" + className + "' changed to: "
+                        + newParametersInput + ".\n");
+                drawingPanel.revalidate();
+                drawingPanel.repaint();
+            } else {
+                outputArea.append(
+                        "Failed to change parameters of method '" + methodName + "' in class '" + className + "'.\n");
+            }
 
             changeParameterClassField.setText("");
             changeParameterMethodField.setText("");
