@@ -1472,7 +1472,6 @@ private void showRenameMethodPanel() {
                         methodY += 15; // Move down for the next method
                     }
                 }
-
             }
         }
 
