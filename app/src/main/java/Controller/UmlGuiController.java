@@ -1450,7 +1450,7 @@ public class UmlGuiController extends JFrame {
                 if (umlClass != null) {
                     int attributeY = position.y + 45; // Start position for attributes
                     for (Map.Entry<String, String> entre : umlClass.getFields().entrySet()) {
-                        String attribute = entre.getKey() + " " + entre.getValue(); // "name type"
+                        String attribute = entre.getValue() + " " + entre.getKey(); // "type name"
                         g.drawString(attribute, position.x + 10, attributeY);
                         attributeY += 15; // Move down for the next attribute
                     }
@@ -1462,6 +1462,7 @@ public class UmlGuiController extends JFrame {
                         methodY += 15; // Move down for the next method
                     }
                 }
+
             }
         }
 
