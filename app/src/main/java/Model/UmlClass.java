@@ -2,6 +2,7 @@ package Model;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -318,8 +319,23 @@ public class UmlClass {
                 if (other.parameters != null) {
                     return false;
                 }
-            } else if (!parameters.keySet().equals(other.parameters.keySet())) {
+            } else if (parameters.size() != other.parameters.size()) {
                 return false;
+            } else {
+                Collection<String> values = parameters.values();
+                Iterator<String> iter = values.iterator();
+
+                Collection<String> otherValues = other.parameters.values();
+                Iterator<String> otherIter = otherValues.iterator();
+                
+                while (iter.hasNext()) {
+                    String type = iter.next();
+                    String otherType = otherIter.next();
+
+                    if (!type.equals(otherType)) {
+                        return false;
+                    }
+                }    
             }
 
             // If both name and parameter types are equal, the objects are equal.
@@ -512,6 +528,11 @@ public class UmlClass {
             Map<String, String> newParameters) {
         // If the method name is invalid, return false.
         if (methodName.isEmpty()) {
+            return false;
+        }
+
+        // Cannot change the parameters to the same as they were before.
+        if (oldParameters.equals(newParameters)) {
             return false;
         }
 

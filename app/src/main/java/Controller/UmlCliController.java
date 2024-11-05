@@ -2,6 +2,7 @@ package Controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -9,7 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.Arrays;
+
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.impl.completer.StringsCompleter;
 
 import Model.JsonUtils;
 import Model.RelationshipType;
@@ -18,10 +22,6 @@ import Model.UmlClass.Method;
 import Model.UmlEditorModel;
 import Model.UmlRelationship;
 import View.CLI;
-
-import org.jline.reader.LineReader;
-import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.impl.completer.StringsCompleter;
 
 /**
  * The UmlCliController class handles the command-line interface (CLI)
