@@ -3,7 +3,6 @@ package Controller;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -103,30 +102,28 @@ public class UmlEditor {
     /* FIELD MANAGEMENT METHODS */
     /*----------------------------------------------------------------------------------------------------------------*/
 
-   public List<String> getFields(String className) {
-    UmlClass umlClass = model.getUmlClass(className);
-    if (umlClass != null) {
-        return new ArrayList<>(umlClass.getFields().keySet()); // Return only field names
-    }
-    return Collections.emptyList(); // Return empty list if class doesn't exist
-}
-
-
-public boolean addField(String className, String fieldType, String fieldName) {
-    UmlClass umlClass = model.getUmlClass(className);
-    if (umlClass != null) {
-        System.out.println("Attempting to add field: " + fieldName + " of type: " + fieldType + " to class: " + className);
-        boolean result = umlClass.addField(fieldType, fieldName);
-        if (!result) {
-            System.out.println("Field '" + fieldName + "' already exists in class '" + className + "'.");
+    public List<String> getFields(String className) {
+        UmlClass umlClass = model.getUmlClass(className);
+        if (umlClass != null) {
+            return new ArrayList<>(umlClass.getFields().keySet()); // Return only field names
         }
-        return result;
+        return Collections.emptyList(); // Return empty list if class doesn't exist
     }
-    System.out.println("Class '" + className + "' not found.");
-    return false;
-}
 
-
+    public boolean addField(String className, String fieldType, String fieldName) {
+        UmlClass umlClass = model.getUmlClass(className);
+        if (umlClass != null) {
+            System.out.println(
+                    "Attempting to add field: " + fieldName + " of type: " + fieldType + " to class: " + className);
+            boolean result = umlClass.addField(fieldType, fieldName);
+            if (!result) {
+                System.out.println("Field '" + fieldName + "' already exists in class '" + className + "'.");
+            }
+            return result;
+        }
+        System.out.println("Class '" + className + "' not found.");
+        return false;
+    }
 
     /**
      * Delete a field from a class.
