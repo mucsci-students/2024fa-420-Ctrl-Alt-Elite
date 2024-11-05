@@ -135,17 +135,25 @@ public class UmlClass {
             return false; // Indicate that the field was not found
         }
     }
-    
 
     // Renames an existing field. Returns true if the field was found and renamed,
-    // false if the field didn't exist.
+    // false if the field didn't exist or if the new name is invalid.
     public boolean renameField(String oldName, String newName) {
-        if (!fields.containsKey(oldName) || fields.containsKey(newName) || newName.isEmpty() || newName.contains(" ")) {
-            return false;
+        // Check for invalid conditions
+        if (!fields.containsKey(oldName)) {
+            return false; // Field to rename does not exist
         }
+        if (fields.containsKey(newName)) {
+            return false; // New name already exists
+        }
+        if (newName.isEmpty() || newName.contains(" ")) {
+            return false; // New name is invalid
+        }
+
+        // Rename the field
         String fieldType = fields.remove(oldName); // Remove the old entry
         fields.put(newName, fieldType); // Add the new entry with the renamed field
-        return true;
+        return true; // Renaming successful
     }
 
     /**
