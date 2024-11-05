@@ -1,5 +1,7 @@
 package Model;
+
 import java.awt.Point;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -12,24 +14,23 @@ import java.util.Map.Entry;
  */
 public class UmlClass {
     private String name;
-    private LinkedHashSet<String> fields;
+    private LinkedHashMap<String, String> fields = new LinkedHashMap<>(); // Corrected type to LinkedHashMap
     private ArrayList<Method> methods;
-    private Point position; // Add position as a Point object
+    private Point position; // Position as a Point object
 
     /**
      * Constructs a new UmlClass with the specified name and position.
      * 
-     * @param name The name of the UML class.
-     * @param name The x-y position of the UML class.
+     * @param name     The name of the UML class.
+     * @param position The x-y position of the UML class.
      */
     public UmlClass(String name, Point position) {
         this.name = name;
         this.methods = new ArrayList<>();
-        this.fields = new LinkedHashSet<>();
         this.position = position; // Initialize position
     }
 
-     /**
+    /**
      * Constructs a new UmlClass with the specified name.
      * 
      * @param name The name of the UML class.
@@ -37,11 +38,15 @@ public class UmlClass {
     public UmlClass(String name) {
         this.name = name;
         this.methods = new ArrayList<>();
-        this.fields = new LinkedHashSet<>();
     }
 
-    public Point getPosition() { return position; }
-    public void setPosition(Point position) { this.position = position; }
+    public Point getPosition() {
+        return position;
+    }
+
+    public void setPosition(Point position) {
+        this.position = position;
+    }
 
     /**
      * Gets the name of the UML class.
@@ -62,12 +67,13 @@ public class UmlClass {
     }
 
     /**
-     * Gets the fields of the UML class.
+     * Returns a copy of the fields to prevent modification of the internal fields
+     * map.
      * 
-     * @return A collection of the fields in the UML class.
+     * @return A LinkedHashMap containing the fields.
      */
-    public LinkedHashSet<String> getFields() {
-        return new LinkedHashSet<>(fields); // Return a copy to prevent modification
+    public LinkedHashMap<String, String> getFields() {
+        return new LinkedHashMap<>(fields); // Return a copy to prevent modification
     }
 
     /**
@@ -83,9 +89,9 @@ public class UmlClass {
             methodString.append(method.getReturnType()).append(" ");
             methodString.append(method.getName()).append("(");
 
-            //TODO test
+            // TODO test
             // Add method parameters
-            Iterator<Map.Entry<String,String>> paramIterator = method.getParameters().entrySet().iterator();
+            Iterator<Map.Entry<String, String>> paramIterator = method.getParameters().entrySet().iterator();
             if (paramIterator.hasNext()) {
                 methodString.append(paramIterator.next());
             }
@@ -109,54 +115,45 @@ public class UmlClass {
         return methods;
     }
 
-    /**
-     * Adds a field to the class.
-     * 
-     * @param fieldName The name of the field to add.
-     * @return {@code true} if the field was added, {@code false} if the field
-     *         already exists.
-     */
-    public boolean addField(String fieldName) {
-        if (fieldName.isEmpty() || fieldName.contains(" ")) {
+    public boolean addField(String fieldType, String fieldName) {
+        // Check for invalid input
+        if (fieldType.isEmpty() || fieldName.isEmpty() || fieldName.contains(" ") || fields.containsKey(fieldName)) {
             return false;
         }
-        
-        return fields.add(fieldName); // Returns false if the field is already present
+        // Add field to the map
+        fields.put(fieldName, fieldType);
+        return true;
     }
 
-    /**
-     * Deletes a field from the class.
-     * 
-     * @param fieldName The name of the field to delete.
-     * @return {@code true} if the field was removed, {@code false} if the field was
-     *         not found.
-     */
     public boolean deleteField(String fieldName) {
-        if (fieldName.isEmpty()) {
-            return false;
+        // Check if the field exists
+        if (fields.containsKey(fieldName)) {
+            // Remove the field from the map
+            fields.remove(fieldName);
+            return true; // Indicate successful removal
+        } else {
+            return false; // Indicate that the field was not found
         }
-        return fields.remove(fieldName);
     }
 
-    /**
-     * Renames a field in the class.
-     * 
-     * @param oldName The old name of the class.
-     * @param newName The new name of the class.
-     * @return {@code true} if the field was renamed, {@code false} if the field
-     *         could not me renamed.
-     */
+    // Renames an existing field. Returns true if the field was found and renamed,
+    // false if the field didn't exist or if the new name is invalid.
     public boolean renameField(String oldName, String newName) {
-        if (oldName.isEmpty() || newName.isEmpty() || oldName.contains(" ") || newName.contains(" ")) {
-            return false;
+        // Check for invalid conditions
+        if (!fields.containsKey(oldName)) {
+            return false; // Field to rename does not exist
         }
-       
-        if (fields.contains(oldName) && !fields.contains(newName)) {
-            fields.remove(oldName);
-            fields.add(newName);
-            return true;
+        if (fields.containsKey(newName)) {
+            return false; // New name already exists
         }
-        return false;
+        if (newName.isEmpty() || newName.contains(" ")) {
+            return false; // New name is invalid
+        }
+
+        // Rename the field
+        String fieldType = fields.remove(oldName); // Remove the old entry
+        fields.put(newName, fieldType); // Add the new entry with the renamed field
+        return true; // Renaming successful
     }
 
     /**
@@ -193,15 +190,6 @@ public class UmlClass {
         }
 
         /**
-         * Gets the fields of the UML class.
-         * 
-         * @return A collection of the fields in the UML class.
-         */
-        public LinkedHashSet<String> getFields() {
-            return new LinkedHashSet<>(fields); // Return a copy to prevent modification
-        }
-
-        /**
          * Changes the name of the method.
          * 
          * @param newName The new name for the method.
@@ -233,7 +221,7 @@ public class UmlClass {
          * 
          * @param paraName The name of the parameter to remove.
          * @return {@code true} if the parameter was removed, {@code false} if the
-         *         parameter could not be removed.      
+         *         parameter could not be removed.
          */
         public boolean removeParameter(String[] parameterPair) {
             return parameters.remove(parameterPair[0], parameterPair[1]);
@@ -258,28 +246,29 @@ public class UmlClass {
         }
 
         /**
-         * Returns a string representation of a single method, with its return type and parameters.
+         * Returns a string representation of a single method, with its return type and
+         * parameters.
          * 
          * @return The method, its return type, and parameters as a string.
          */
-        //TODO refactor this so that it is just the method class toString.
+        // TODO refactor this so that it is just the method class toString.
         public String singleMethodString() {
             StringBuilder methodString = new StringBuilder();
             methodString.append(this.getReturnType()).append(" ");
             methodString.append(this.getName()).append("(");
 
             // Add method parameters
-            //TODO test
-            Iterator<Map.Entry<String,String>> paramIterator = this.getParameters().entrySet().iterator();
+            // TODO test
+            Iterator<Map.Entry<String, String>> paramIterator = this.getParameters().entrySet().iterator();
             if (paramIterator.hasNext()) {
-                Entry<String,String> element = paramIterator.next();
+                Entry<String, String> element = paramIterator.next();
                 methodString.append(element.getKey()).append(" ");
                 methodString.append(element.getValue());
             }
             while (paramIterator.hasNext()) {
                 methodString.append(", ");
 
-                Entry<String,String> element = paramIterator.next();
+                Entry<String, String> element = paramIterator.next();
                 methodString.append(element.getKey()).append(" ");
                 methodString.append(element.getValue());
             }
@@ -321,7 +310,7 @@ public class UmlClass {
             }
 
             // Compare the parameters field for equality.
-            //TODO test
+            // TODO test
             if (parameters == null) {
                 if (other.parameters != null) {
                     return false;
@@ -355,21 +344,21 @@ public class UmlClass {
          * 
          * @return A string representation of the Method class.
          */
-        //TODO test
+        // TODO test
         @Override
         public String toString() {
             String string = "\tMethod: " + returnType + " " + name;
             string = string.concat(" (");
             if (!parameters.isEmpty()) {
-                Iterator<Map.Entry<String,String>> iter = this.getParameters().entrySet().iterator();
-                
+                Iterator<Map.Entry<String, String>> iter = this.getParameters().entrySet().iterator();
+
                 Entry<String, String> entry = iter.next();
                 string = string.concat(entry.getKey());
                 string = string.concat(" ");
                 string = string.concat(entry.getValue());
                 for (int i = 1; i < parameters.size(); i++) {
                     string = string.concat(", ");
-                    
+
                     Entry<String, String> loopEntry = iter.next();
                     string = string.concat(loopEntry.getKey());
                     string = string.concat(" ");
@@ -397,10 +386,10 @@ public class UmlClass {
         }
 
         if (!parameters.isEmpty()) {
-            //Check that all of the parameter names are valid
+            // Check that all of the parameter names are valid
             for (Map.Entry<String, String> element : parameters.entrySet()) {
-                if (element.getKey().isEmpty() || element.getValue().isEmpty() 
-                    || element.getKey().contains(" ") || element.getValue().contains(" ")) {
+                if (element.getKey().isEmpty() || element.getValue().isEmpty()
+                        || element.getKey().contains(" ") || element.getValue().contains(" ")) {
                     return false;
                 }
             }
@@ -409,7 +398,7 @@ public class UmlClass {
         Method newMethod = new Method(methodName, parameters, returnType);
         // Loop through the methods to see if a method that equals
         // the method we are trying to create already exists.
-        //TODO test that .equals works
+        // TODO test that .equals works
         for (Method method : methods) {
             if (method.equals(newMethod)) {
                 return false;
@@ -432,7 +421,7 @@ public class UmlClass {
     public boolean deleteMethod(String methodName, Map<String, String> parameters, String returnType) {
         // Loop through the methods to find and remove the given method.
         Method testMethod = new Method(methodName, parameters, returnType);
-        
+
         for (Method method : methods) {
             if (method.equals(testMethod)) {
                 return methods.remove(method);
@@ -454,7 +443,7 @@ public class UmlClass {
      */
     public boolean renameMethod(String oldName, Map<String, String> parameters, String returnType, String newName) {
         // If the names are empty, if there are no methods, or if there is white space
-        //  in the new name, return false.
+        // in the new name, return false.
         if (oldName.isEmpty() || newName.isEmpty() || methods.isEmpty() || newName.contains(" ")) {
             return false;
         }
@@ -489,7 +478,8 @@ public class UmlClass {
      * @return {@code true} if the parameter was able to be removed, {@code false}
      *         if it could not be removed.
      */
-    public boolean removeParameter(String methodName, Map<String, String> parameters, String returnType, String[] parameterPair) {
+    public boolean removeParameter(String methodName, Map<String, String> parameters, String returnType,
+            String[] parameterPair) {
         // If any of the function parameters are invalid, return false.
         if (methodName.isEmpty() || parameterPair[1].isEmpty()) {
             return false;
@@ -497,7 +487,7 @@ public class UmlClass {
 
         Method testMethod = new Method(methodName, parameters, returnType);
         // Loop through the methods, find the one we need,
-        //  and remove the parameter
+        // and remove the parameter
         for (Method method : methods) {
             if (method.equals(testMethod)) {
                 return method.removeParameter(parameterPair);
@@ -516,17 +506,18 @@ public class UmlClass {
      * @return {@code true} if the parameters were changed, {@code false} if the
      *         parameters were not changed.
      */
-    public boolean changeParameters(String methodName, Map<String, String> oldParameters, String returnType, Map<String, String> newParameters) {
+    public boolean changeParameters(String methodName, Map<String, String> oldParameters, String returnType,
+            Map<String, String> newParameters) {
         // If the method name is invalid, return false.
         if (methodName.isEmpty()) {
             return false;
         }
 
         if (!newParameters.isEmpty()) {
-            //Check that all of the parameter names are valid
+            // Check that all of the parameter names are valid
             for (Map.Entry<String, String> element : newParameters.entrySet()) {
-                if (element.getKey().isEmpty() || element.getValue().isEmpty() 
-                    || element.getKey().contains(" ") || element.getValue().contains(" ")) {
+                if (element.getKey().isEmpty() || element.getValue().isEmpty()
+                        || element.getKey().contains(" ") || element.getValue().contains(" ")) {
                     return false;
                 }
             }
@@ -543,30 +534,27 @@ public class UmlClass {
         return false;
     }
 
-    /**
-     * Returns a string representation of the UML class, including its name,
-     * indented fields, and methods along with their parameters.
-     * 
-     * @return A string containing the class name, fields, and methods.
-     */
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Class: ").append(name).append("\n");
 
-        // Add Fields section
+        // Add Fields section with types
         stringBuilder.append("\tFields:\n");
-        for (String field : fields) {
-            stringBuilder.append("\t\t").append(field).append("\n");
+        for (Map.Entry<String, String> field : fields.entrySet()) { // Use entrySet() to iterate
+            stringBuilder.append("\t\t").append(field.getValue()) // Field type
+                    .append(" ").append(field.getKey()) // Field name
+                    .append("\n");
         }
 
         // Add Methods section
         stringBuilder.append("\tMethods:\n");
         for (Method method : methods) {
-            stringBuilder.append("\t\t").append(method.singleMethodString());
-            stringBuilder.append("\n");
+            stringBuilder.append("\t\t").append(method.singleMethodString())
+                    .append("\n");
         }
 
         return stringBuilder.toString();
     }
+
 }
