@@ -24,7 +24,7 @@ public class UmlEditor {
     }
 
     /*----------------------------------------------------------------------------------------------------------------*/
-    /* CLASS MANAGEMENT METHODS */
+    /*                                              CLASS MANAGEMENT METHODS                                          */
     /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
@@ -99,9 +99,16 @@ public class UmlEditor {
     }
 
     /*----------------------------------------------------------------------------------------------------------------*/
-    /* FIELD MANAGEMENT METHODS */
+    /*                                              FIELD MANAGEMENT METHODS                                          */
     /*----------------------------------------------------------------------------------------------------------------*/
 
+    /**
+    * Retrieves the list of field names for a given class.
+    *
+    * @param className The name of the class whose fields are to be retrieved.
+    * @return A list of field names for the specified class. If the class does not exist, 
+    *         an empty list is returned.
+    */
     public List<String> getFields(String className) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
@@ -110,17 +117,25 @@ public class UmlEditor {
         return Collections.emptyList(); // Return empty list if class doesn't exist
     }
 
+    /**
+    * Adds a new field to a specified class.
+    *
+    * @param className The name of the class to which the field will be added.
+    * @param fieldType The type of the field to be added (e.g., int, String).
+    * @param fieldName The name of the field to be added.
+    * @return {@code true} if the field was successfully added, 
+    *         {@code false} if the field already exists or the class was not found.
+    */
     public boolean addField(String className, String fieldType, String fieldName) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
-            System.out.println(
-                    "Attempting to add field: " + fieldName + " of type: " + fieldType + " to class: " + className);
+            System.out.println("Attempting to add field: " + fieldName + " of type: " + fieldType + " to class: " + className);
             boolean result = umlClass.addField(fieldType, fieldName);
             if (!result) {
                 System.out.println("Field '" + fieldName + "' already exists in class '" + className + "'.");
             }
             return result;
-        }
+    }
         System.out.println("Class '" + className + "' not found.");
         return false;
     }
@@ -157,7 +172,7 @@ public class UmlEditor {
     }
 
     /*----------------------------------------------------------------------------------------------------------------*/
-    /* METHOD MANAGEMENT METHODS */
+    /*                                              METHOD MANAGEMENT METHODS                                         */
     /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
@@ -214,7 +229,7 @@ public class UmlEditor {
     }
 
     /*----------------------------------------------------------------------------------------------------------------*/
-    /* PARAMETER MANAGEMENT METHODS */
+    /*                                             PARAMETER MANAGEMENT METHODS                                       */
     /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
@@ -256,7 +271,7 @@ public class UmlEditor {
     }
 
     /*----------------------------------------------------------------------------------------------------------------*/
-    /* RELATIONSHIP MANAGEMENT METHODS */
+    /*                                              RELATIONSHIP MANAGEMENT METHODS                                   */
     /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
