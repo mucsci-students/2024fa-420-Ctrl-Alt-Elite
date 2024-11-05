@@ -3,11 +3,13 @@ package Controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.Arrays;
 
 import Model.JsonUtils;
 import Model.RelationshipType;
@@ -16,6 +18,10 @@ import Model.UmlClass.Method;
 import Model.UmlEditorModel;
 import Model.UmlRelationship;
 import View.CLI;
+
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.impl.completer.StringsCompleter;
 
 /**
  * The UmlCliController class handles the command-line interface (CLI)
@@ -30,6 +36,16 @@ public class UmlCliController {
     private UmlEditor umlEditor;
     private final CLI view;
     private final Scanner scanner;
+    private final LineReader reader; // Moved here to be a class field
+
+    private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
+        "add-class", "delete-class", "rename-class",
+        "add-field", "delete-field", "rename-field",
+        "add-method", "delete-method", "rename-method",
+        "add-parameter", "delete-parameter", "change-parameter",
+        "list-classes", "list-class", "list-relationship",
+        "undo", "redo", "help", "exit"
+    ));
 
     /**
      * Constructs a new UmlCliController.
@@ -44,6 +60,9 @@ public class UmlCliController {
         this.umlEditor = umlEditor;
         this.view = view;
         this.scanner = new Scanner(System.in);
+        this.reader = LineReaderBuilder.builder()
+            .completer(new StringsCompleter(COMMANDS))
+            .build();
     }
 
     /**
@@ -55,7 +74,7 @@ public class UmlCliController {
         // Loop until the user chooses to exit
         while (!exit) {
             view.displayMessage("Enter a command (Type 'help' for a list of commands): ");
-            String command = scanner.nextLine().trim();
+            String command = reader.readLine().trim();
 
             switch (command) {
                 case "add-class":
@@ -130,6 +149,7 @@ public class UmlCliController {
         }
         scanner.close(); // Close the scanner when done
     }
+
 
     /**
      * Handles the 'add-class' command by prompting the user for a class name and
