@@ -140,7 +140,7 @@ public class UmlCliController {
                     break;
                 case "exit":
                     exit = true;
-                    view.displayMessage("Exiting the program.");
+                    view.displayMessage("Exiting the program...");
                     break;
                 default:
                     view.displayMessage("Invalid command. Type 'help' for options.");
@@ -313,7 +313,7 @@ public class UmlCliController {
 
         view.displayMessage("Enter the method name: ");
         String methodName = scanner.nextLine().trim();
-        view.displayMessage("Enter the parameters for the method (void p1, int p2, etc.): ");
+        view.displayMessage("Enter the parameters for the method (String p1, int p2, etc.): ");
         String parameters = scanner.nextLine().trim();
 
         Map<String, String> paraList = new HashMap<>();
@@ -322,7 +322,11 @@ public class UmlCliController {
             for (String parameter : splitParameters) {
                 parameter = parameter.trim();
                 String[] splitSpace = parameter.split(" ");
-                paraList.put(splitSpace[0], splitSpace[1]);
+                if (paraList.containsKey(splitSpace[1])) {
+                    view.displayMessage("Parameters must have different names.");
+                    return; 
+                }
+                paraList.put(splitSpace[1], splitSpace[0]);
             }
         }
 
@@ -429,7 +433,7 @@ public class UmlCliController {
                 methodOfParameter.getParameters(),
                 methodOfParameter.getReturnType(), parameterPair)) {
             view.displayMessage(
-                    "Parameter '" + parameterPair[1] + "' was removed from '" + methodOfParameter.getName() + "'.");
+                    "Parameter '" + parameterPair[0] + "' was removed from '" + methodOfParameter.getName() + "'.");
         } else {
             view.displayMessage("Failed to remove parameter. Name may be invalid, or class does not exist.");
         }
@@ -455,7 +459,7 @@ public class UmlCliController {
             return;
         } // Stop if chooseMethod found an error.
 
-        view.displayMessage("Enter the new parameters for the method (void p1, int p2, etc.): ");
+        view.displayMessage("Enter the new parameters for the method (String p1, int p2, etc.): ");
         String parameters = scanner.nextLine().trim();
 
         Map<String, String> newParaList = new HashMap<>();
@@ -464,7 +468,7 @@ public class UmlCliController {
             for (String parameter : splitParameters) {
                 parameter = parameter.trim();
                 String[] splitSpace = parameter.split(" ");
-                newParaList.put(splitSpace[0], splitSpace[1]);
+                newParaList.put(splitSpace[1], splitSpace[0]);
             }
         }
 
@@ -646,6 +650,7 @@ public class UmlCliController {
 
     /*************************************************************************************************/
     // Helper Functions
+    //TODO add comments
     private String chooseClass(String action) {
         Map<String, UmlClass> map = model.getClasses();
         if (map.isEmpty()) {
@@ -777,7 +782,9 @@ public class UmlCliController {
             return null;
         }
 
+        // The name of the parameter is the key, the type is the value
         Map<String, String> parameters = method.getParameters();
+        
         if (parameters.isEmpty()) {
             view.displayMessage("There are no parameters to choose from.");
             return null;
