@@ -115,12 +115,12 @@ public class UmlClass {
         return methods;
     }
 
-    // Adds a field with the specified type and name. Returns false if the fieldName
-    // already exists or if inputs are invalid.
-    public boolean addField(String fieldName, String fieldType) {
+    public boolean addField(String fieldType, String fieldName) {
+        // Check for invalid input
         if (fieldType.isEmpty() || fieldName.isEmpty() || fieldName.contains(" ") || fields.containsKey(fieldName)) {
             return false;
         }
+        // Add field to the map
         fields.put(fieldName, fieldType);
         return true;
     }
@@ -528,8 +528,8 @@ public class UmlClass {
         // Add Fields section with types
         stringBuilder.append("\tFields:\n");
         for (Map.Entry<String, String> field : fields.entrySet()) { // Use entrySet() to iterate
-            stringBuilder.append("\t\t").append(field.getKey()) // Field type
-                    .append(" ").append(field.getValue()) // Field name
+            stringBuilder.append("\t\t").append(field.getValue()) // Field type
+                    .append(" ").append(field.getKey()) // Field name
                     .append("\n");
         }
 
