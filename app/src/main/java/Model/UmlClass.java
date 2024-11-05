@@ -125,11 +125,17 @@ public class UmlClass {
         return true;
     }
 
-    // Deletes a field with the specified name. Returns true if the field was
-    // removed, false if it didn't exist.
     public boolean deleteField(String fieldName) {
-        return fields.remove(fieldName) != null;
+        // Check if the field exists
+        if (fields.containsKey(fieldName)) {
+            // Remove the field from the map
+            fields.remove(fieldName);
+            return true; // Indicate successful removal
+        } else {
+            return false; // Indicate that the field was not found
+        }
     }
+    
 
     // Renames an existing field. Returns true if the field was found and renamed,
     // false if the field didn't exist.

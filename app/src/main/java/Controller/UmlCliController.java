@@ -670,27 +670,27 @@ public class UmlCliController {
             view.displayMessage("There is no class to choose from.");
             return null;
         }
-
+    
         // Retrieve fields from the UmlClass as a LinkedHashMap
         LinkedHashMap<String, String> fieldMap = fieldClass.getFields();
         if (fieldMap.isEmpty()) {
             view.displayMessage("There are no fields to choose from.");
             return null;
         }
-
+    
         view.displayMessage("Select the number of the field to " + action + ": ");
         String[] fields = new String[fieldMap.size()]; // Prepare an array for field names
         int index = 0;
         int displayIndex = 1;
-
+    
         // Populate the fields array and display them
         for (Map.Entry<String, String> entry : fieldMap.entrySet()) {
-            fields[index] = entry.getValue(); // Get the field name
-            view.displayMessage("\t" + displayIndex + ". " + fields[index]);
+            fields[index] = entry.getKey(); // Get the field name (key)
+            view.displayMessage("\t" + displayIndex + ". " + fields[index] + " (" + entry.getValue() + ")"); // Show field name and type
             index++;
             displayIndex++;
         }
-
+    
         int fieldIndex;
         try {
             fieldIndex = scanner.nextInt();
@@ -701,14 +701,15 @@ public class UmlCliController {
             return null;
         }
         scanner.nextLine(); // Clear the buffer
-
+    
         if (fieldIndex > displayIndex || fieldIndex < 1) {
             view.displayMessage("Field number does not exist.");
             return null;
         }
-
+    
         return fields[fieldIndex - 1]; // Return the selected field name
     }
+    
 
     private Method chooseMethod(String className, String action) {
         UmlClass methodClass = model.getClass(className);
