@@ -1,11 +1,9 @@
 package Model;
 
 import java.awt.Point;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -93,10 +91,16 @@ public class UmlClass {
             // Add method parameters
             Iterator<Map.Entry<String, String>> paramIterator = method.getParameters().entrySet().iterator();
             if (paramIterator.hasNext()) {
-                methodString.append(paramIterator.next());
+                Entry<String, String> element = paramIterator.next();
+                methodString.append(element.getValue()).append(" ");
+                methodString.append(element.getKey());
             }
             while (paramIterator.hasNext()) {
-                methodString.append(", ").append(paramIterator.next());
+                methodString.append(", ");
+
+                Entry<String, String> element = paramIterator.next();
+                methodString.append(element.getValue()).append(" ");
+                methodString.append(element.getKey());
             }
 
             methodString.append(")");
@@ -162,7 +166,7 @@ public class UmlClass {
     public class Method {
         /** The name of the method. */
         private String name;
-        /** A map of parameters, with the type as the key and the name as the value. */
+        /** A map of parameters, with the name as the key and the type as the value. */
         private Map<String, String> parameters;
         /** The return type of the method */
         private String returnType;
@@ -262,15 +266,15 @@ public class UmlClass {
             Iterator<Map.Entry<String, String>> paramIterator = this.getParameters().entrySet().iterator();
             if (paramIterator.hasNext()) {
                 Entry<String, String> element = paramIterator.next();
-                methodString.append(element.getKey()).append(" ");
-                methodString.append(element.getValue());
+                methodString.append(element.getValue()).append(" ");
+                methodString.append(element.getKey());
             }
             while (paramIterator.hasNext()) {
                 methodString.append(", ");
 
                 Entry<String, String> element = paramIterator.next();
-                methodString.append(element.getKey()).append(" ");
-                methodString.append(element.getValue());
+                methodString.append(element.getValue()).append(" ");
+                methodString.append(element.getKey());
             }
 
             methodString.append(")");
@@ -310,7 +314,6 @@ public class UmlClass {
             }
 
             // Compare the parameters field for equality.
-            // TODO test
             if (parameters == null) {
                 if (other.parameters != null) {
                     return false;
@@ -353,16 +356,16 @@ public class UmlClass {
                 Iterator<Map.Entry<String, String>> iter = this.getParameters().entrySet().iterator();
 
                 Entry<String, String> entry = iter.next();
-                string = string.concat(entry.getKey());
-                string = string.concat(" ");
                 string = string.concat(entry.getValue());
+                string = string.concat(" ");
+                string = string.concat(entry.getKey());
                 for (int i = 1; i < parameters.size(); i++) {
                     string = string.concat(", ");
 
                     Entry<String, String> loopEntry = iter.next();
-                    string = string.concat(loopEntry.getKey());
-                    string = string.concat(" ");
                     string = string.concat(loopEntry.getValue());
+                    string = string.concat(" ");
+                    string = string.concat(loopEntry.getKey());
                 }
             }
             string = string.concat(")\n");
@@ -398,7 +401,6 @@ public class UmlClass {
         Method newMethod = new Method(methodName, parameters, returnType);
         // Loop through the methods to see if a method that equals
         // the method we are trying to create already exists.
-        // TODO test that .equals works
         for (Method method : methods) {
             if (method.equals(newMethod)) {
                 return false;
