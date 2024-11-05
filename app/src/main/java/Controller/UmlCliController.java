@@ -3,6 +3,7 @@ package Controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -176,23 +177,30 @@ public class UmlCliController {
     }
 
     /**
-     * Handles the 'add-field' command by prompting the user for a class and field name and adding the field to the class.
-     */
-    public void handleAddField() {
-        // Add a field to a class
-        String action = "add the field to"; // The action that this function will take
-        String classToAddField = chooseClass(action); // Call helper to find the class's name
-        if (classToAddField == null) { return; } // Stop if chooseClass found an error.
+ * Handles the 'add-field' command by prompting the user for a class, field type, and field name, then adding the field to the class.
+ */
+public void handleAddField() {
+    // Add a field to a class
+    String action = "add the field to"; // The action that this function will take
+    String classToAddField = chooseClass(action); // Call helper to find the class's name
+    if (classToAddField == null) { return; } // Stop if chooseClass found an error.
 
-        view.displayMessage("Enter the field name: ");
-        String fieldName = scanner.nextLine().trim();
+    // Prompt for field type
+    view.displayMessage("Enter the field type: ");
+    String fieldType = scanner.nextLine().trim();
 
-        if (umlEditor.addField(classToAddField, fieldName)) {
-            view.displayMessage("Field '" + fieldName + "' added to class '" + classToAddField + "'.");
-        } else {
-            view.displayMessage("Failed to add field. Class may not exist or field is invalid.");
-        }
+    // Prompt for field name
+    view.displayMessage("Enter the field name: ");
+    String fieldName = scanner.nextLine().trim();
+
+    // Add the field to the UML class
+    if (umlEditor.addField(classToAddField, fieldType, fieldName)) {
+        view.displayMessage("Field '" + fieldType + " " + fieldName + "' added to class '" + classToAddField + "'.");
+    } else {
+        view.displayMessage("Failed to add field. Class may not exist or field is invalid.");
     }
+}
+
 
     /**
      * Handles the 'delete-field' command by prompting the user for a class and field name and removing the field from the class.
@@ -571,48 +579,50 @@ public class UmlCliController {
     }
 
     private String chooseField(String className, String action) {
-        UmlClass fieldClass = model.getClass(className);
-        if (fieldClass == null) {
-            view.displayMessage("There is no class to choose from.");
-            return null;
-        }
-
-        LinkedHashSet<String> fieldSet = fieldClass.getFields();
-        if (fieldSet.isEmpty()) {
-            view.displayMessage("There are no fields to choose from.");
-            return null;
-        }
-
-        view.displayMessage("Select the number of the field to " + action + ": ");
-        String[] fields = new String[fieldSet.size()];
-        int index = 0;
-        int displayIndex = 1;
-        for ( String field : fieldSet) {
-            fields[index] = field;
-            view.displayMessage("\t" + displayIndex + ". " + fields[index]);
-            index++;
-            displayIndex++;
-        }
-        
-        int fieldIndex;
-        try {
-            fieldIndex = scanner.nextInt();
-        } catch (Exception e) {
-            view.displayMessage(
-                "Field number entered improperly. Please enter a number that corresponds to a field (1, 2, 3, etc.).");
-            scanner.nextLine(); // Clear the buffer
-            return null;
-        }
-        scanner.nextLine(); // Clear the buffer
-
-        if (fieldIndex > displayIndex || fieldIndex < 0) {
-            view.displayMessage(
-                "Field number does not exist.");
-            return null;
-        }
-
-        return fields[(fieldIndex - 1)];
+    UmlClass fieldClass = model.getUmlClass(className); // Ensure this retrieves the class correctly
+    if (fieldClass == null) {
+        view.displayMessage("There is no class to choose from.");
+        return null;
     }
+
+    // Retrieve fields from the UmlClass as a LinkedHashMap
+    LinkedHashMap<String, String> fieldMap = fieldClass.getFields();
+    if (fieldMap.isEmpty()) {
+        view.displayMessage("There are no fields to choose from.");
+        return null;
+    }
+
+    view.displayMessage("Select the number of the field to " + action + ": ");
+    String[] fields = new String[fieldMap.size()]; // Prepare an array for field names
+    int index = 0;
+    int displayIndex = 1;
+
+    // Populate the fields array and display them
+    for (Map.Entry<String, String> entry : fieldMap.entrySet()) {
+        fields[index] = entry.getValue(); // Get the field name
+        view.displayMessage("\t" + displayIndex + ". " + fields[index]);
+        index++;
+        displayIndex++;
+    }
+
+    int fieldIndex;
+    try {
+        fieldIndex = scanner.nextInt();
+    } catch (Exception e) {
+        view.displayMessage("Field number entered improperly. Please enter a number that corresponds to a field (1, 2, 3, etc.).");
+        scanner.nextLine(); // Clear the buffer
+        return null;
+    }
+    scanner.nextLine(); // Clear the buffer
+
+    if (fieldIndex > displayIndex || fieldIndex < 1) {
+        view.displayMessage("Field number does not exist.");
+        return null;
+    }
+
+    return fields[fieldIndex - 1]; // Return the selected field name
+}
+
     
     private Method chooseMethod(String className, String action) {
         UmlClass methodClass = model.getClass(className);

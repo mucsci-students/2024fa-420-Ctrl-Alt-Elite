@@ -347,14 +347,14 @@ public class UmlGuiController extends JFrame {
             String fieldName = fieldNameField.getText();
             
             // Assuming you have a method to add the field
-            if (umlEditor.addField(className, fieldName)) {
-                outputArea.append("Field '" + fieldName + "' added to class '" + className + "'.\n");
-                drawingPanel.revalidate();
-                drawingPanel.repaint();
-                updateButtonStates(); // Update button states after adding the field
-            } else {
-                outputArea.append("Failed to add field '" + fieldName + "' to class '" + className + "'.\n");
-            }
+            // if (umlEditor.addField(className, fieldName)) {
+            //     outputArea.append("Field '" + fieldName + "' added to class '" + className + "'.\n");
+            //     drawingPanel.revalidate();
+            //     drawingPanel.repaint();
+            //     updateButtonStates(); // Update button states after adding the field
+            // } else {
+            //     outputArea.append("Failed to add field '" + fieldName + "' to class '" + className + "'.\n");
+            // }
     
             fieldNameField.setText(""); // Clear the field
             dialog.dispose();
@@ -390,9 +390,9 @@ public class UmlGuiController extends JFrame {
             fieldNameComboBox.removeAllItems(); // Clear previous fields
             String selectedClass = (String) classNameComboBox.getSelectedItem();
             if (selectedClass != null) {
-                for (String fieldName : umlEditor.getFields(selectedClass)) {
-                    fieldNameComboBox.addItem(fieldName);
-                }
+                // for (String fieldName : umlEditor.getFields(selectedClass)) {
+                //     fieldNameComboBox.addItem(fieldName);
+                // }
             }
         });
     
@@ -448,11 +448,11 @@ public class UmlGuiController extends JFrame {
         classNameComboBox.addActionListener(e -> {
             oldFieldNameComboBox.removeAllItems(); // Clear previous fields
             String selectedClass = (String) classNameComboBox.getSelectedItem();
-            if (selectedClass != null) {
-                for (String fieldName : umlEditor.getFields(selectedClass)) {
-                    oldFieldNameComboBox.addItem(fieldName);
-                }
-            }
+            // if (selectedClass != null) {
+            //     for (String fieldName : umlEditor.getFields(selectedClass)) {
+            //         oldFieldNameComboBox.addItem(fieldName);
+            //     }
+            // }
         });
     
         JTextField newFieldNameField = new JTextField(15); // Text field for the new field name
@@ -531,14 +531,14 @@ public class UmlGuiController extends JFrame {
             String methodName = methodNameField.getText();
             LinkedHashSet<String> paraList = parseParameterList(parameterListField.getText());
     
-            if (umlEditor.addMethod(className, methodName, paraList)) {
-                outputArea.append("Method '" + methodName + "' added to class '" + className + "'.\n");
-                drawingPanel.revalidate();
-                drawingPanel.repaint();
-                updateButtonStates(); // Update button states after adding the method
-            } else {
-                outputArea.append("Failed to add method '" + methodName + "' to class '" + className + "'.\n");
-            }
+            // if (umlEditor.addMethod(className, methodName, paraList)) {
+            //     outputArea.append("Method '" + methodName + "' added to class '" + className + "'.\n");
+            //     drawingPanel.revalidate();
+            //     drawingPanel.repaint();
+            //     updateButtonStates(); // Update button states after adding the method
+            // } else {
+            //     outputArea.append("Failed to add method '" + methodName + "' to class '" + className + "'.\n");
+            // }
     
             // Clear input fields and close dialog after submission
             methodNameField.setText("");
@@ -590,13 +590,13 @@ public class UmlGuiController extends JFrame {
             String methodName = methodNameField.getText();
             LinkedHashSet<String> paraList = parseParameterList(parameterListField.getText());
     
-            if (umlEditor.deleteMethod(className, methodName, paraList)) {
-                outputArea.append("Method '" + methodName + "' deleted from class '" + className + "'.\n");
-                drawingPanel.revalidate();
-                drawingPanel.repaint();
-            } else {
-                outputArea.append("Failed to delete method '" + methodName + "' from class '" + className + "'.\n");
-            }
+            // if (umlEditor.deleteMethod(className, methodName, paraList)) {
+            //     outputArea.append("Method '" + methodName + "' deleted from class '" + className + "'.\n");
+            //     drawingPanel.revalidate();
+            //     drawingPanel.repaint();
+            // } else {
+            //     outputArea.append("Failed to delete method '" + methodName + "' from class '" + className + "'.\n");
+            // }
     
             // Clear input fields and close dialog after submission
             methodNameField.setText("");
@@ -654,13 +654,13 @@ public class UmlGuiController extends JFrame {
             String newName = newMethodNameField.getText();
             LinkedHashSet<String> paraList = parseParameterList(parameterListField.getText());
     
-            if (umlEditor.renameMethod(className, oldName, paraList, newName)) {
-                outputArea.append("Method '" + oldName + "' renamed to '" + newName + "' in class '" + className + "'.\n");
-                drawingPanel.revalidate();
-                drawingPanel.repaint();
-            } else {
-                outputArea.append("Failed to rename method '" + oldName + "' to '" + newName + "' in class '" + className + "'.\n");
-            }
+            // if (umlEditor.renameMethod(className, oldName, paraList, newName)) {
+            //     outputArea.append("Method '" + oldName + "' renamed to '" + newName + "' in class '" + className + "'.\n");
+            //     drawingPanel.revalidate();
+            //     drawingPanel.repaint();
+            // } else {
+            //     outputArea.append("Failed to rename method '" + oldName + "' to '" + newName + "' in class '" + className + "'.\n");
+            // }
     
             // Clear input fields and close dialog after submission
             oldMethodNameField.setText("");
@@ -731,15 +731,15 @@ public class UmlGuiController extends JFrame {
             String className = (String) classNameComboBox.getSelectedItem();
             String methodName = methodNameField.getText();
             String parameterName = parameterNameField.getText();
-            if (umlEditor.removeParameter(className, methodName, parameterName)) {
-                outputArea.append("Parameter '" + parameterName + "' deleted from method '" + methodName
-                        + "' in class '" + className + "'.\n");
-                drawingPanel.revalidate();
-                drawingPanel.repaint();
-            } else {
-                outputArea.append("Failed to delete parameter '" + parameterName + "' from method '" + methodName
-                        + "' in class '" + className + "'.\n");
-            }
+            // if (umlEditor.removeParameter(className, methodName, parameterName)) {
+            //     outputArea.append("Parameter '" + parameterName + "' deleted from method '" + methodName
+            //             + "' in class '" + className + "'.\n");
+            //     drawingPanel.revalidate();
+            //     drawingPanel.repaint();
+            // } else {
+            //     outputArea.append("Failed to delete parameter '" + parameterName + "' from method '" + methodName
+            //             + "' in class '" + className + "'.\n");
+            // }
             
             methodNameField.setText("");
             parameterNameField.setText("");
@@ -796,15 +796,15 @@ public class UmlGuiController extends JFrame {
                         .forEach(newParametersSet::add);
             }
 
-            if (umlEditor.changeParameters(className, methodName, newParametersSet)) {
-                outputArea.append("Parameters of method '" + methodName + "' in class '" + className + "' changed to: "
-                        + newParametersInput + ".\n");
-                drawingPanel.revalidate();
-                drawingPanel.repaint();
-            } else {
-                outputArea.append(
-                        "Failed to change parameters of method '" + methodName + "' in class '" + className + "'.\n");
-            }
+            // if (umlEditor.changeParameters(className, methodName, newParametersSet)) {
+            //     outputArea.append("Parameters of method '" + methodName + "' in class '" + className + "' changed to: "
+            //             + newParametersInput + ".\n");
+            //     drawingPanel.revalidate();
+            //     drawingPanel.repaint();
+            // } else {
+            //     outputArea.append(
+            //             "Failed to change parameters of method '" + methodName + "' in class '" + className + "'.\n");
+            // }
 
             changeParameterMethodField.setText("");
             changeParameterNewParamsField.setText("");
@@ -1352,9 +1352,9 @@ public class UmlGuiController extends JFrame {
 
                 // Calculate the width for attributes
                 if (umlClass != null) {
-                    for (String attribute : umlClass.getFields()) {
-                        maxWidth = Math.max(maxWidth, metrics.stringWidth(attribute) + 20);
-                    }
+                    // for (String attribute : umlClass.getFields()) {
+                    //     maxWidth = Math.max(maxWidth, metrics.stringWidth(attribute) + 20);
+                    // }
 
                     // Calculate the width for methods
                     for (String methodSignature : umlClass.getMethods()) {
@@ -1374,10 +1374,10 @@ public class UmlGuiController extends JFrame {
                 // Draw attributes
                 if (umlClass != null) {
                     int attributeY = position.y + 45; // Start position for attributes
-                    for (String attribute : umlClass.getFields()) {
-                        g.drawString(attribute, position.x + 10, attributeY);
-                        attributeY += 15; // Move down for the next attribute
-                    }
+                    // for (String attribute : umlClass.getFields()) {
+                    //     g.drawString(attribute, position.x + 10, attributeY);
+                    //     attributeY += 15; // Move down for the next attribute
+                    // }
 
                     // Draw methods
                     int methodY = attributeY + 10; // Start position for methods (after attributes)

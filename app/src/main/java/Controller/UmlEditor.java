@@ -1,6 +1,7 @@
 package Controller;
 
 import java.awt.Point;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -99,31 +100,41 @@ public class UmlEditor {
     /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
-     * Retrieves the fields of a specified UML class by name
-     * 
-     * @param className The name of the class in which the fields belongs
-     * @return A set of fields that belong to a class.
-     */
-    public Set<String> getFields(String className) {
-        UmlClass umlClass = model.getUmlClass(className);
-        if (umlClass != null) {
-            return umlClass.getFields(); // Assuming getFields() returns a Set<String> of field names
-        }
-        return null; // Return null if the class does not exist
+ * Retrieves the fields of a specified UML class by name.
+ * 
+ * @param className The name of the class whose fields are being retrieved.
+ * @return A LinkedHashMap of fields (field name -> field type) for the class, or null if the class does not exist.
+ */
+public LinkedHashMap<String, String> getFields(String className) {
+    UmlClass umlClass = model.getUmlClass(className);
+    if (umlClass != null) {
+        return umlClass.getFields(); // Now returns a LinkedHashMap<String, String>
     }
+    return null; // Return null if the class does not exist
+}
 
-    public boolean addField(String className, String fieldName) {
-        UmlClass umlClass = model.getUmlClass(className);
-        if (umlClass != null) {
-            boolean result = umlClass.addField(fieldName);
-            if (!result) {
-                System.out.println("Field '" + fieldName + "' already exists in class '" + className + "'.");
-            }
-            return result;
+
+    /**
+ * Adds a field to the specified UML class.
+ * 
+ * @param className The name of the class to add the field to.
+ * @param fieldType The type of the field.
+ * @param fieldName The name of the field.
+ * @return True if the field was added successfully, false otherwise.
+ */
+public boolean addField(String className, String fieldType, String fieldName) {
+    UmlClass umlClass = model.getUmlClass(className);
+    if (umlClass != null) {
+        boolean result = umlClass.addField(fieldType, fieldName);
+        if (!result) {
+            System.out.println("Field '" + fieldName + "' already exists in class '" + className + "'.");
         }
-        System.out.println("Class '" + className + "' not found.");
-        return false;
+        return result;
     }
+    System.out.println("Class '" + className + "' not found.");
+    return false;
+}
+
 
     /**
      * Delete a field from a class.
