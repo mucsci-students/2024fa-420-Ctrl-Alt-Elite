@@ -14,6 +14,8 @@
 ## Project Description
 This project results from a large-stakes, group assessment in the capstone course, Software Engineering, from the 2024 Fall semester. The main purpose of this project is to give the team of students an opportunity to engage with the principles of software development in an encouraging and educational environment. 
 
+Multiple design patterns were used in this project, including MVC, Null Object, State, and Memento.
+
 ## Instructions
 ### Step 1: Clone the Repository
 ```sh
