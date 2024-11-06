@@ -650,7 +650,13 @@ public class UmlCliController {
 
     /*************************************************************************************************/
     // Helper Functions
-    //TODO add comments
+    /**
+     * Go through all created classes and retrieve the class
+     *  the user selects.
+     * 
+     * @param action The action that the calling function is performing.
+     * @return The name of the class
+     */
     private String chooseClass(String action) {
         Map<String, UmlClass> map = model.getClasses();
         if (map.isEmpty()) {
@@ -689,6 +695,14 @@ public class UmlCliController {
         return keys[(classIndex - 1)];
     }
 
+    /**
+     * Go through all created fields and retrieve the field
+     *  the user selects.
+     * 
+     * @param className The name of the class that the fields are in
+     * @param action The action that the calling function is performing.
+     * @return The name of the field
+     */
     private String chooseField(String className, String action) {
         UmlClass fieldClass = model.getUmlClass(className); // Ensure this retrieves the class correctly
         if (fieldClass == null) {
@@ -735,7 +749,14 @@ public class UmlCliController {
         return fields[fieldIndex - 1]; // Return the selected field name
     }
     
-
+    /**
+     * Go through all created methods and retrieve the method
+     *  the user selects.
+     * 
+     * @param className The name of the class that the methods are in
+     * @param action The action that the calling function is performing
+     * @return The method object the user selected
+     */
     private Method chooseMethod(String className, String action) {
         UmlClass methodClass = model.getClass(className);
         if (methodClass == null) {
@@ -776,6 +797,14 @@ public class UmlCliController {
         return methodList.get(methodIndex - 1);
     }
 
+    /**
+     * Go through all created parameters and retrieve the parameter
+     *  the user selects.
+     * 
+     * @param method The method that the parameter belongs to
+     * @param action The action that the calling function is performing
+     * @return The string array with the parameter type and name
+     */
     private String[] chooseParameter(Method method, String action) {
         if (method == null) {
             view.displayMessage("There are no methods to choose from.");
@@ -828,6 +857,13 @@ public class UmlCliController {
         return parameterPair;
     }
 
+    /**
+     * Go through all created relationships and retrieve the relationship
+     *  the user selects.
+     * 
+     * @param action The action that the calling function is performing
+     * @return The UmlRelationship object
+     */
     private UmlRelationship chooseRelationship(String action) {
         List<UmlRelationship> relationships = model.getRelationships();
         if (relationships.isEmpty()) {
@@ -862,6 +898,13 @@ public class UmlCliController {
         return relationships.get(relationshipIndex - 1);
     }
 
+    /**
+     * Go through all relationships types and retrieve the type
+     *  the user selects.
+     * 
+     * @param action The action that the calling function is performing
+     * @return The RelationshipType object
+     */
     private RelationshipType chooseRelationshipType(String action) {
         RelationshipType types[] = RelationshipType.values();
 
