@@ -16,6 +16,8 @@ public class UmlClass {
     private LinkedHashMap<String, String> fields = new LinkedHashMap<>(); // Corrected type to LinkedHashMap
     private ArrayList<Method> methods;
     private Point position; // Position as a Point object
+    /** An object to be used in the case that a method has no parameters */
+    private Map<String, String> parametersNull;
 
     /**
      * Constructs a new UmlClass with the specified name and position.
@@ -27,6 +29,7 @@ public class UmlClass {
         this.name = name;
         this.methods = new ArrayList<>();
         this.position = position; // Initialize position
+        this.parametersNull = new LinkedHashMap<>();
     }
 
     /**
@@ -76,6 +79,22 @@ public class UmlClass {
     }
 
     /**
+     * Returns the null parameter object.
+     * 
+     * @return The null parameter object.
+     */
+    public Map<String, String> getParametersNull() {
+        return parametersNull;
+    }
+
+    /**
+     * Sets the methods parameters to the null parameter object.
+     */
+    public Map<String, String> setParametersNull(Map<String, String> parameters) {
+        return parameters = parametersNull;
+    }
+
+    /**
      * Gets the list of methods of the UML class in a readable format.
      * 
      * @return A list of strings representing the methods and their parameters.
@@ -88,7 +107,6 @@ public class UmlClass {
             methodString.append(method.getReturnType()).append(" ");
             methodString.append(method.getName()).append("(");
 
-            // TODO test
             // Add method parameters
             Iterator<Map.Entry<String, String>> paramIterator = method.getParameters().entrySet().iterator();
             if (paramIterator.hasNext()) {
@@ -169,6 +187,7 @@ public class UmlClass {
         private String name;
         /** A map of parameters, with the name as the key and the type as the value. */
         private Map<String, String> parameters;
+
         /** The return type of the method */
         private String returnType;
 
@@ -256,14 +275,12 @@ public class UmlClass {
          * 
          * @return The method, its return type, and parameters as a string.
          */
-        // TODO refactor this so that it is just the method class toString.
         public String singleMethodString() {
             StringBuilder methodString = new StringBuilder();
             methodString.append(this.getReturnType()).append(" ");
             methodString.append(this.getName()).append("(");
 
             // Add method parameters
-            // TODO test
             Iterator<Map.Entry<String, String>> paramIterator = this.getParameters().entrySet().iterator();
             if (paramIterator.hasNext()) {
                 Entry<String, String> element = paramIterator.next();
@@ -363,7 +380,6 @@ public class UmlClass {
          * 
          * @return A string representation of the Method class.
          */
-        // TODO test
         @Override
         public String toString() {
             String string = "\tMethod: " + returnType + " " + name;
@@ -404,6 +420,13 @@ public class UmlClass {
             return false;
         }
 
+        Method newMethod = new Method(methodName, parameters, returnType);
+
+        // Set the parameter map to the parameter null object
+        if (parameters.isEmpty()) {
+            parameters = setParametersNull(parameters);
+        }
+
         if (!parameters.isEmpty()) {
             // Check that all of the parameter names are valid
             for (Map.Entry<String, String> element : parameters.entrySet()) {
@@ -414,7 +437,6 @@ public class UmlClass {
             }
         }
 
-        Method newMethod = new Method(methodName, parameters, returnType);
         // Loop through the methods to see if a method that equals
         // the method we are trying to create already exists.
         for (Method method : methods) {
@@ -499,7 +521,8 @@ public class UmlClass {
     public boolean removeParameter(String methodName, Map<String, String> parameters, String returnType,
             String[] parameterPair) {
         // If any of the function parameters are invalid, return false.
-        if (methodName.isEmpty() || parameterPair[1].isEmpty()) {
+        // You can't remove a parameter if none exist
+        if (methodName.isEmpty() || parameterPair[1].isEmpty() || parameters == getParametersNull()) {
             return false;
         }
 
@@ -536,6 +559,13 @@ public class UmlClass {
             return false;
         }
 
+        Method testMethod = new Method(methodName, oldParameters, returnType);
+
+        // Set the parameter map to the parameter null object
+        if (newParameters.isEmpty()) {
+            newParameters = setParametersNull(newParameters);
+        }
+
         if (!newParameters.isEmpty()) {
             // Check that all of the parameter names are valid
             for (Map.Entry<String, String> element : newParameters.entrySet()) {
@@ -545,8 +575,7 @@ public class UmlClass {
                 }
             }
         }
-
-        Method testMethod = new Method(methodName, oldParameters, returnType);
+  
         for (Method method : methods) {
             if (method.equals(testMethod)) {
                 method.setParameters(newParameters);
