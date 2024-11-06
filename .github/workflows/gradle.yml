@@ -37,11 +37,25 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew build
 
-    - name: Add coverage to PR
-      id: jacoco
-      uses: madrapps/jacoco-report@v1.7.1
+    # generates coverage-report.md and publishes as checkrun
+    - name: JaCoCo Code Coverage Report
+      id: jacoco_reporter
+      uses: PavanMudigonda/jacoco-reporter@v5.0
       with:
-        paths: |
-          ${{ github.workspace }}/**/build/reports/jacoco/prodNormalDebugCoverage/prodNormalDebugCoverage.xml,
-          ${{ github.workspace }}/**/build/reports/jacoco/**/debugCoverage.xml
-        token: ${{ secrets.GITHUB_TOKEN }}
+        coverage_results_path: jacoco-report/test.xml
+        coverage_report_name: Coverage
+        coverage_report_title: JaCoCo
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        skip_check_run: false
+        fail_below_threshold: false
+        publish_only_summary: false
+  
+    # Publish Coverage Job Summary  # Optional
+    - name: Add Jacocoo report to workflow run summary
+      run: |
+        echo "| Outcome | Value |" >> $GITHUB_STEP_SUMMARY
+        echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+        echo "| Code Coverage % | ${{ steps.jacoco_reporter.outputs.coverage_percentage }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| :heavy_check_mark: Number of Lines Covered | ${{ steps.jacoco_reporter.outputs.covered_lines }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| :x: Number of Lines Missed | ${{ steps.jacoco_reporter.outputs.missed_lines }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Total Number of Lines | ${{ steps.jacoco_reporter.outputs.total_lines }} |" >> $GITHUB_STEP_SUMMARY
