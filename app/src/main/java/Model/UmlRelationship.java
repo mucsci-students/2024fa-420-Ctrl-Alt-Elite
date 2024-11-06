@@ -22,6 +22,12 @@ public class UmlRelationship {
         this.type = type;
     }
 
+    // Copy constructor
+    public UmlRelationship(UmlRelationship other) {
+        this.source = other.source;
+        this.destination = other.destination;
+        this.type = other.type;
+    }
     /**
      * Get the source entity.
      * 

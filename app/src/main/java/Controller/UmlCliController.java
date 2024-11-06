@@ -135,13 +135,22 @@ public class UmlCliController {
                     handleListRelationships();
                     break;
                 case "help":
-                    // Displays a list of available commands
+
+                      // Displays a list of available commands
                     view.displayHelp();
                     break;
                 case "exit":
                     exit = true;
                     view.displayMessage("Exiting the program...");
                     break;
+                    
+                case "undo":
+                handleUndo();
+                break;
+                case "redo":
+                handleRedo();
+                break;
+
                 default:
                     view.displayMessage("Invalid command. Type 'help' for options.");
                     break;
@@ -646,6 +655,17 @@ public class UmlCliController {
         for (UmlRelationship relationship : model.getRelationships()) {
             view.displayMessage(relationship.toString());
         }
+    }
+
+
+    public void handleUndo() {
+        umlEditor.undo();
+        System.out.println("Undo performed.");
+    }
+
+    public void handleRedo() {
+        umlEditor.redo();
+        System.out.println("Redo performed.");
     }
 
     /*************************************************************************************************/

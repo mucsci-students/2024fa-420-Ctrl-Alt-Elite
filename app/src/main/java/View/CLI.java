@@ -51,6 +51,8 @@ public class CLI {
         System.out.println("load - Load data from a JSON file");
         System.out.println("help - Display this help menu");
         System.out.println("exit - Exit the application");
+        System.out.println("undo - undos the last command.");
+		System.out.println("redo - goes back to state before previous undo.");
     }
 
     /**

@@ -30,6 +30,29 @@ public class UmlEditorModel {
         this.classes = new HashMap<>();
         this.relationships = new ArrayList<>();
         this.classPositions = new HashMap<>(); // Initialize the classPositions map
+
+        
+    }
+
+    // Copy constructor for deep copying
+    public UmlEditorModel(UmlEditorModel other) {
+        // Deep copy classes
+        this.classes = new HashMap<>();
+        for (Map.Entry<String, UmlClass> entry : other.classes.entrySet()) {
+            this.classes.put(entry.getKey(), new UmlClass(entry.getValue())); // Assuming UmlClass has a copy constructor
+        }
+
+        // Deep copy relationships
+        this.relationships = new ArrayList<>();
+        for (UmlRelationship relationship : other.relationships) {
+            this.relationships.add(new UmlRelationship(relationship)); // Assuming UmlRelationship has a copy constructor
+        }
+
+        // Deep copy class positions
+        this.classPositions = new HashMap<>();
+        for (Map.Entry<String, Point> entry : other.classPositions.entrySet()) {
+            this.classPositions.put(entry.getKey(), new Point(entry.getValue())); // Create a new Point for deep copy
+        }
     }
 
     /*----------------------------------------------------------------------------------------------------------------*/
