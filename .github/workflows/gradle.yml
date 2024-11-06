@@ -1,4 +1,3 @@
-
 name: Build
 
 on:
@@ -37,50 +36,11 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew build
 
-    - name: Jacoco Report to PR
+    - name: Add coverage to PR
       id: jacoco
-      uses: madrapps/jacoco-report@v1.1
+      uses: madrapps/jacoco-report@v1.7.1
       with:
-        path: ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
+        paths: |
+          ${{ github.workspace }}/**/build/reports/jacoco/prodNormalDebugCoverage/prodNormalDebugCoverage.xml,
+          ${{ github.workspace }}/**/build/reports/jacoco/**/debugCoverage.xml
         token: ${{ secrets.GITHUB_TOKEN }}
-        min-coverage-overall: 40
-        min-coverage-changed-files: 60
-        debug-mode: false
-        
-    - name: JaCoCo Code Coverage Report
-      id: jacoco_reporter
-      uses: PavanMudigonda/jacoco-reporter@v4.9
-      with:
-        coverage_results_path: ${{ github.workspace }}/build/reports/jacoco/testCoverage/testCoverage.xml
-        coverage_report_name: Coverage
-        coverage_report_title: JaCoCo
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        skip_check_run: true # set to false to publish check run
-        minimum_coverage: 80
-        fail_below_threshold: false # set to false to pass below even when threshold is not met
-        publish_only_summary: false. #set to true to publish only summary to avoid 65k problem
-
-      # Publish Coverage Job Summary  # Optional
-    - name: Add Coverage Job Summary
-      run: echo "${{ steps.jacoco_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
-       
-    - name: Get the Coverage info
-      run: |
-        echo "Total coverage coverage-overall ${{ steps.jacoco.outputs.coverage-overall }}"
-        echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
-        echo "Coverage coverage_percentage ${{ steps.jacoco.outputs.coverage_percentage }}"
-        
-#     - name: construct coverage job summary markdown
-#       run: |
-#         cat > coverage_summary.md <<EOF
-#           | Code Coverage Summary                      | Value                                                    |
-#           |--------------------------------------------|----------------------------------------------------------|
-#           | Code Coverage %                            | ${{ steps.jacoco_reporter.outputs.coverage_percentage }} |
-#           | :heavy_check_mark: Number of Lines Covered | ${{ steps.jacoco_reporter.outputs.covered_lines }}       |
-#           | :x: Number of Lines Missed                 | ${{ steps.jacoco_reporter.outputs.missed_lines }}        |
-#           | Total Number of Lines                      | ${{ steps.jacoco_reporter.outputs.total_lines }}         |
-#         EOF
-#         cat coverage_summary.md >> $GITHUB_STEP_SUMMARY
-
-    - name: print output
-      run: echo "${{ steps.jacoco_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
