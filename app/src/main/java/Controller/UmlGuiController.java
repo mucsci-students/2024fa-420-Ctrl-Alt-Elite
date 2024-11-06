@@ -801,73 +801,91 @@ private void showRenameMethodPanel() {
         dialog.setVisible(true);
     }
 
-    // Change Parameter Panel
     private void showChangeParameterPanel() {
-        JDialog dialog = new JDialog(this, "Change Method Parameters", true);
+        JDialog dialog = new JDialog(this, "Change Parameters", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
-        JPanel changeParameterPanel = new JPanel();
-        changeParameterPanel.setLayout(new BoxLayout(changeParameterPanel, BoxLayout.Y_AXIS));
-        changeParameterPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
-
-        // Get class names from the model
+    
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+        // Class name selection
         String[] classNames = umlEditorModel.getClassNames();
-
-        // Create a combo box for selecting the class name
         JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
-        JTextField changeParameterMethodField = new JTextField(10);
-        JTextField changeParameterNewParamsField = new JTextField(10);
-
-        changeParameterPanel.add(new JLabel("Class Name:"));
-        changeParameterPanel.add(Box.createVerticalStrut(5));
-        changeParameterPanel.add(classNameComboBox);
-        changeParameterPanel.add(Box.createVerticalStrut(10)); // Add space
-        changeParameterPanel.add(new JLabel("Method Name:"));
-        changeParameterPanel.add(Box.createVerticalStrut(5)); // Add space
-        changeParameterPanel.add(changeParameterMethodField);
-        changeParameterPanel.add(Box.createVerticalStrut(10)); // Add space
-        changeParameterPanel.add(new JLabel("New Parameters (comma-separated):"));
-        changeParameterPanel.add(Box.createVerticalStrut(5)); // Add space
-        changeParameterPanel.add(changeParameterNewParamsField);
-        changeParameterPanel.add(Box.createVerticalStrut(10)); // Add space
-
-        JButton changeParameterButton = new JButton("Change Parameters");
-        changeParameterButton.addActionListener(e -> {
+        JTextField methodNameField = new JTextField(10);
+        JTextField returnTypeField = new JTextField(10);
+        JTextField oldParametersField = new JTextField(20);
+        JTextField newParametersField = new JTextField(20);
+    
+        panel.add(new JLabel("Class Name:"));
+        panel.add(classNameComboBox);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(new JLabel("Method Name:"));
+        panel.add(methodNameField);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(new JLabel("Return Type:"));
+        panel.add(returnTypeField);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(new JLabel("Old Parameters (type name, type name):"));
+        panel.add(oldParametersField);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(new JLabel("New Parameters (type name, type name):"));
+        panel.add(newParametersField);
+        panel.add(Box.createVerticalStrut(10));
+    
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(e -> {
             String className = (String) classNameComboBox.getSelectedItem();
-            String methodName = changeParameterMethodField.getText();
-            String newParametersInput = changeParameterNewParamsField.getText();
+            String methodName = methodNameField.getText();
+            String returnType = returnTypeField.getText();
+            String oldParamsText = oldParametersField.getText();
+            String newParamsText = newParametersField.getText();
+    
+            Map<String, String> oldParameters = parseParameterString(oldParamsText);
+            Map<String, String> newParameters = parseParameterString(newParamsText);
+    
+            boolean result = umlEditor.changeParameters(className, methodName, oldParameters, returnType, newParameters);
+    
+            if (result) {
+                outputArea.append("Parameters successfully changed for method '" + methodName + "' in class '" + className + "'.\n");
+                drawingPanel.revalidate();
+                drawingPanel.repaint();
 
-            LinkedHashSet<String> newParametersSet = new LinkedHashSet<>();
-            if (!newParametersInput.trim().isEmpty()) {
-                Arrays.stream(newParametersInput.split(","))
-                        .map(String::trim)
-                        .forEach(newParametersSet::add);
+            } else {
+                outputArea.append("Failed to change parameters for method '" + methodName + "' in class '" + className + "'.\n");
             }
-
-            // if (umlEditor.changeParameters(className, methodName, newParametersSet)) {
-            // outputArea.append("Parameters of method '" + methodName + "' in class '" +
-            // className + "' changed to: "
-            // + newParametersInput + ".\n");
-            // drawingPanel.revalidate();
-            // drawingPanel.repaint();
-            // } else {
-            // outputArea.append(
-            // "Failed to change parameters of method '" + methodName + "' in class '" +
-            // className + "'.\n");
-            // }
-
-            changeParameterMethodField.setText("");
-            changeParameterNewParamsField.setText("");
+    
+            methodNameField.setText("");
+            returnTypeField.setText("");
+            oldParametersField.setText("");
+            newParametersField.setText("");
+    
+            dialog.dispose();
         });
-        changeParameterPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-        changeParameterPanel.add(changeParameterButton);
-
-        dialog.add(changeParameterPanel);
+        panel.add(submitButton);
+    
+        dialog.add(panel);
         dialog.pack();
-        dialog.setLocationRelativeTo(this); // Center dialog
+        dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
 
+    private Map<String, String> parseParameterString(String parameterString) {
+        Map<String, String> parameters = new LinkedHashMap<>();
+        String[] paramPairs = parameterString.split(",\\s*");
+    
+        for (String pair : paramPairs) {
+            String[] parts = pair.trim().split("\\s+");
+            if (parts.length == 2) {
+                String type = parts[0];
+                String name = parts[1];
+                parameters.put(name, type);
+            }
+        }
+        return parameters;
+    }
+    
+    
     // Add Relationship Panel
     private void showAddRelationshipPanel() {
         JPanel addRelationshipPanel = new JPanel();
