@@ -422,11 +422,6 @@ public class UmlClass {
 
         Method newMethod = new Method(methodName, parameters, returnType);
 
-        // Set the parameter map to the parameter null object
-        if (parameters.isEmpty()) {
-            parameters = setParametersNull(parameters);
-        }
-
         if (!parameters.isEmpty()) {
             // Check that all of the parameter names are valid
             for (Map.Entry<String, String> element : parameters.entrySet()) {
@@ -560,11 +555,6 @@ public class UmlClass {
         }
 
         Method testMethod = new Method(methodName, oldParameters, returnType);
-
-        // Set the parameter map to the parameter null object
-        if (newParameters.isEmpty()) {
-            newParameters = setParametersNull(newParameters);
-        }
 
         if (!newParameters.isEmpty()) {
             // Check that all of the parameter names are valid
