@@ -38,6 +38,15 @@ test {
     finalizedBy jacocoTestReport
 }
 
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
+
 run {
     standardInput = System.in
     doFirst {
@@ -58,11 +67,4 @@ sourceSets {
     }
 }
 
-jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
-    reports {
-        xml.required = false
-        csv.required = false
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
-    }
-}
+
