@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'jacoco'
 }
 
 repositories {
@@ -23,18 +24,31 @@ java {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.7"
+}
+
 application {
     mainClass = 'ApplicationLauncher' // Point this to your GUI class
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 run {
     standardInput = System.in
     doFirst {
         println("Starting the application...")
+    }
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
     }
 }
 
