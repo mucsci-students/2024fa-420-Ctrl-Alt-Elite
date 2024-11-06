@@ -390,7 +390,7 @@ public class UmlEditorTest {
         umlEditor.addClass("ClassA");
         Map<String, String> map = new LinkedHashMap<>();
         map.put("P1", "int");
-        map.put("P2", "String");
+        map.put("P 2", "String");
 
         assertFalse(umlEditor.addMethod("ClassA", "Method1", map, "int"),
         	() -> "Error with trying to add method with bad parameter names.");
