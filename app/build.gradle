@@ -27,25 +27,16 @@ java {
 
 jacoco {
     toolVersion = "0.8.12"
-    reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
 }
 
 application {
     mainClass = 'ApplicationLauncher' // Point this to your GUI class
 }
 
-test {
+tasks.withType(Test) {
     useJUnitPlatform()
+    jacoco.includeNoLocationClasses = true
     finalizedBy jacocoTestReport
-}
-
-jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
-    reports {
-        xml.required = true
-        csv.required = false
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
-    }
 }
 
 run {
@@ -68,4 +59,25 @@ sourceSets {
     }
 }
 
+tasks.create(name: "testCoverage", type: JacocoReport, dependsOn: "test") {
 
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports for the test build."
+
+    reports {
+        html.enabled = true
+        xml.enabled = true
+    }
+
+    def excludes = [
+            '**/*Test*.*',
+            '**/actions/*.*',
+            '**/core/*.*',
+            '**/markers/*.*',
+            '**/services/**/*.*',
+            '**/toolwindow/*.*',
+            '**/utils/*.*'
+    ]
+
+    executionData.from = files("${project.buildDir}/jacoco/test.exec")
+}
