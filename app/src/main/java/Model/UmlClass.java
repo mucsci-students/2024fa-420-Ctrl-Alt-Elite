@@ -32,6 +32,13 @@ public class UmlClass {
         this.parametersNull = new LinkedHashMap<>();
     }
 
+    // Copy constructor
+    public UmlClass(UmlClass other) {
+        this.name = other.name;
+        this.position = (other.position != null) ? new Point(other.position) : new Point(0, 0);
+        this.fields = new LinkedHashMap<>(other.fields); // Deep copy of fields
+    }
+
     /**
      * Constructs a new UmlClass with the specified name.
      * 

@@ -1,10 +1,15 @@
 package Controller;
+import Model.Memento;
+
 
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+
+import java.util.Stack;
 
 import Model.RelationshipType;
 import Model.UmlClass;
@@ -15,14 +20,38 @@ public class UmlEditor {
     private UmlEditorModel model;
 
     /*----------------------------------------------------------------------------------------------------------------*/
+    private Memento memento = new Memento();
+    
 
-    /**
-     * Constructor initializes the collections for classes and relationships.
-     */
-    public UmlEditor(UmlEditorModel model) {
-        this.model = model;
+    public UmlEditor(UmlEditorModel initialModel) {
+        this.model =  initialModel; // Use a deep copy here
+        memento.saveState(this.model); // Save initial state
     }
 
+
+
+// Undo the last action
+public void undo() {
+    UmlEditorModel previousState = memento.undoState();
+    if (previousState != null) {
+        this.model = previousState;
+        System.out.println("Undo performed.");
+    } else {
+        System.out.println("Nothing to undo.");
+    }
+}
+
+// Redo the last undone action
+public void redo() {
+    UmlEditorModel nextState = memento.redoState();
+    if (nextState != null) {
+        this.model = nextState;
+        System.out.println("Redo performed.");
+    } else {
+        System.out.println("Nothing to redo.");
+    }
+
+}
     /*----------------------------------------------------------------------------------------------------------------*/
     /*                                              CLASS MANAGEMENT METHODS                                          */
     /*----------------------------------------------------------------------------------------------------------------*/
@@ -49,25 +78,28 @@ public class UmlEditor {
      * @param name The name of the new class.
      * @return {@code true} if the class was added, {@code false} otherwise.
      */
-    public boolean addClass(String name) {
-        if (name == null || name.isEmpty() || name.contains(" ")) {
-            return false;
-        }
-        return model.addClass(name);
+    // Example method to add a class
+   // Method to add a class
+   public boolean addClass(String name) {
+    if (name == null || name.isEmpty() || name.contains(" ")) {
+        return false;
     }
+    return model.addClass(name);
+}
 
-    /**
-     * Deletes a class and all relationships involving that class.
-     * 
-     * @param name The name of the class to be deleted.
-     * @return {@code true} if the class was deleted, {@code false} otherwise.
-     */
-    public boolean deleteClass(String name) {
-        if (name == null || name.isEmpty()) {
-            return false;
-        }
-        return model.deleteClass(name);
+/**
+ * Deletes a class and all relationships involving that class.
+ * 
+ * @param name The name of the class to be deleted.
+ * @return {@code true} if the class was deleted, {@code false} otherwise.
+ */
+public boolean deleteClass(String name) {
+    if (name == null || name.isEmpty()) {
+        return false;
     }
+    return model.deleteClass(name);
+}
+
 
     /**
      * Rename a class to a new name if it doesn't already exist
