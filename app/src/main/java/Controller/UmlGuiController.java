@@ -551,7 +551,7 @@ public class UmlGuiController extends JFrame {
         addMethodPanel.add(Box.createVerticalStrut(5));
         addMethodPanel.add(methodNameField);
         addMethodPanel.add(Box.createVerticalStrut(10));
-        addMethodPanel.add(new JLabel("Parameter List (comma-separated):"));
+        addMethodPanel.add(new JLabel("Parameter List (format: type1 name1, type2 name2):"));
         addMethodPanel.add(Box.createVerticalStrut(5));
         addMethodPanel.add(parameterListField);
         addMethodPanel.add(Box.createVerticalStrut(10)); // Add space before the return type field
@@ -616,7 +616,7 @@ private void showDeleteMethodPanel() {
     deleteMethodPanel.add(Box.createVerticalStrut(5));
     deleteMethodPanel.add(methodNameField);
     deleteMethodPanel.add(Box.createVerticalStrut(10));
-    deleteMethodPanel.add(new JLabel("Parameter List (name:type, name:type):"));
+    deleteMethodPanel.add(new JLabel("Parameter List (format: type1 name1, type2 name2):"));
     deleteMethodPanel.add(Box.createVerticalStrut(5));
     deleteMethodPanel.add(parameterListField);
     deleteMethodPanel.add(Box.createVerticalStrut(10)); // Add space before the button
@@ -681,7 +681,7 @@ private void showRenameMethodPanel() {
     renameMethodPanel.add(Box.createVerticalStrut(5));
     renameMethodPanel.add(newMethodNameField);
     renameMethodPanel.add(Box.createVerticalStrut(10));
-    renameMethodPanel.add(new JLabel("Parameter List (name:type, name:type):"));
+    renameMethodPanel.add(new JLabel("Parameter List (format: type1 name1, type2 name2):"));
     renameMethodPanel.add(Box.createVerticalStrut(5));
     renameMethodPanel.add(parameterListField);
     renameMethodPanel.add(Box.createVerticalStrut(10));
