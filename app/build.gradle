@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'jacoco'
 }
 
 repositories {
@@ -14,8 +15,7 @@ dependencies {
     // Dependencies used by the application.
     implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'com.google.guava:guava:31.0.1-jre' // Specify the Guava version
-
-    
+    implementation 'org.jline:jline:3.21.0' // For Tab-Completion
 }
 
 java {
@@ -24,12 +24,27 @@ java {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.12"
+    reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
+}
+
 application {
     mainClass = 'ApplicationLauncher' // Point this to your GUI class
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+    reports {
+        xml.required = true
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
 }
 
 run {

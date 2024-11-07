@@ -1,0 +1,27 @@
+{
+  "classes": {
+    "a": {
+      "name": "a",
+      "fields": {
+        "aa": "string"
+      },
+      "methods": [
+        {
+          "name": "aa",
+          "parameters": {
+            "aa": "string"
+          },
+          "returnType": "void"
+        }
+      ]
+    }
+  },
+  "relationships": [
+    {
+      "source": "a",
+      "destination": "a",
+      "type": "AGGREGATION"
+    }
+  ],
+  "classPositions": {}
+}

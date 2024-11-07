@@ -8,10 +8,13 @@
   - [Step 3: Build the Project](https://github.com/mucsci-students/2024fa-420-Ctrl-Alt-Elite/tree/README#step-3-build-the-project)
   - [Step 4: Run the Program](https://github.com/mucsci-students/2024fa-420-Ctrl-Alt-Elite/tree/README#step-4-run-the-program)
 - [Dependencies](https://github.com/mucsci-students/2024fa-420-Ctrl-Alt-Elite/tree/README#dependencies)
+- [Testing](https://github.com/mucsci-students/2024fa-420-Ctrl-Alt-Elite/tree/README#testing)
 - [Developers](https://github.com/mucsci-students/2024fa-420-Ctrl-Alt-Elite/tree/README#developers)
 
 ## Project Description
 This project results from a large-stakes, group assessment in the capstone course, Software Engineering, from the 2024 Fall semester. The main purpose of this project is to give the team of students an opportunity to engage with the principles of software development in an encouraging and educational environment. 
+
+Multiple design patterns were used in this project, including MVC, Null Object, State, and Memento.
 
 ## Instructions
 ### Step 1: Clone the Repository
@@ -32,20 +35,44 @@ This project results from a large-stakes, group assessment in the capstone cours
    ./gradlew build
 ```
 ### Step 4: Run the Program
-+ On Windows
++ On Windows (CLI)
 ```sh
-   .\gradlew run --console=plain
+   .\gradlew run --console=plain --args="--cli"
 ```
-+ On macOS/Linux
++ On Windows (GUI)
 ```sh
-   ./gradlew run --console=plain
+   .\gradlew run 
+```
++ On macOS/Linux (CLI)
+```sh
+   .\gradlew run --console=plain --args="--cli"
+```
++ On macOS/Linux (GUI)
+```sh
+   ./gradlew run 
 ```
 ## Dependencies
 To run this project, ensure you have the following installed on your machine:
 + [Java Development Kit (JDK)](https://www.oracle.com/java/technologies/downloads/#java23) (Version 17 or later)
 
 ## Testing
-For the test files, they were created using JUnit 5. If you want to run them, you can visit [this website](https://junit.org/junit5/) for details on downloading and running JUnit.
+To ensure the quality and functionality of the project, automated tests have been written using JUnit. Follow the instructions below to run the tests using Gradle.
+### Running All Tests
++ To run all the tests in the project, execute the following command:
+```sh
+   ./gradlew test
+```
+### Running a Specific Test Class
++ If you want to run a specific test class, use the following command:
+```sh
+   ./gradlew test --tests "TestClassName"
+```
+### Running a Specific Test Method
++ To run a particular test method within a test class, use:
+```sh
+   ./gradlew test --tests "TestClassName.TestMethodName"
+
+```
 
 ## Developers
 - Sydney Norgaard - sydney-norgaard

@@ -1,10 +1,10 @@
-import java.util.Arrays;  // JUnit 5 assertions
-import java.util.LinkedHashSet;  // JUnit 5 setup
+import java.util.LinkedHashMap;  // JUnit 5 assertions
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertFalse; // JUnit DisplayName annotation
-import static org.junit.jupiter.api.Assertions.assertNotNull;  // JUnit 5 Test annotation
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;  // JUnit 5 setup
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull; // JUnit DisplayName annotation
+import static org.junit.jupiter.api.Assertions.assertTrue;  // JUnit 5 Test annotation
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -202,7 +202,7 @@ public class UmlEditorTest {
     @DisplayName ("AddField: Add a field to a class")
     public void testAddField() {
         umlEditor.addClass("ClassA");
-        assertTrue(umlEditor.addField("ClassA", "Field1"), 
+        assertTrue(umlEditor.addField("ClassA", "int", "Field1"), 
             () -> "Error with adding field.");
     }
     
@@ -212,7 +212,7 @@ public class UmlEditorTest {
     @Test
     @DisplayName ("AddField: Add a field to a class that does not exist, failure test")
     public void testAddFieldFalseClass() {
-        assertFalse(umlEditor.addField("NonExistentClass", "Field1"), 
+        assertFalse(umlEditor.addField("NonExistentClass", "int", "Field1"), 
             () -> "Error with adding field to non-existent class.");
     }
     /**
@@ -223,9 +223,9 @@ public class UmlEditorTest {
     public void testAddDuplicateField() {
         umlEditor.addClass("ClassA");
         
-        assertTrue(umlEditor.addField("ClassA", "Field1"), 
+        assertTrue(umlEditor.addField("ClassA", "int", "Field1"), 
             () -> "Error with adding field in duplicate field test.");
-        assertFalse(umlEditor.addField("ClassA", "Field1"), 
+        assertFalse(umlEditor.addField("ClassA", "int", "Field1"), 
             () -> "Error with adding a duplicate field.");
     }
     /**
@@ -235,10 +235,10 @@ public class UmlEditorTest {
     @DisplayName ("AddField: Add a field with invalid input, failure test")
     public void testAddFieldInvalidInput() {
         umlEditor.addClass("ClassA");
-        assertFalse(umlEditor.addField("ClassA", " "), 
+        assertFalse(umlEditor.addField("ClassA", "int", " "), 
             () -> "Error with adding a field with invalid name.");
         
-        assertFalse(umlEditor.addField("ClassA", ""), 
+        assertFalse(umlEditor.addField("ClassA", "int", ""), 
             () -> "Error with adding a field with invalid type.");
     }
 
@@ -251,7 +251,7 @@ public class UmlEditorTest {
     @DisplayName ("DeleteField: Delete a field from a class")
     public void testDeleteField() {
         umlEditor.addClass("ClassA");
-        umlEditor.addField("ClassA", "Field1");
+        umlEditor.addField("ClassA", "int", "Field1");
         assertTrue(umlEditor.deleteField("ClassA", "Field1"), 
             () -> "Error with deleting a field."); 
     }
@@ -284,7 +284,7 @@ public class UmlEditorTest {
     @DisplayName ("RenameField: Rename a field")
     public void testRenameField() {
         umlEditor.addClass("ClassA");
-        umlEditor.addField("ClassA", "Field1");
+        umlEditor.addField("ClassA", "int", "Field1");
         assertTrue(umlEditor.renameField("ClassA", "Field1", "Field2"), 
             () -> "Error with renaming a field.");
     }
@@ -314,7 +314,7 @@ public class UmlEditorTest {
     @DisplayName ("RenameField: Rename a field to an empty string, failure test")
     public void testRenameFieldToEmptyString() {
         umlEditor.addClass("ClassA");
-        umlEditor.addField("ClassA", "Field1");
+        umlEditor.addField("ClassA", "int", "Field1");
         assertFalse(umlEditor.renameField("ClassA", "Field1", ""), 
             () -> "Error with renaming a field to an empty name.");
     }
@@ -328,10 +328,11 @@ public class UmlEditorTest {
     @DisplayName ("AddMethod: Add a method to a class")
     public void testAddMethod() {
         umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("P1", "int");
+        map.put("P2", "String");
 
-        assertTrue(umlEditor.addMethod("ClassA", "Method1", lst), 
+        assertTrue(umlEditor.addMethod("ClassA", "Method1", map, "int"), 
         	() -> "Error with adding method.");
     }
     
@@ -342,9 +343,9 @@ public class UmlEditorTest {
     @DisplayName ("AddMethod: Add a method with 0 parameters")
     public void testAddMethodNoPara() {
         umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lst = new LinkedHashSet<>();
+        Map<String, String> map = new LinkedHashMap<>();
 
-        assertTrue(umlEditor.addMethod("ClassA", "Method1", lst), 
+        assertTrue(umlEditor.addMethod("ClassA", "Method1", map, "int"), 
         	() -> "Error with adding method with 0 parameters.");
     }
 
@@ -354,10 +355,11 @@ public class UmlEditorTest {
     @Test
     @DisplayName ("AddMethod: Add a method to a class that does not exist, failure test")
     public void testAddMethodFalseClass() {
-    	LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+    	Map<String, String> map = new LinkedHashMap<>();
+        map.put("P1", "int");
+        map.put("P2", "String");
 
-        assertFalse(umlEditor.addMethod("ClassB", "Method1", lst), 
+        assertFalse(umlEditor.addMethod("ClassB", "Method1", map, "int"), 
     		() -> "Error with adding to non-existent class.");
     }
     
@@ -368,13 +370,14 @@ public class UmlEditorTest {
     @DisplayName ("AddMethod: Add an method with a duplicate name, failure test")
     public void testAddDuplicateMethod() {
         umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("P1", "int");
+        map.put("P2", "String");
 
-        assertTrue(umlEditor.addMethod("ClassA", "Method1", lst), 
+        assertTrue(umlEditor.addMethod("ClassA", "Method1", map, "int"), 
         	() -> "Error with adding method in duplicate method test.");
 
-        assertFalse(umlEditor.addMethod("ClassA", "Method1", lst),
+        assertFalse(umlEditor.addMethod("ClassA", "Method1", map, "int"),
         	() -> "Error with trying to add duplicate method.");
     }
 
@@ -385,10 +388,11 @@ public class UmlEditorTest {
     @DisplayName ("AddMethod: Add a method with invalid parameter names, failure test")
     public void testAddMethodBadParaNames() {
         umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList(" Para A ", " Para B", "Para C "));
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("P1", "int");
+        map.put("P 2", "String");
 
-        assertFalse(umlEditor.addMethod("ClassA", "Method1", lst),
+        assertFalse(umlEditor.addMethod("ClassA", "Method1", map, "int"),
         	() -> "Error with trying to add method with bad parameter names.");
     }
     
@@ -401,11 +405,12 @@ public class UmlEditorTest {
     @DisplayName ("DeleteMethod: Delete a method from a class")
     public void testDeleteMethod() {
         umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        umlEditor.addMethod("ClassA", "Method1", lst);
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("P1", "int");
+        map.put("P2", "String");
+        umlEditor.addMethod("ClassA", "Method1", map, "int");
 
-        assertTrue(umlEditor.deleteMethod("ClassA", "Method1", lst), 
+        assertTrue(umlEditor.deleteMethod("ClassA", "Method1", map, "int"), 
         	() -> "Error with deleting a method."); 
     }
     
@@ -416,9 +421,9 @@ public class UmlEditorTest {
     @DisplayName ("DeleteMethod: Delete and method that does not exist, failure test")
     public void testDeleteMethodNotExist() {
     	umlEditor.addClass("ClassA");
-    	LinkedHashSet<String> lst = new LinkedHashSet<>();
+    	Map<String, String> map = new LinkedHashMap<>();
 
-        assertFalse(umlEditor.deleteMethod("ClassA", "NonExistentMethod", lst), 
+        assertFalse(umlEditor.deleteMethod("ClassA", "NonExistentMethod", map, "int"), 
     		() -> "Error with deleting a method that does not exist.");
     }
     
@@ -428,9 +433,9 @@ public class UmlEditorTest {
     @Test
     @DisplayName ("DeleteMethod: Delete a method in a class that does not exist, failure test")
     public void testDeleteMethodFalseClass() {
-    	LinkedHashSet<String> lst = new LinkedHashSet<>();
+    	Map<String, String> map = new LinkedHashMap<>();
 
-        assertFalse(umlEditor.deleteMethod("ClassA", "Method1", lst), 
+        assertFalse(umlEditor.deleteMethod("ClassA", "Method1", map, "int"), 
     		() -> "Error with deleting from non-existent class.");
     }
     
@@ -443,11 +448,12 @@ public class UmlEditorTest {
     @DisplayName ("RenameMethod: Rename and method")
     public void testRenameMethod() {
         umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        umlEditor.addMethod("ClassA", "Method1", lst);
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("P1", "int");
+        map.put("P2", "String");
+        umlEditor.addMethod("ClassA", "Method1", map, "int");
 
-        assertTrue(umlEditor.renameMethod("ClassA", "Method1", lst, "Method2"),
+        assertTrue(umlEditor.renameMethod("ClassA", "Method1", map, "int", "Method2"),
         	() -> "Error with renaming an method.");
     }
     
@@ -458,9 +464,9 @@ public class UmlEditorTest {
     @DisplayName ("RenameMethod: Rename a method that does not exist, failure test")
     public void testRenameMethodNotExist() {
     	umlEditor.addClass("ClassA");
-    	LinkedHashSet<String> lst = new LinkedHashSet<>();
+    	Map<String, String> map = new LinkedHashMap<>();
 
-        assertFalse(umlEditor.renameMethod("ClassA", "Method1", lst, "Method3"),
+        assertFalse(umlEditor.renameMethod("ClassA", "Method1", map, "int", "Method3"),
     		() -> "Error with renaming a method that does not exist.");
     }
     
@@ -470,9 +476,9 @@ public class UmlEditorTest {
     @Test
     @DisplayName ("RenameMethod: Rename an method to a class that does not exist, failure test")
     public void testRenameMethodFalseClass() {
-    	LinkedHashSet<String> lst = new LinkedHashSet<>();
+    	Map<String, String> map = new LinkedHashMap<>();
 
-        assertFalse(umlEditor.renameMethod("ClassA", "Method1", lst, "Method2"), 
+        assertFalse(umlEditor.renameMethod("ClassA", "Method1", map, "int", "Method2"), 
     		() -> "Error with renaming from non-existent class.");
     }
 
@@ -485,11 +491,13 @@ public class UmlEditorTest {
     @DisplayName ("removeParameter: Remove a parameter from a method")
     public void testRemoveParameter() {
     	umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        umlEditor.addMethod("ClassA", "MethodA", lst);
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("P1", "int");
+        map.put("P2", "String");
+        String[] parameterPair = {"P1", "int"};
+        umlEditor.addMethod("ClassA", "MethodA", map, "int");
         
-        assertTrue(umlEditor.removeParameter("ClassA", "MethodA", "Para-A"));
+        assertTrue(umlEditor.removeParameter("ClassA", "MethodA", map, "int", parameterPair));
     }
 
     /**
@@ -499,11 +507,13 @@ public class UmlEditorTest {
     @DisplayName ("removeParameter: Try to remove a parameter that does not exist, failure test")
     public void testRemoveParameterNotExist() {
     	umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        umlEditor.addMethod("ClassA", "MethodA", lst);
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("P1", "int");
+        map.put("P2", "String");
+        String[] parameterPair = {"P3", "int"};
+        umlEditor.addMethod("ClassA", "MethodA", map, "int");
         
-        assertFalse(umlEditor.removeParameter("ClassA", "MethodA", "Para-D"));
+        assertFalse(umlEditor.removeParameter("ClassA", "MethodA", map, "int", parameterPair));
     }
 
     /**
@@ -513,8 +523,10 @@ public class UmlEditorTest {
     @DisplayName ("removeParameter: Remove a parameter from a method that does not exist, failure test")
     public void testRemoveParameterMethodNotExist() {
     	umlEditor.addClass("ClassA");
+        Map<String, String> map = new LinkedHashMap<>();
+        String[] parameterPair = {"P3", "int"};
 
-        assertFalse(umlEditor.removeParameter("ClassA", "MethodA", "Para-A"));
+        assertFalse(umlEditor.removeParameter("ClassA", "MethodA", map, "int", parameterPair));
     }
 
     /**
@@ -524,11 +536,14 @@ public class UmlEditorTest {
     @DisplayName ("removeParameter: Remove a parameter from a class that does not exist, failure test")
     public void testRemoveParameterClassNotExist() {
     	umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        umlEditor.addMethod("ClassA", "MethodA", lst);
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("P1", "int");
+        map.put("P2", "String");
+        String[] parameterPair = {"P3", "int"};
+       
+        umlEditor.addMethod("ClassA", "MethodA", map, "int");
 
-        assertFalse(umlEditor.removeParameter("ClassB", "MethodA", "Para-A"));
+        assertFalse(umlEditor.removeParameter("ClassB", "MethodA", map, "int", parameterPair));
     }
 
     /** 
@@ -538,11 +553,14 @@ public class UmlEditorTest {
     @DisplayName ("removeParameter: Remove a parameter with invalid input, failure test")
     public void testRemoveParameterInvalidInput() {
         umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lst = new LinkedHashSet<>(
-            Arrays.asList("Para A", "Para B ", " Para-C"));
-            umlEditor.addMethod("ClassA", "MethodA", lst);
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("P1", "int");
+        map.put("P2", "String");
+        String[] parameterPair = {"P 3", "int"};
+       
+        umlEditor.addMethod("ClassA", "MethodA", map, "int");
         
-        assertFalse(umlEditor.removeParameter("ClassA", "MethodA", "Para A"));
+        assertFalse(umlEditor.removeParameter("ClassA", "MethodA", map, "int", parameterPair));
     }
 
     
@@ -555,14 +573,15 @@ public class UmlEditorTest {
     @DisplayName ("changeParameters: Change the list of parameters of a method")
     public void testChangeParameters() {
     	umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        umlEditor.addMethod("ClassA", "MethodA", lstA);
+        Map<String, String> mapA = new LinkedHashMap<>();
+        mapA.put("P1", "int");
+        mapA.put("P2", "String");
+        Map<String, String> mapB = new LinkedHashMap<>();
+        mapB.put("P3", "int");
 
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList("Para-A"));
+        umlEditor.addMethod("ClassA", "MethodA", mapA, "int");
         
-        assertTrue(umlEditor.changeParameters("ClassA", "MethodA", lstB));
+        assertTrue(umlEditor.changeParameters("ClassA", "MethodA", mapA, "int", mapB));
     }
 
     /**
@@ -572,13 +591,14 @@ public class UmlEditorTest {
     @DisplayName ("changeParameters: Change the list of parameters of a method from none to a few")
     public void testChangeParametersNoneFew() {
     	umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lstA = new LinkedHashSet<>();
-        umlEditor.addMethod("ClassA", "MethodA", lstA);
+        Map<String, String> mapA = new LinkedHashMap<>();
+        Map<String, String> mapB = new LinkedHashMap<>();
+        mapB.put("P1", "int");
+        mapB.put("P2", "String");
 
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
+        umlEditor.addMethod("ClassA", "MethodA", mapA, "int");
         
-        assertTrue(umlEditor.changeParameters("ClassA", "MethodA", lstB));
+        assertTrue(umlEditor.changeParameters("ClassA", "MethodA", mapA, "int", mapB));
     }
 
     /**
@@ -588,13 +608,14 @@ public class UmlEditorTest {
     @DisplayName ("changeParameters: Change the list of parameters of a method from a few to none")
     public void testChangeParametersFewNone() {
     	umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        umlEditor.addMethod("ClassA", "MethodA", lstA);
+        Map<String, String> mapA = new LinkedHashMap<>();
+        mapA.put("P1", "int");
+        mapA.put("P2", "String");
+        Map<String, String> mapB = new LinkedHashMap<>();
 
-        LinkedHashSet<String> lstB = new LinkedHashSet<>();
+        umlEditor.addMethod("ClassA", "MethodA", mapA, "int");
         
-        assertTrue(umlEditor.changeParameters("ClassA", "MethodA", lstB));
+        assertTrue(umlEditor.changeParameters("ClassA", "MethodA", mapA, "int", mapB));
     }
 
     /**
@@ -604,10 +625,11 @@ public class UmlEditorTest {
     @DisplayName ("changeParameters: Change the list of parameters from a method that does not exist, failure test")
     public void testChangeParametersMethodNotExist() {
     	umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList("Para-A"));
+        Map<String, String> mapA = new LinkedHashMap<>();
+        Map<String, String> mapB = new LinkedHashMap<>();
+        mapB.put("P1", "int");
         
-        assertFalse(umlEditor.changeParameters("ClassA", "MethodB", lstB));
+        assertFalse(umlEditor.changeParameters("ClassA", "MethodB", mapA, "int", mapB));
     }
 
     /**
@@ -617,14 +639,15 @@ public class UmlEditorTest {
     @DisplayName ("changeParameters: Change the list of parameters from a class that does not exist, failure test")
     public void testChangeParametersClassNotExist() {
     	umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        umlEditor.addMethod("ClassA", "MethodA", lstA);
+        Map<String, String> mapA = new LinkedHashMap<>();
+        mapA.put("P1", "int");
+        mapA.put("P2", "String");
+        umlEditor.addMethod("ClassA", "MethodA", mapA, "int");
 
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList("Para-A"));
+        Map<String, String> mapB = new LinkedHashMap<>();
+        mapB.put("P3", "int");
         
-        assertFalse(umlEditor.changeParameters("ClassB", "MethodB", lstB));
+        assertFalse(umlEditor.changeParameters("ClassB", "MethodB", mapA, "int", mapB));
     }
 
     /**
@@ -634,11 +657,12 @@ public class UmlEditorTest {
     @DisplayName ("changeParameters: Change the list of parameters to the same list, failure test")
     public void testChangeParametersSameList() {
     	umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList("Para-A", "Para-B", "Para-C"));
-        umlEditor.addMethod("ClassA", "MethodA", lstA);
+        Map<String, String> mapA = new LinkedHashMap<>();
+        mapA.put("P1", "int");
+        mapA.put("P2", "String");
+        umlEditor.addMethod("ClassA", "MethodA", mapA, "int");
         
-        assertFalse(umlEditor.changeParameters("ClassB", "MethodB", lstA));
+        assertFalse(umlEditor.changeParameters("ClassB", "MethodB", mapA, "int", mapA));
     }
 
     /**
@@ -648,14 +672,15 @@ public class UmlEditorTest {
     @DisplayName ("changeParameters: Change the list of parameters with invalid input, failure test")
     public void testChangeParametersInvalidInput() {
     	umlEditor.addClass("ClassA");
-        LinkedHashSet<String> lstA = new LinkedHashSet<>(
-            Arrays.asList(" Para A", "Para-B ", "Para- C"));
-        umlEditor.addMethod("ClassA", "MethodA", lstA);
+        Map<String, String> mapA = new LinkedHashMap<>();
+        mapA.put("P1", "int");
+        mapA.put("P2", "String");
+        umlEditor.addMethod("ClassA", "MethodA", mapA, "int");
 
-        LinkedHashSet<String> lstB = new LinkedHashSet<>(
-            Arrays.asList(" Para A "));
+        Map<String, String> mapB = new LinkedHashMap<>();
+        mapB.put("P 3", "int");
         
-        assertFalse(umlEditor.changeParameters("ClassA", "MethodA", lstB));
+        assertFalse(umlEditor.changeParameters("ClassA", "MethodA", mapA, "int", mapB));
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
