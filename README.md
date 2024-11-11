@@ -85,14 +85,14 @@ To ensure the quality and functionality of the project, automated tests have bee
   - **Controller**: The **Controller** folder contains files like `UmlEditor.java`, `UmGuiController.java`, and `UmCliController.java`, which manage the interactions between the View and the Model. The controller listens for user inputs (such as adding or removing UML elements) from the View, modifies the Model accordingly, and updates the View to reflect the changes.
 
 ### 2. State
-+ **Defintion**: Alter an object's behavior when its state changes.
++ **Definition**: Alter an object's behavior when its state changes.
 
 + **Usage**: We used the State pattern in `UmlGuiController.java`. The `updateButtonStates()` function dynamically updates the enabled/disabled states of menu items based on the current state of the UML editor model. This ensures that only relevant options are available to the user, depending on the classes, fields, methods, and relationships present in the model.
   
 ### 3. Null Object
-+ **Defintion**: Designed to act as a default value of an object.
++ **Definition**: Designed to act as a "nothing" version of an object.
 
-+ **Usage**:
++ **Usage**: The **Null Object** pattern in our UML editor project is implemented in `UmlClass` to represent a method's parameters when the method was not assigned any parameters by the user. The logic has been abstracted so that an empty parameter object is handled independently from parameter objects with values, and is written in a way that it can be adjusted in the future.
     
 ### 4. Memento
 + **Definition**: Capture and restore an object's internal state, allowing for undo and redo functionality.
