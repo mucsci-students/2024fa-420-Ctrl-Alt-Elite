@@ -116,13 +116,14 @@ public class UmlGuiController extends JFrame {
 
     private void updateButtonStates() {
         // Check if there are any classes
-        boolean hasClasses = !umlEditorModel.getClasses().isEmpty(); 
+        boolean hasClasses = !umlEditorModel.getClasses().isEmpty();
         // Check if there are fields in the first class
         boolean hasFields = hasClasses && !umlEditorModel.getClasses().values().iterator().next().getFields().isEmpty();
         // Check if there are methods in the first class
-        boolean hasMethods = hasClasses && !umlEditorModel.getClasses().values().iterator().next().getMethods().isEmpty();
-        // Check if there are any relationships 
-        boolean hasRelationships = !umlEditorModel.getRelationships().isEmpty(); 
+        boolean hasMethods = hasClasses
+                && !umlEditorModel.getClasses().values().iterator().next().getMethods().isEmpty();
+        // Check if there are any relationships
+        boolean hasRelationships = !umlEditorModel.getRelationships().isEmpty();
 
         // Enable/disable relevant items
         deleteClassItem.setEnabled(hasClasses);
@@ -451,11 +452,13 @@ public class UmlGuiController extends JFrame {
             String newFieldName = newFieldNameField.getText();
 
             if (umlEditor.renameField(className, oldFieldName, newFieldName)) {
-                outputArea.append("Field '" + oldFieldName + "' renamed to '" + newFieldName + "' in class '" + className + "'.\n");
+                outputArea.append("Field '" + oldFieldName + "' renamed to '" + newFieldName + "' in class '"
+                        + className + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
             } else {
-                outputArea.append("Failed to rename field '" + oldFieldName + "' to '" + newFieldName + "' in class '" + className + "'.\n");
+                outputArea.append("Failed to rename field '" + oldFieldName + "' to '" + newFieldName + "' in class '"
+                        + className + "'.\n");
             }
             dialog.dispose();
         });
@@ -794,7 +797,8 @@ public class UmlGuiController extends JFrame {
                     newParameters);
 
             if (result) {
-                outputArea.append("Parameters successfully changed for method '" + methodName + "' in class '" + className + "'.\n");
+                outputArea.append("Parameters successfully changed for method '" + methodName + "' in class '"
+                        + className + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
 
@@ -967,11 +971,13 @@ public class UmlGuiController extends JFrame {
             }
 
             if (umlEditorModel.deleteRelationship(source, destination, type)) {
-                outputArea.append("Deleted relationship of type '" + type + "' between '" + source + "' and '" + destination + "'.\n");
+                outputArea.append("Deleted relationship of type '" + type + "' between '" + source + "' and '"
+                        + destination + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
             } else {
-                outputArea.append("Failed to delete relationship between '" + source + "' and '" + destination + "'.\n");
+                outputArea
+                        .append("Failed to delete relationship between '" + source + "' and '" + destination + "'.\n");
             }
         });
 
@@ -1052,11 +1058,13 @@ public class UmlGuiController extends JFrame {
             }
 
             if (umlEditorModel.changeRelationshipType(source, destination, currentType, newType)) {
-                outputArea.append("Changed relationship type from '" + currentType + "' to '" + newType + "' between '" + source + "' and '" + destination + "'.\n");
+                outputArea.append("Changed relationship type from '" + currentType + "' to '" + newType + "' between '"
+                        + source + "' and '" + destination + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
             } else {
-                outputArea.append("Failed to change relationship type between '" + source + "' and '" + destination + "'.\n");
+                outputArea.append(
+                        "Failed to change relationship type between '" + source + "' and '" + destination + "'.\n");
             }
 
         });
@@ -1102,7 +1110,7 @@ public class UmlGuiController extends JFrame {
                     String className = entry.getKey();
 
                     // Load the position from the UmlClass if it exists
-                    Point position = entry.getValue().getPosition();                                            
+                    Point position = entry.getValue().getPosition();
                     if (position != null) {
                         classPositions.put(className, position);
                     } else {
@@ -1156,8 +1164,10 @@ public class UmlGuiController extends JFrame {
                     for (Map.Entry<String, Point> entry : classPositions.entrySet()) {
                         String className = entry.getKey();
                         Point position = entry.getValue();
-                        Rectangle rect = new Rectangle(position.x, position.y, 100,
-                                50 + (umlEditorModel.getClass(className).getFields().size() * 15));
+
+                        int boxWidth = getBoxWidth(className); // Now works without Graphics
+
+                        Rectangle rect = new Rectangle(position.x, position.y, boxWidth, 50 + (umlEditorModel.getClass(className).getFields().size() * 15));
                         if (rect.contains(e.getPoint())) {
                             selectedClassName = className; // Set the selected class
                             dragStartPoint = e.getPoint(); // Store the initial drag point
@@ -1188,7 +1198,8 @@ public class UmlGuiController extends JFrame {
                             classPositions.put(selectedClassName, new Point(newX, newY)); // Update the position
 
                             // Update the position in the model as well
-                            umlEditorModel.updateClassPosition(selectedClassName, new Point(newX, newY)); // Update model
+                            umlEditorModel.updateClassPosition(selectedClassName, new Point(newX, newY)); // Update
+                                                                                                          // model
 
                             dragStartPoint = currentPoint; // Update the drag start point for smooth dragging
                             repaint(); // Repaint the panel to show the updated position
@@ -1202,7 +1213,8 @@ public class UmlGuiController extends JFrame {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
 
-            // Create a map to keep track of how many relationships exist between class pairs
+            // Create a map to keep track of how many relationships exist between class
+            // pairs
             Map<String, Integer> relationshipCount = new HashMap<>();
 
             // Draw relationships
@@ -1241,9 +1253,10 @@ public class UmlGuiController extends JFrame {
                             } else {
                                 g2d.drawLine(sourcePosition.x + 50,
                                         // Start from the bottom middle
-                                        sourcePosition.y + getBoxHeight(relationship.getSource()) + offset, destinationPosition.x + 50,
+                                        sourcePosition.y + getBoxHeight(relationship.getSource()) + offset,
+                                        destinationPosition.x + 50,
                                         // Line ends below the box
-                                        destinationPosition.y + getBoxHeight(relationship.getDestination()) + 10); 
+                                        destinationPosition.y + getBoxHeight(relationship.getDestination()) + 10);
                                 drawArrow(g, destinationPosition.x + 50,
                                         destinationPosition.y + getBoxHeight(relationship.getDestination())
                                                 + arrowheadOffset1, // Offset for arrowhead
@@ -1452,5 +1465,29 @@ public class UmlGuiController extends JFrame {
             int methodCount = (umlClass != null) ? umlClass.getMethods().size() : 0; // Get the number of methods
             return 50 + (attributeCount * 15) + (methodCount * 15); // Base height + dynamic attribute and method height
         }
+
+        // Get width of class box
+        public int getBoxWidth(String className) {
+            // Assuming you have access to the FontMetrics from paintComponent
+            FontMetrics metrics = getFontMetrics(getFont()); // or get a specific font you are using
+            int width = metrics.stringWidth(className) + 100; // 20 for padding
+
+            // Assuming you have UmlClass object
+            UmlClass umlClass = umlEditorModel.getClass(className);
+            if (umlClass != null) {
+                for (Map.Entry<String, String> entry : umlClass.getFields().entrySet()) {
+                    String attribute = entry.getValue() + " " + entry.getKey(); // "type name"
+                    width = Math.max(width, metrics.stringWidth(attribute) + 20);
+                }
+
+                // Methods width
+                for (String methodSignature : umlClass.getMethods()) {
+                    width = Math.max(width, metrics.stringWidth(methodSignature) + 20);
+                }
+            }
+
+            return width;
+        }
+
     }
 }
