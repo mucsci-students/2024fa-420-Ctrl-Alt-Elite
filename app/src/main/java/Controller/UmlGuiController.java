@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.awt.event.ActionListener;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Model.RelationshipType;
 import Model.UmlClass;
@@ -65,6 +66,8 @@ public class UmlGuiController extends JFrame {
         JMenu fileMenu = new JMenu("File");
         addMenuItem(fileMenu, "Save UML File", e -> showSaveFilePanel());
         addMenuItem(fileMenu, "Load UML File", e -> showLoadFilePanel());
+        // Add the "Export as Image" menu item
+        addMenuItem(fileMenu, "Export as Image", e -> exportAsImage());
         menuBar.add(fileMenu);
 
         // Create the "Class" menu and initialize menu items
@@ -105,6 +108,34 @@ public class UmlGuiController extends JFrame {
         // Initially update button states
         updateButtonStates();
     }
+
+    private void exportAsImage() {
+    // Create a file chooser for saving the file
+    JFileChooser fileChooser = new JFileChooser();
+    
+    // Set the default file name and extension
+    fileChooser.setSelectedFile(new File("UML_Editor_exported_image.png"));
+    
+    // Set the file filter to allow only PNG images (can change this if you want other formats)
+    fileChooser.setAcceptAllFileFilterUsed(false);
+    fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("PNG Image", "png"));
+    
+    // Open the file chooser dialog
+    int userSelection = fileChooser.showSaveDialog(this);
+    
+    if (userSelection == JFileChooser.APPROVE_OPTION) {
+        // Get the selected file
+        File fileToSave = fileChooser.getSelectedFile();
+        
+        // Ensure the file has the correct extension if not provided
+        if (!fileToSave.getName().endsWith(".png")) {
+            fileToSave = new File(fileToSave.getAbsolutePath() + ".png");
+        }
+
+        // Call the ImageExporter to save the image at the chosen location
+        ImageExporter.exportPanelAsImage(drawingPanel, fileToSave.getAbsolutePath());
+    }
+}
 
     // Helper method to create menu items and add to the menu
     private JMenuItem addMenuItem(JMenu menu, String title, ActionListener action) {
