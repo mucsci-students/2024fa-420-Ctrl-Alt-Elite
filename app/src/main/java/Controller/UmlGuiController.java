@@ -137,12 +137,6 @@ public class UmlGuiController extends JFrame {
                 e -> showChangeRelationshipTypePanel());
         menuBar.add(relationshipMenu);
 
-        // Create the "List" menu
-        JMenu listMenu = new JMenu("List");
-        addMenuItem(listMenu, "List Classes", e -> showListClassesPanel());
-        addMenuItem(listMenu, "List Relationships", e -> showListRelationshipsPanel());
-        menuBar.add(listMenu);
-
         // Set the menu bar
         setJMenuBar(menuBar);
 
@@ -418,7 +412,6 @@ public class UmlGuiController extends JFrame {
                 for (String fieldName : umlEditor.getFields(selectedClass)) {
                     fieldNameComboBox.addItem(fieldName);
                 }
-
             }
         });
 
@@ -1126,29 +1119,7 @@ private void showRenameMethodPanel() {
         dialog.setVisible(true);
     }
 
-    // List Classes Panel
-    private void showListClassesPanel() {
-        // Clear the output area before displaying the classes
-        outputArea.setText(""); // Assuming you have an outputArea to display the classes
-
-        // Call the listClasses method and display the classes
-        for (UmlClass umlClass : umlEditorModel.getClasses().values()) {
-            outputArea.append(umlClass + "\n");
-        }
-    }
-
-    // List Relationships Panel
-    private void showListRelationshipsPanel() {
-        // Clear the output area before displaying the relationships
-        outputArea.setText(""); // Assuming you have an outputArea to display the relationships
-
-        // Call the listRelationships method and display the relationships
-        for (UmlRelationship relationship : umlEditorModel.getRelationships()) {
-            outputArea.append(relationship + "\n");
-        }
-    }
-
-    // Save Project Panel
+    // Save File Panel
     private void showSaveFilePanel() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showSaveDialog(null);
@@ -1163,7 +1134,7 @@ private void showRenameMethodPanel() {
         }
     }
 
-    // Load Project Panel
+    // Load File Panel
     private void showLoadFilePanel() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showOpenDialog(null);
