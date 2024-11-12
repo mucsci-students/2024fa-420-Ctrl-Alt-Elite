@@ -109,6 +109,10 @@ public class UmlGuiController extends JFrame {
         updateButtonStates();
     }
 
+    /**
+    * Prompts the user to choose a location and filename to export the current drawing panel as an image.
+    * The image is saved in PNG format. If the user does not specify the .png extension, it is added automatically.
+    */
     private void exportAsImage() {
         // Create a file chooser for saving the file
         JFileChooser fileChooser = new JFileChooser();
