@@ -65,6 +65,8 @@ public class UmlGuiController extends JFrame {
         JMenu fileMenu = new JMenu("File");
         addMenuItem(fileMenu, "Save UML File", e -> showSaveFilePanel());
         addMenuItem(fileMenu, "Load UML File", e -> showLoadFilePanel());
+        // Add the "Export as Image" menu item
+        addMenuItem(fileMenu, "Export as Image", e -> exportAsImage());
         menuBar.add(fileMenu);
 
         // Create the "Class" menu and initialize menu items
