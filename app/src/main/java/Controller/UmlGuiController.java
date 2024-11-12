@@ -99,6 +99,12 @@ public class UmlGuiController extends JFrame {
         // Create the menu bar
         JMenuBar menuBar = new JMenuBar();
 
+        // Create the "File" menu and initialize menu items
+        JMenu fileMenu = new JMenu("File");
+        addMenuItem(fileMenu, "Save UML File", e -> showSaveFilePanel());
+        addMenuItem(fileMenu, "Load UML File", e -> showLoadFilePanel());
+        menuBar.add(fileMenu);
+
         // Create the "Class" menu and initialize menu items
         JMenu classMenu = new JMenu("Class");
         addMenuItem(classMenu, "Add Class", e -> showAddClassPanel());
@@ -130,12 +136,6 @@ public class UmlGuiController extends JFrame {
         changeRelationshipItem = addMenuItem(relationshipMenu, "Change Relationship",
                 e -> showChangeRelationshipTypePanel());
         menuBar.add(relationshipMenu);
-
-        // Create the "Project" menu and initialize menu items
-        JMenu projectMenu = new JMenu("Project");
-        addMenuItem(projectMenu, "Save UML Project", e -> showSaveProjectPanel());
-        addMenuItem(projectMenu, "Load UML Project", e -> showLoadProjectPanel());
-        menuBar.add(projectMenu);
 
         // Create the "List" menu
         JMenu listMenu = new JMenu("List");
@@ -1149,22 +1149,22 @@ private void showRenameMethodPanel() {
     }
 
     // Save Project Panel
-    private void showSaveProjectPanel() {
+    private void showSaveFilePanel() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showSaveDialog(null);
         if (option == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             try {
                 JsonUtils.save(umlEditorModel, file.getAbsolutePath()); // Ensure save method includes positions
-                outputArea.append("Project saved successfully to " + file.getAbsolutePath() + ".\n");
+                outputArea.append("File saved successfully to " + file.getAbsolutePath() + ".\n");
             } catch (IOException ex) {
-                outputArea.append("Failed to save project: " + ex.getMessage() + "\n");
+                outputArea.append("Failed to save file: " + ex.getMessage() + "\n");
             }
         }
     }
 
     // Load Project Panel
-    private void showLoadProjectPanel() {
+    private void showLoadFilePanel() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showOpenDialog(null);
         if (option == JFileChooser.APPROVE_OPTION) {
@@ -1196,9 +1196,9 @@ private void showRenameMethodPanel() {
                 // Update button states after loading the project
                 updateButtonStates(); // Ensure buttons are updated based on loaded data
 
-                outputArea.append("Project loaded successfully from " + file.getAbsolutePath() + ".\n");
+                outputArea.append("File loaded successfully from " + file.getAbsolutePath() + ".\n");
             } catch (IOException ex) {
-                outputArea.append("Failed to load project: " + ex.getMessage() + "\n");
+                outputArea.append("Failed to load file: " + ex.getMessage() + "\n");
             }
         }
     }
