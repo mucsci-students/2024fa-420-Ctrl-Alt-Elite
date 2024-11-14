@@ -110,32 +110,33 @@ public class UmlGuiController extends JFrame {
     }
 
     private void exportAsImage() {
-    // Create a file chooser for saving the file
-    JFileChooser fileChooser = new JFileChooser();
-    
-    // Set the default file name and extension
-    fileChooser.setSelectedFile(new File("UML_Editor_exported_image.png"));
-    
-    // Set the file filter to allow only PNG images (can change this if you want other formats)
-    fileChooser.setAcceptAllFileFilterUsed(false);
-    fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("PNG Image", "png"));
-    
-    // Open the file chooser dialog
-    int userSelection = fileChooser.showSaveDialog(this);
-    
-    if (userSelection == JFileChooser.APPROVE_OPTION) {
-        // Get the selected file
-        File fileToSave = fileChooser.getSelectedFile();
-        
-        // Ensure the file has the correct extension if not provided
-        if (!fileToSave.getName().endsWith(".png")) {
-            fileToSave = new File(fileToSave.getAbsolutePath() + ".png");
-        }
+        // Create a file chooser for saving the file
+        JFileChooser fileChooser = new JFileChooser();
 
-        // Call the ImageExporter to save the image at the chosen location
-        ImageExporter.exportPanelAsImage(drawingPanel, fileToSave.getAbsolutePath());
+        // Set the default file name and extension
+        fileChooser.setSelectedFile(new File("UML_Editor_exported_image.png"));
+
+        // Set the file filter to allow only PNG images (can change this if you want
+        // other formats)
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("PNG Image", "png"));
+
+        // Open the file chooser dialog
+        int userSelection = fileChooser.showSaveDialog(this);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            // Get the selected file
+            File fileToSave = fileChooser.getSelectedFile();
+
+            // Ensure the file has the correct extension if not provided
+            if (!fileToSave.getName().endsWith(".png")) {
+                fileToSave = new File(fileToSave.getAbsolutePath() + ".png");
+            }
+
+            // Call the ImageExporter to save the image at the chosen location
+            ImageExporter.exportPanelAsImage(drawingPanel, fileToSave.getAbsolutePath());
+        }
     }
-}
 
     // Helper method to create menu items and add to the menu
     private JMenuItem addMenuItem(JMenu menu, String title, ActionListener action) {
@@ -544,13 +545,19 @@ public class UmlGuiController extends JFrame {
             LinkedHashMap<String, String> paraList = parseParameterList(parameterListField.getText());
             String returnType = returnTypeField.getText(); // Get return type from the input field
 
+            // Check if method addition was successful
             if (umlEditor.addMethod(className, methodName, paraList, returnType)) {
                 outputArea.append("Method '" + methodName + "' added to class '" + className + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
                 updateButtonStates(); // Update button states after adding the method
+                dialog.dispose(); // Close dialog only if successful
             } else {
-                outputArea.append("Failed to add method '" + methodName + "' to class '" + className + "'.\n");
+                // Display an error message in the output area or GUI
+                JOptionPane.showMessageDialog(dialog,
+                        "Method '" + methodName + "' already exists in class '" + className + "'.",
+                        "Duplicate Method",
+                        JOptionPane.ERROR_MESSAGE);
             }
 
             // Clear input fields and close dialog after submission
@@ -1198,7 +1205,8 @@ public class UmlGuiController extends JFrame {
 
                         int boxWidth = getBoxWidth(className); // Now works without Graphics
 
-                        Rectangle rect = new Rectangle(position.x, position.y, boxWidth, 50 + (umlEditorModel.getClass(className).getFields().size() * 15));
+                        Rectangle rect = new Rectangle(position.x, position.y, boxWidth,
+                                50 + (umlEditorModel.getClass(className).getFields().size() * 15));
                         if (rect.contains(e.getPoint())) {
                             selectedClassName = className; // Set the selected class
                             dragStartPoint = e.getPoint(); // Store the initial drag point
