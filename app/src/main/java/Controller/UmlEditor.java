@@ -197,6 +197,36 @@ public class UmlEditor {
         return false;
     }
 
+    /**
+ * Updates the type of an existing field in a specified class.
+ *
+ * @param className The name of the class containing the field to be updated.
+ * @param fieldName The name of the field to be updated.
+ * @param newFieldType The new type for the field.
+ * @return {@code true} if the field type was successfully updated,
+ *         {@code false} if the field was not found or the new type is invalid.
+ */
+public boolean updateFieldType(String className, String fieldName, String newFieldType) {
+    // Validate input
+    if (newFieldType.isEmpty()) {
+        System.out.println("Field type cannot be empty.");
+        return false;
+    }
+    
+    UmlClass umlClass = model.getUmlClass(className);
+    if (umlClass != null) {
+        System.out.println("Attempting to update field: " + fieldName + " to type: " + newFieldType + " in class: " + className);
+        boolean result = umlClass.updateFieldType(fieldName, newFieldType);
+        if (!result) {
+            System.out.println("Field '" + fieldName + "' not found in class '" + className + "' or failed to update type.");
+        }
+        return result;
+    }
+    System.out.println("Class '" + className + "' not found.");
+    return false;
+}
+
+
     /*----------------------------------------------------------------------------------------------------------------*/
     /* METHOD MANAGEMENT METHODS */
     /*----------------------------------------------------------------------------------------------------------------*/

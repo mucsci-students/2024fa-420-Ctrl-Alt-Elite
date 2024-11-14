@@ -42,6 +42,7 @@ public class UmlGuiController extends JFrame {
     private JMenuItem addRelationshipItem;
     private JMenuItem deleteRelationshipItem;
     private JMenuItem changeRelationshipItem;
+    private JMenuItem changeFieldTypeItem;
 
     public UmlGuiController() {
         umlEditorModel = new UmlEditorModel();
@@ -82,6 +83,7 @@ public class UmlGuiController extends JFrame {
         addFieldItem = addMenuItem(fieldMenu, "Add Field", e -> showAddFieldPanel());
         deleteFieldItem = addMenuItem(fieldMenu, "Delete Field", e -> showDeleteFieldPanel());
         renameFieldItem = addMenuItem(fieldMenu, "Rename Field", e -> showRenameFieldPanel());
+        changeFieldTypeItem = addMenuItem(fieldMenu, "Change Field Type", e -> showChangeFieldTypePanel());
         menuBar.add(fieldMenu);
 
         // Create the "Method" menu and initialize menu items
@@ -165,6 +167,7 @@ public class UmlGuiController extends JFrame {
         addFieldItem.setEnabled(hasClasses); // Enable "Add Field" if there's at least one class
         deleteFieldItem.setEnabled(hasFields); // Enable "Delete Field" if there are fields in the class
         renameFieldItem.setEnabled(hasFields); // Enable "Rename Field" if there are fields in the class
+        changeFieldTypeItem.setEnabled(hasFields);
 
         // Method menu items
         addMethodItem.setEnabled(hasClasses); // Enable "Add Method" if there's at least one class
@@ -350,35 +353,35 @@ public class UmlGuiController extends JFrame {
             String className = (String) classNameComboBox.getSelectedItem(); // Get selected class name
             String fieldType = fieldTypeField.getText().trim();
             String fieldName = fieldNameField.getText().trim();
-        
+
             if (fieldName.isEmpty() || fieldType.isEmpty()) {
-                JOptionPane.showMessageDialog(dialog, 
-                    "Field name and type cannot be empty.", 
-                    "Input Error", 
-                    JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(dialog,
+                        "Field name and type cannot be empty.",
+                        "Input Error",
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
-        
-            if (!umlEditor.addField(className, fieldType, fieldName)) {  // Single call to addField
-                JOptionPane.showMessageDialog(dialog, 
-                    "Field '" + fieldName + "' already exists in class '" + className + "'.", 
-                    "Duplicate Field", 
-                    JOptionPane.ERROR_MESSAGE);
+
+            if (!umlEditor.addField(className, fieldType, fieldName)) { // Single call to addField
+                JOptionPane.showMessageDialog(dialog,
+                        "Field '" + fieldName + "' already exists in class '" + className + "'.",
+                        "Duplicate Field",
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
-        
+
             // Success path
             outputArea.append(
-                "Field '" + fieldName + "' of type '" + fieldType + "' added to class '" + className + "'.\n");
+                    "Field '" + fieldName + "' of type '" + fieldType + "' added to class '" + className + "'.\n");
             drawingPanel.revalidate();
             drawingPanel.repaint();
             updateButtonStates(); // Update button states after adding the field
-        
+
             fieldTypeField.setText(""); // Clear the field type
             fieldNameField.setText(""); // Clear the field name
             dialog.dispose();
         });
-        
+
         addFieldPanel.add(submitButton);
         dialog.getContentPane().add(addFieldPanel);
         dialog.pack();
@@ -509,6 +512,93 @@ public class UmlGuiController extends JFrame {
 
         renameFieldPanel.add(submitButton);
         dialog.getContentPane().add(renameFieldPanel);
+        dialog.pack();
+        dialog.setSize(350, 250); // Set preferred size
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+
+    // Update Field Panel (only updates the type, not the name)
+    private void showChangeFieldTypePanel() {
+        JDialog dialog = new JDialog(this, "Update Field Type", true);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+        JPanel updateFieldPanel = new JPanel();
+        updateFieldPanel.setLayout(new BoxLayout(updateFieldPanel, BoxLayout.Y_AXIS));
+        updateFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Combo box for class names
+        JComboBox<String> classNameComboBox = new JComboBox<>();
+        for (String className : umlEditorModel.getClassNames()) {
+            classNameComboBox.addItem(className);
+        }
+
+        // Combo box for field names (old field)
+        JComboBox<String> oldFieldNameComboBox = new JComboBox<>();
+        // Populate field combo box based on selected class
+        classNameComboBox.addActionListener(e -> {
+            oldFieldNameComboBox.removeAllItems(); // Clear previous fields
+            String selectedClass = (String) classNameComboBox.getSelectedItem();
+            if (selectedClass != null) {
+                for (String fieldName : umlEditor.getFields(selectedClass)) {
+                    oldFieldNameComboBox.addItem(fieldName);
+                }
+            }
+        });
+
+        // Text field for updating field type
+        JTextField newFieldTypeField = new JTextField(15); // Text field for the new field type
+
+        updateFieldPanel.add(new JLabel("Class Name:"));
+        updateFieldPanel.add(Box.createVerticalStrut(5));
+        updateFieldPanel.add(classNameComboBox);
+        updateFieldPanel.add(Box.createVerticalStrut(10)); // Space between fields
+
+        updateFieldPanel.add(new JLabel("Field Name:"));
+        updateFieldPanel.add(Box.createVerticalStrut(5));
+        updateFieldPanel.add(oldFieldNameComboBox);
+        updateFieldPanel.add(Box.createVerticalStrut(10)); // Space between fields
+
+        updateFieldPanel.add(new JLabel("New Field Type:"));
+        updateFieldPanel.add(Box.createVerticalStrut(5));
+        updateFieldPanel.add(newFieldTypeField);
+        updateFieldPanel.add(Box.createVerticalStrut(10)); // Space before button
+
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(e -> {
+            String className = (String) classNameComboBox.getSelectedItem();
+            String oldFieldName = (String) oldFieldNameComboBox.getSelectedItem();
+            String newFieldType = newFieldTypeField.getText().trim();
+
+            if (newFieldType.isEmpty()) {
+                JOptionPane.showMessageDialog(dialog,
+                        "Field type cannot be empty.",
+                        "Input Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!umlEditor.updateFieldType(className, oldFieldName, newFieldType)) {
+                JOptionPane.showMessageDialog(dialog,
+                        "Failed to update field type for '" + oldFieldName + "' in class '" + className + "'.",
+                        "Update Failed",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Success path
+            outputArea.append("Field type for '" + oldFieldName + "' updated to '" + newFieldType + "' in class '"
+                    + className + "'.\n");
+            drawingPanel.revalidate();
+            drawingPanel.repaint();
+            updateButtonStates(); // Update button states after updating the field
+
+            newFieldTypeField.setText(""); // Clear the field type
+            dialog.dispose();
+        });
+
+        updateFieldPanel.add(submitButton);
+        dialog.getContentPane().add(updateFieldPanel);
         dialog.pack();
         dialog.setSize(350, 250); // Set preferred size
         dialog.setLocationRelativeTo(this);

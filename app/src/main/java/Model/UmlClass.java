@@ -186,6 +186,16 @@ public class UmlClass {
         return true; // Renaming successful
     }
 
+    // Updates the type of an existing field. Returns true if the field exists and
+    // the type is updated, false otherwise.
+    public boolean updateFieldType(String fieldName, String newFieldType) {
+        if (fields.containsKey(fieldName) && !newFieldType.isEmpty()) {
+            fields.put(fieldName, newFieldType); // Update the field's type
+            return true; // Type update successful
+        }
+        return false; // Field does not exist or new type is invalid
+    }
+
     /**
      * Represents a method with a list of parameters.
      */
@@ -351,7 +361,7 @@ public class UmlClass {
 
                 Collection<String> otherValues = other.parameters.values();
                 Iterator<String> otherIter = otherValues.iterator();
-                
+
                 while (iter.hasNext()) {
                     String type = iter.next();
                     String otherType = otherIter.next();
@@ -359,7 +369,7 @@ public class UmlClass {
                     if (!type.equals(otherType)) {
                         return false;
                     }
-                }    
+                }
             }
 
             // If both name and parameter types are equal, the objects are equal.
@@ -572,7 +582,7 @@ public class UmlClass {
                 }
             }
         }
-  
+
         for (Method method : methods) {
             if (method.equals(testMethod)) {
                 method.setParameters(newParameters);
