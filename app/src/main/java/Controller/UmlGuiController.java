@@ -348,25 +348,37 @@ public class UmlGuiController extends JFrame {
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             String className = (String) classNameComboBox.getSelectedItem(); // Get selected class name
-            String fieldType = fieldTypeField.getText();
-            String fieldName = fieldNameField.getText();
-
-            // Call addField with className, fieldType, and fieldName
-            if (umlEditor.addField(className, fieldType, fieldName)) {
-                outputArea.append(
-                        "Field '" + fieldName + "' of type '" + fieldType + "' added to class '" + className + "'.\n");
-                drawingPanel.revalidate();
-                drawingPanel.repaint();
-                updateButtonStates(); // Update button states after adding the field
-            } else {
-                outputArea.append("Failed to add field '" + fieldName + "' to class '" + className + "'.\n");
+            String fieldType = fieldTypeField.getText().trim();
+            String fieldName = fieldNameField.getText().trim();
+        
+            if (fieldName.isEmpty() || fieldType.isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, 
+                    "Field name and type cannot be empty.", 
+                    "Input Error", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
             }
-
+        
+            if (!umlEditor.addField(className, fieldType, fieldName)) {  // Single call to addField
+                JOptionPane.showMessageDialog(dialog, 
+                    "Field '" + fieldName + "' already exists in class '" + className + "'.", 
+                    "Duplicate Field", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        
+            // Success path
+            outputArea.append(
+                "Field '" + fieldName + "' of type '" + fieldType + "' added to class '" + className + "'.\n");
+            drawingPanel.revalidate();
+            drawingPanel.repaint();
+            updateButtonStates(); // Update button states after adding the field
+        
             fieldTypeField.setText(""); // Clear the field type
             fieldNameField.setText(""); // Clear the field name
             dialog.dispose();
         });
-
+        
         addFieldPanel.add(submitButton);
         dialog.getContentPane().add(addFieldPanel);
         dialog.pack();
