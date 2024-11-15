@@ -202,11 +202,10 @@ public class UmlClass {
     public class Method {
         /** The name of the method. */
         private String name;
-        /** A map of parameters, with the name as the key and the type as the value. */
-        private Map<String, String> parameters;
-
         /** The return type of the method */
         private String return_type;
+        /** A map of parameters, with the name as the key and the type as the value. */
+        private Map<String, String> parameters;
 
         /**
          * Creates a new method with a list of parameters.
