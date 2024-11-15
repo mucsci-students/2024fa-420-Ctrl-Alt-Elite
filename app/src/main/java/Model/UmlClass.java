@@ -206,7 +206,7 @@ public class UmlClass {
         private Map<String, String> parameters;
 
         /** The return type of the method */
-        private String returnType;
+        private String return_type;
 
         /**
          * Creates a new method with a list of parameters.
@@ -218,7 +218,7 @@ public class UmlClass {
         public Method(String name, Map<String, String> parameters, String returnType) {
             this.name = name;
             this.parameters = new LinkedHashMap<>(parameters);
-            this.returnType = returnType;
+            this.return_type = returnType;
         }
 
         /**
@@ -274,7 +274,7 @@ public class UmlClass {
          * @return The return type of the method.
          */
         public String getReturnType() {
-            return returnType;
+            return return_type;
         }
 
         /**
@@ -282,8 +282,8 @@ public class UmlClass {
          * 
          * @param newReturnType The new return type for the method.
          */
-        public void setReturnType(String newReturnType) {
-            this.returnType = newReturnType;
+        public void setReturnType(String new_return_type) {
+            this.return_type = new_return_type;
         }
 
         /**
@@ -388,7 +388,7 @@ public class UmlClass {
             int result = 1;
             result = prime * result + ((name == null) ? 0 : name.hashCode());
             result = prime * result + ((parameters == null) ? 0 : parameters.hashCode());
-            result = prime * result + ((returnType == null) ? 0 : returnType.hashCode());
+            result = prime * result + ((return_type == null) ? 0 : return_type.hashCode());
             return result;
         }
 
@@ -399,7 +399,7 @@ public class UmlClass {
          */
         @Override
         public String toString() {
-            String string = "\tMethod: " + returnType + " " + name;
+            String string = "\tMethod: " + return_type + " " + name;
             string = string.concat(" (");
             if (!parameters.isEmpty()) {
                 Iterator<Map.Entry<String, String>> iter = this.getParameters().entrySet().iterator();

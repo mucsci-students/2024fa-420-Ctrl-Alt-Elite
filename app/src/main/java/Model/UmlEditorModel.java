@@ -29,9 +29,7 @@ public class UmlEditorModel {
     public UmlEditorModel() {
         this.classes = new HashMap<>();
         this.relationships = new ArrayList<>();
-        this.classPositions = new HashMap<>(); // Initialize the classPositions map
-
-        
+        this.classPositions = new HashMap<>(); // Initialize the classPositions map        
     }
 
     // Copy constructor for deep copying
