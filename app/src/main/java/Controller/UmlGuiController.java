@@ -24,6 +24,7 @@ import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -68,6 +69,7 @@ public class UmlGuiController extends JFrame {
     private JMenuItem deleteRelationshipItem;
     private JMenuItem changeRelationshipItem;
     private JMenuItem changeFieldTypeItem;
+    private JMenuItem changeReturnTypeItem;
 
     public UmlGuiController() {
         umlEditorModel = new UmlEditorModel();
@@ -116,6 +118,7 @@ public class UmlGuiController extends JFrame {
         addMethodItem = addMenuItem(methodMenu, "Add Method", e -> showAddMethodPanel());
         deleteMethodItem = addMenuItem(methodMenu, "Delete Method", e -> showDeleteMethodPanel());
         renameMethodItem = addMenuItem(methodMenu, "Rename Method", e -> showRenameMethodPanel());
+        changeReturnTypeItem = addMenuItem(methodMenu, "Change Return Type", e -> showChangeReturnTypePanel());
         changeParametersItem = addMenuItem(methodMenu, "Change Parameters", e -> showChangeParameterPanel());
         deleteParameterItem = addMenuItem(methodMenu, "Delete Parameter", e -> showDeleteParameterPanel());
         menuBar.add(methodMenu);
@@ -198,6 +201,7 @@ public class UmlGuiController extends JFrame {
         addMethodItem.setEnabled(hasClasses); // Enable "Add Method" if there's at least one class
         deleteMethodItem.setEnabled(hasMethods); // Enable "Delete Method" if there are methods in the class
         renameMethodItem.setEnabled(hasMethods); // Enable "Rename Method" if there are methods in the class
+        changeReturnTypeItem.setEnabled(hasMethods);
 
         // Relationship menu items
         addRelationshipItem.setEnabled(hasClasses); // Enable "Add Relationship" if there's at least one class
@@ -852,6 +856,98 @@ public class UmlGuiController extends JFrame {
             }
         }
         return paraList; // Return the populated parameter map
+    }
+
+    private void showChangeReturnTypePanel() {
+        JDialog dialog = new JDialog(this, "Change Return Type", true);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+        JPanel changeReturnTypePanel = new JPanel();
+        changeReturnTypePanel.setLayout(new BoxLayout(changeReturnTypePanel, BoxLayout.Y_AXIS));
+        changeReturnTypePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding
+
+        // Get class names from the model
+        String[] classNames = umlEditorModel.getClassNames();
+        JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
+
+        JComboBox<String> methodNameComboBox = new JComboBox<>();
+        JComboBox<String> oldReturnTypeField = new JComboBox<>();
+        JTextField newReturnTypeField = new JTextField(10);
+
+        // Populate methods and return types when class is selected
+        classNameComboBox.addActionListener(e -> {
+            String selectedClass = (String) classNameComboBox.getSelectedItem();
+            if (selectedClass != null) {
+                String[] methodNames = umlEditorModel.getMethodNames(selectedClass);
+                methodNameComboBox.setModel(new DefaultComboBoxModel<>(methodNames));
+
+                if (methodNames.length > 0) {
+                    String selectedMethod = methodNames[0];
+                    oldReturnTypeField.setModel(new DefaultComboBoxModel<>(new String[] {
+                            umlEditorModel.getMethodReturnType(selectedClass, selectedMethod)
+                    }));
+                }
+            }
+        });
+
+        // Update old return type when method changes
+        methodNameComboBox.addActionListener(e -> {
+            String selectedClass = (String) classNameComboBox.getSelectedItem();
+            String selectedMethod = (String) methodNameComboBox.getSelectedItem();
+            if (selectedClass != null && selectedMethod != null) {
+                oldReturnTypeField.setModel(new DefaultComboBoxModel<>(new String[] {
+                        umlEditorModel.getMethodReturnType(selectedClass, selectedMethod)
+                }));
+            }
+        });
+
+        changeReturnTypePanel.add(new JLabel("Class Name:"));
+        changeReturnTypePanel.add(classNameComboBox);
+        changeReturnTypePanel.add(Box.createVerticalStrut(10));
+
+        changeReturnTypePanel.add(new JLabel("Method Name:"));
+        changeReturnTypePanel.add(methodNameComboBox);
+        changeReturnTypePanel.add(Box.createVerticalStrut(10));
+
+        changeReturnTypePanel.add(new JLabel("Old Return Type:"));
+        changeReturnTypePanel.add(oldReturnTypeField);
+        changeReturnTypePanel.add(Box.createVerticalStrut(10));
+
+        changeReturnTypePanel.add(new JLabel("New Return Type:"));
+        changeReturnTypePanel.add(newReturnTypeField);
+        changeReturnTypePanel.add(Box.createVerticalStrut(10));
+
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(e -> {
+            String className = (String) classNameComboBox.getSelectedItem();
+            String methodName = (String) methodNameComboBox.getSelectedItem();
+            String oldType = (String) oldReturnTypeField.getSelectedItem();
+            String newType = newReturnTypeField.getText();
+
+            if (className != null && methodName != null && oldType != null && !newType.isEmpty()) {
+                List<String[]> parameters = umlEditorModel.getParameters(className, methodName);
+
+                boolean success = umlEditor.changeReturnType(className, methodName, parameters, oldType, newType);
+                if (success) {
+                    outputArea.append("Return type of method '" + methodName + "' in class '" + className
+                            + "' changed from '" + oldType + "' to '" + newType + "'.\n");
+                    drawingPanel.revalidate();
+                    drawingPanel.repaint();
+                } else {
+                    outputArea.append("Failed to change return type for method '" + methodName + "' in class '"
+                            + className + "'.\n");
+                }
+            } else {
+                outputArea.append("Please fill in all fields before submitting.\n");
+            }
+        });
+
+        changeReturnTypePanel.add(submitButton);
+
+        dialog.add(changeReturnTypePanel);
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
     }
 
     // Delete Parameter Panel

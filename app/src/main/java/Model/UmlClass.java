@@ -8,6 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Represents a UML class with a name and a list of methods.
@@ -20,6 +21,47 @@ public class UmlClass {
     /** An object to be used in the case that a method has no parameters */
     private List<String[]> parametersNull;
 
+    public List<String[]> getMethodParameters(String methodName) {
+        if (methods == null || methods.isEmpty()) {
+            return null;
+        }
+
+        for (Method method : methods) {
+            if (method.getName().equals(methodName)) {
+                return method.getParameters(); // Assumes Method class has getParameters() method
+            }
+        }
+
+        return null; // Return null if method is not found
+    }
+    
+    public String getMethodReturnType(String methodName) {
+        if (methods == null || methods.isEmpty()) {
+            return null;
+        }
+
+        for (Method method : methods) {
+            if (method.getName().equals(methodName)) {
+                return method.getReturnType(); // Assumes Method class has getReturnType method
+            }
+        }
+
+        return null; // Return null if method not found
+    }
+
+    /**
+     * Get the names of all methods in this UML class.
+     *
+     * @return A list of method names.
+     */
+    public List<String> getMethodNames() {
+        if (methods == null || methods.isEmpty()) {
+            return new ArrayList<>(); // Return empty list if no methods
+        }
+        return methods.stream()
+                      .map(Method::getName) // Assumes Method class has a getName() method
+                      .collect(Collectors.toList());
+    }
     /**
      * Constructs a new UmlClass with the specified name and position.
      * 

@@ -23,6 +23,37 @@ public class UmlEditorModel {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
+    public List<String[]> getParameters(String className, String methodName) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.getMethodParameters(methodName);
+        }
+        return null; // Return null if the class or method is not found
+    }
+
+    public String getMethodReturnType(String className, String methodName) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.getMethodReturnType(methodName);
+        }
+        return null; // Return null if class or method is not found
+    }
+    
+    /**
+     * Get the method names for a specific UML class.
+     *
+     * @param className The name of the UML class.
+     * @return An array of method names, or an empty array if the class is not found or has no methods.
+     */
+    public String[] getMethodNames(String className) {
+        UmlClass umlClass = classes.get(className); // Fetch the class from the map
+        if (umlClass != null) {
+            List<String> methodNames = umlClass.getMethodNames(); // Assume UmlClass has getMethodNames()
+            return methodNames.toArray(new String[0]); // Convert List to String[]
+        }
+        return new String[0]; // Return empty array if class not found or has no methods
+    }
+
     /**
      * A model that holds the classes and relationships for the UML Editor.
      */
