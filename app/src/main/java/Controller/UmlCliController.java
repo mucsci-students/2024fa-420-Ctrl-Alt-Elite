@@ -3,7 +3,6 @@ package Controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -105,6 +104,9 @@ public class UmlCliController {
                     break;
                 case "rename-method":
                     handleRenameMethod();
+                    break;
+                case "change-return-type":
+                    handleChangeReturnType();
                     break;
                 case "remove-parameter":
                     handleRemoveParameter();
@@ -365,17 +367,13 @@ public class UmlCliController {
         view.displayMessage("Enter the parameters for the method (String p1, int p2, etc.): ");
         String parameters = scanner.nextLine().trim();
 
-        Map<String, String> paraList = new HashMap<>();
+        List<String[]> paraList = new ArrayList<>();
         if (!parameters.trim().isEmpty()) {
             String[] splitParameters = parameters.split(",");
             for (String parameter : splitParameters) {
                 parameter = parameter.trim();
                 String[] splitSpace = parameter.split(" ");
-                if (paraList.containsKey(splitSpace[1])) {
-                    view.displayMessage("Parameters must have different names.");
-                    return;
-                }
-                paraList.put(splitSpace[1], splitSpace[0]);
+                paraList.add(splitSpace);
             }
         }
 
@@ -451,6 +449,38 @@ public class UmlCliController {
     }
 
     /**
+     * Handles the changing of a method's return type by prompting 
+     * the user to choose the class and method, then asking them
+     * for the new return type.
+     */
+    public void handleChangeReturnType() {
+        // Change the return type of a method in a class
+        String action = "change the return type of"; // The action that this function will take
+        String classOfMethod = chooseClass(action); // Call helper to find the class's name
+        if (classOfMethod == null) {
+            return;
+        } // Stop if chooseClass found an error.
+
+        String methodAction = "change the return type"; // The action that this function will take
+        Method method = chooseMethod(classOfMethod, methodAction); // Call helper to find the method's name
+        if (method == null) {
+            return;
+        } // Stop if chooseMethod found an error.
+
+        view.displayMessage("Enter the new return type (String, int, etc.): ");
+        String newReturnType = scanner.nextLine().trim();
+
+        if (umlEditor.changeReturnType(classOfMethod, method.getName(), method.getParameters(),
+            method.getReturnType(), newReturnType)) {
+            view.displayMessage(
+                    "The return type of method '" + method.getName() + "' has been changed to '" + newReturnType + "' in class '"
+                            + classOfMethod + "'.");
+        } else {
+            view.displayMessage("Failed to change the return type. Name may be invalid or duplicated, or class does not exist.");
+        }
+    }
+
+    /**
      * Handles removing a parameter from a method by prompting the user for class
      * name,
      * method name, and parameter name, and then removing the parameter from the
@@ -482,7 +512,7 @@ public class UmlCliController {
                 methodOfParameter.getParameters(),
                 methodOfParameter.getReturnType(), parameterPair)) {
             view.displayMessage(
-                    "Parameter '" + parameterPair[0] + "' was removed from '" + methodOfParameter.getName() + "'.");
+                    "Parameter '" + parameterPair[1] + "' was removed from '" + methodOfParameter.getName() + "'.");
         } else {
             view.displayMessage("Failed to remove parameter. Name may be invalid, or class does not exist.");
         }
@@ -511,13 +541,13 @@ public class UmlCliController {
         view.displayMessage("Enter the new parameters for the method (String p1, int p2, etc.): ");
         String parameters = scanner.nextLine().trim();
 
-        Map<String, String> newParaList = new HashMap<>();
+        List<String[]> newParaList = new ArrayList<>();
         if (!parameters.trim().isEmpty()) {
             String[] splitParameters = parameters.split(",");
             for (String parameter : splitParameters) {
                 parameter = parameter.trim();
                 String[] splitSpace = parameter.split(" ");
-                newParaList.put(splitSpace[1], splitSpace[0]);
+                newParaList.add(splitSpace);
             }
         }
 
@@ -874,7 +904,7 @@ public class UmlCliController {
         }
 
         // The name of the parameter is the key, the type is the value
-        Map<String, String> parameters = method.getParameters();
+        List<String[]> parameters = method.getParameters();
 
         if (parameters.isEmpty()) {
             view.displayMessage("There are no parameters to choose from.");
@@ -882,16 +912,10 @@ public class UmlCliController {
         }
 
         view.displayMessage("Select the number of the parameter to " + action + ": ");
-        String[][] paras = new String[parameters.size() + 1][parameters.size() + 1];
-
-        int keyIndex = 0;
         int displayIndex = 1;
-        for (Map.Entry<String, String> element : parameters.entrySet()) {
-            paras[keyIndex][0] = element.getKey();
-            paras[keyIndex][1] = element.getValue();
-            view.displayMessage("\t" + displayIndex + ". " + paras[keyIndex][0] + " " + paras[keyIndex][1]);
+        for (String[] element : parameters) {
+            view.displayMessage("\t" + displayIndex + ". " + element[0] + " " + element[1]);
 
-            keyIndex++;
             displayIndex++;
         }
 
@@ -912,11 +936,7 @@ public class UmlCliController {
             return null;
         }
 
-        String[] parameterPair = new String[2];
-        parameterPair[0] = paras[(parameterIndex - 1)][0];
-        parameterPair[1] = paras[(parameterIndex - 1)][1];
-
-        return parameterPair;
+        return parameters.get(parameterIndex - 1);
     }
 
     /**

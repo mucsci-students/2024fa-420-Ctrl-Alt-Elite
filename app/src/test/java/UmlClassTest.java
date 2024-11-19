@@ -1,6 +1,5 @@
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -43,9 +42,11 @@ public class UmlClassTest {
 
     @Test
     public void testGetMethods() {
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("int", "P1");
-        parameters.put("void", "P2");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"void", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
         String returnType = "void";
 
         umlClass.addMethod("Method1", parameters, returnType);
@@ -160,16 +161,19 @@ public class UmlClassTest {
     @Test
     @DisplayName ("Equals: Test that two methods that are the same equal each other")
     public void testEquality() {
-        Map<String, String> mapA = new LinkedHashMap<>();
-        mapA.put("P1", "int");
-        mapA.put("P2", "String");
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"void", "P2"};
+        
+        List<String[]> parametersA = new ArrayList<>();
+        parametersA.add(P1);
+        parametersA.add(P2);
 
-        Map<String, String> mapB = new LinkedHashMap<>();
-        mapB.put("P1", "int");
-        mapB.put("P2", "String");
+        List<String[]> parametersB = new ArrayList<>();
+        parametersB.add(P1);
+        parametersB.add(P2);
 
-        UmlClass.Method methodA = umlClass.new Method("Method1", mapA, "void");
-        UmlClass.Method methodB = umlClass.new Method("Method1", mapB, "int");
+        UmlClass.Method methodA = umlClass.new Method("Method1", parametersA, "void");
+        UmlClass.Method methodB = umlClass.new Method("Method1", parametersB, "int");
         
         assertTrue(methodA.equals(methodB));
     }
@@ -180,12 +184,14 @@ public class UmlClassTest {
     @Test
     @DisplayName ("Equals: Test that two methods, that are not the same, are not equal, failure test")
     public void testNotEquality() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("P1", "int");
-        map.put("P2", "String");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"void", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
 
-        UmlClass.Method methodA = umlClass.new Method("Method1", map, "void");
-        UmlClass.Method methodB = umlClass.new Method("Method2", map, "void");
+        UmlClass.Method methodA = umlClass.new Method("Method1", parameters, "void");
+        UmlClass.Method methodB = umlClass.new Method("Method2", parameters, "void");
        
         assertFalse(methodA.equals(methodB));
     }
@@ -196,16 +202,20 @@ public class UmlClassTest {
     @Test
     @DisplayName ("Equals: Test that two methods with same name, but different parameter types, do not equal each other, failure test")
     public void testNotEqualityDiffPara() {
-        Map<String, String> mapA = new LinkedHashMap<>();
-        mapA.put("P1", "int");
-        mapA.put("P2", "String");
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"void", "P2"};
+        String[] otherP2 = {"int", "P2"};
+        
+        List<String[]> parametersA = new ArrayList<>();
+        parametersA.add(P1);
+        parametersA.add(P2);
 
-        Map<String, String> mapB = new LinkedHashMap<>();
-        mapB.put("P1", "int");
-        mapB.put("P2", "int");
+        List<String[]> parametersB = new ArrayList<>();
+        parametersB.add(P1);
+        parametersB.add(otherP2);
 
-        UmlClass.Method methodA = umlClass.new Method("Method1", mapA, "void");
-        UmlClass.Method methodB = umlClass.new Method("Method1", mapB, "int");
+        UmlClass.Method methodA = umlClass.new Method("Method1", parametersA, "void");
+        UmlClass.Method methodB = umlClass.new Method("Method1", parametersB, "int");
        
         assertFalse(methodA.equals(methodB));
     }
@@ -218,12 +228,14 @@ public class UmlClassTest {
     @Test
     @DisplayName ("HashCode: Test that the same objects have the same hash code")
     public void testHashCode() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("P1", "int");
-        map.put("P2", "String");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"void", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
         
-        UmlClass.Method methodA = umlClass.new Method("Method1", map, "int");
-        UmlClass.Method methodB = umlClass.new Method("Method1", map, "int");
+        UmlClass.Method methodA = umlClass.new Method("Method1", parameters, "int");
+        UmlClass.Method methodB = umlClass.new Method("Method1", parameters, "int");
         
         assertEquals(methodA.hashCode(), methodB.hashCode());
     }
@@ -234,12 +246,14 @@ public class UmlClassTest {
     @Test
     @DisplayName ("HashCode: Test that different objects different hash code, failure test")
     public void testHashCodeDifferent() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("P1", "int");
-        map.put("P2", "String");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"void", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
         
-        UmlClass.Method methodA = umlClass.new Method("Method1", map, "int");
-        UmlClass.Method methodB = umlClass.new Method("Method2", map, "int");
+        UmlClass.Method methodA = umlClass.new Method("Method1", parameters, "int");
+        UmlClass.Method methodB = umlClass.new Method("Method2", parameters, "int");
         
         assertNotEquals(methodA.hashCode(), methodB.hashCode());
     }
@@ -252,11 +266,13 @@ public class UmlClassTest {
     @Test
     @DisplayName ("MethodToString: Print out the object in the correct way with the correct information")
     public void testMethodToString() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("P1", "int");
-        map.put("P2", "String");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"String", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
         
-        umlClass.addMethod("Method1", map, "int");
+        umlClass.addMethod("Method1", parameters, "int");
         
         assertEquals("""
                      Class: ClassA
@@ -274,11 +290,13 @@ public class UmlClassTest {
     @Test
     @DisplayName ("AddMethod: Add an method to the class")
     public void testAddMethod() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("P1", "int");
-        map.put("P2", "String");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"String", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
         
-            assertTrue(umlClass.addMethod("Method1", map, "int"));
+            assertTrue(umlClass.addMethod("Method1", parameters, "int"));
     }
 
     /**
@@ -287,17 +305,21 @@ public class UmlClassTest {
     @Test
     @DisplayName ("AddMethod: Add methods with the same name, but different parameters")
     public void testAddMethodSameNameDiffPara() {
-        Map<String, String> mapA = new LinkedHashMap<>();
-        mapA.put("P1", "int");
-        mapA.put("P2", "String");
-
-        Map<String, String> mapB = new LinkedHashMap<>();
-        mapB.put("P1", "int");
-        mapB.put("P2", "int");
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"void", "P2"};
+        String[] otherP2 = {"int", "P2"};
         
-        umlClass.addMethod("Method1", mapA, "int");
+        List<String[]> parametersA = new ArrayList<>();
+        parametersA.add(P1);
+        parametersA.add(P2);
+
+        List<String[]> parametersB = new ArrayList<>();
+        parametersB.add(P1);
+        parametersB.add(otherP2);
+        
+        umlClass.addMethod("Method1", parametersA, "int");
        
-        assertTrue(umlClass.addMethod("Method1", mapB, "int"));
+        assertTrue(umlClass.addMethod("Method1", parametersB, "int"));
     }
 
     /**
@@ -306,9 +328,9 @@ public class UmlClassTest {
     @Test
     @DisplayName ("AddMethod: Add a method with zero parameters")
     public void testAddMethodNoPara() {
-        Map<String, String> map = new LinkedHashMap<>();
+        List<String[]> parameters = new ArrayList<>();
         
-        assertTrue(umlClass.addMethod("Method1", map, "int"));
+        assertTrue(umlClass.addMethod("Method1", parameters, "int"));
     }
 
     /**
@@ -317,13 +339,15 @@ public class UmlClassTest {
     @Test
     @DisplayName ("AddMethod: Add a duplicate method, failure test")
     public void testAddMethodNotExist() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("P1", "int");
-        map.put("P2", "int");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"String", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
         
-        umlClass.addMethod("Method1", map, "int");
+        umlClass.addMethod("Method1", parameters, "int");
         
-        assertFalse(umlClass.addMethod("Method1", map, "void"));
+        assertFalse(umlClass.addMethod("Method1", parameters, "void"));
     }
 
     /**
@@ -332,11 +356,13 @@ public class UmlClassTest {
     @Test
     @DisplayName ("AddMethod: Add a method with an empty name, failure test")
     public void testAddMethodNameNotExist() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("P1", "int");
-        map.put("P2", "int");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"String", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
         
-        assertFalse(umlClass.addMethod("", map, "int"));
+        assertFalse(umlClass.addMethod("", parameters, "int"));
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -347,13 +373,15 @@ public class UmlClassTest {
     @Test
     @DisplayName ("DeleteMethod: Delete a method")
     public void testDeleteMethod() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("P1", "int");
-        map.put("P2", "int");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"int", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
 
-        umlClass.addMethod("Method1", map, "int");
+        umlClass.addMethod("Method1", parameters, "int");
        
-        assertTrue(umlClass.deleteMethod("Method1", map, "int"));
+        assertTrue(umlClass.deleteMethod("Method1", parameters, "int"));
     }
     
     /**
@@ -362,18 +390,22 @@ public class UmlClassTest {
     @Test
     @DisplayName ("DeleteMethod: Delete a method that has the same name as another")
     public void testDeleteMethodSameName() {
-        Map<String, String> mapA = new LinkedHashMap<>();
-        mapA.put("P1", "int");
-        mapA.put("P2", "String");
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"void", "P2"};
+        String[] otherP2 = {"int", "P2"};
+        
+        List<String[]> parametersA = new ArrayList<>();
+        parametersA.add(P1);
+        parametersA.add(P2);
 
-        Map<String, String> mapB = new LinkedHashMap<>();
-        mapB.put("P1", "int");
-        mapB.put("P2", "int");
+        List<String[]> parametersB = new ArrayList<>();
+        parametersB.add(P1);
+        parametersB.add(otherP2);
 
-        umlClass.addMethod("Method1", mapA, "int");
-        umlClass.addMethod("Method1", mapB, "int");
+        umlClass.addMethod("Method1", parametersA, "int");
+        umlClass.addMethod("Method1", parametersB, "int");
        
-        assertTrue(umlClass.deleteMethod("Method1", mapA, "int"));
+        assertTrue(umlClass.deleteMethod("Method1", parametersA, "int"));
     }
 
     /**
@@ -382,11 +414,13 @@ public class UmlClassTest {
     @Test
     @DisplayName ("DeleteMethod: Delete an method that dose not exist, failure test")
     public void testDeleteMethodNotExist() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("P1", "int");
-        map.put("P2", "String");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"int", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
 
-        assertFalse(umlClass.deleteMethod("Method1", map, "int"));
+        assertFalse(umlClass.deleteMethod("Method1", parameters, "int"));
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -397,13 +431,15 @@ public class UmlClassTest {
     @Test
     @DisplayName ("RenameMethod: Rename an method")
     public void testRenameMethod() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("P1", "int");
-        map.put("P2", "String");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"int", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
 
-        umlClass.addMethod("Method1", map, "int");
+        umlClass.addMethod("Method1", parameters, "int");
        
-        assertTrue(umlClass.renameMethod("Method1", map, "int", "Method2"));
+        assertTrue(umlClass.renameMethod("Method1", parameters, "int", "Method2"));
     }
     
     /**
@@ -412,18 +448,22 @@ public class UmlClassTest {
     @Test
     @DisplayName ("RenameMethod: Rename an method")
     public void testRenameMethodSameName() {
-        Map<String, String> mapA = new LinkedHashMap<>();
-        mapA.put("P1", "int");
-        mapA.put("P2", "String");
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"void", "P2"};
+        String[] otherP2 = {"int", "P2"};
+        
+        List<String[]> parametersA = new ArrayList<>();
+        parametersA.add(P1);
+        parametersA.add(P2);
 
-        Map<String, String> mapB = new LinkedHashMap<>();
-        mapB.put("P1", "int");
-        mapB.put("P2", "int");
+        List<String[]> parametersB = new ArrayList<>();
+        parametersB.add(P1);
+        parametersB.add(otherP2);
 
-        umlClass.addMethod("Method1", mapA, "int");
-        umlClass.addMethod("Method2", mapB, "void");
+        umlClass.addMethod("Method1", parametersA, "int");
+        umlClass.addMethod("Method2", parametersB, "void");
 
-        assertTrue(umlClass.renameMethod("Method1", mapA, "int", "Method2"));
+        assertTrue(umlClass.renameMethod("Method1", parametersA, "int", "Method2"));
     }
 
     /**
@@ -432,9 +472,9 @@ public class UmlClassTest {
     @Test
     @DisplayName ("RenameMethod: Rename a method that does not exist, failure test")
     public void testRenameMethodNotExist() {
-        Map<String, String> map = new LinkedHashMap<>();
+        List<String[]> parameters = new ArrayList<>();
 
-        assertFalse(umlClass.renameMethod("Method1", map, "int", "Method2"));
+        assertFalse(umlClass.renameMethod("Method1", parameters, "int", "Method2"));
     }
 
     /**
@@ -443,14 +483,16 @@ public class UmlClassTest {
     @Test
     @DisplayName ("RenameMethod: Rename an method")
     public void testRenameMethodSameNameFalse() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("P1", "int");
-        map.put("P2", "String");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"int", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
 
-        umlClass.addMethod("Method1", map, "int");
-        umlClass.addMethod("Method2", map, "void");
+        umlClass.addMethod("Method1", parameters, "int");
+        umlClass.addMethod("Method2", parameters, "void");
 
-        assertFalse(umlClass.renameMethod("Method1", map, "int", "Method2"));
+        assertFalse(umlClass.renameMethod("Method1", parameters, "int", "Method2"));
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -461,14 +503,16 @@ public class UmlClassTest {
     @Test
     @DisplayName ("removeParameter: Remove a parameter from a method")
     public void testRemoveParameter() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("P1", "int");
-        map.put("P2", "String");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"int", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
         
-        String[] parameterPair = {"P1", "int"};
-        umlClass.addMethod("Method1", map, "int");
+        String[] parameterPair = {"int", "P1"};
+        umlClass.addMethod("Method1", parameters, "int");
 
-        assertTrue(umlClass.removeParameter("Method1", map, "int", parameterPair));
+        assertTrue(umlClass.removeParameter("Method1", parameters, "int", parameterPair));
     }
 
     /**
@@ -477,14 +521,16 @@ public class UmlClassTest {
     @Test
     @DisplayName ("removeParameter: Try to remove a parameter that does not exist, failure test")
     public void testRemoveParameterNotExist() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("P1", "int");
-        map.put("P2", "String");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"String", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
         
-        String[] parameterPair = {"P3", "int"};
-        umlClass.addMethod("Method1", map, "int");
+        String[] parameterPair = {"int", "P3"};
+        umlClass.addMethod("Method1", parameters, "int");
         
-        assertFalse(umlClass.removeParameter("MethodA", map, "int", parameterPair));
+        assertFalse(umlClass.removeParameter("MethodA", parameters, "int", parameterPair));
     }
 
     /**
@@ -493,10 +539,10 @@ public class UmlClassTest {
     @Test
     @DisplayName ("removeParameter: Remove a parameter from a method that does not exist, failure test")
     public void testRemoveParameterMethodNotExist() {
-        Map<String, String> map = new LinkedHashMap<>();
+        List<String[]> parameters = new ArrayList<>();
         String[] parameterPair = {"P1", "int"};
 
-        assertFalse(umlClass.removeParameter("MethodA", map, "int", parameterPair));
+        assertFalse(umlClass.removeParameter("MethodA", parameters, "int", parameterPair));
     }
 
     /** 
@@ -505,17 +551,18 @@ public class UmlClassTest {
     @Test
     @DisplayName ("removeParameter: Remove a parameter with invalid input, failure test")
     public void testRemoveParameterInvalidInput() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("P1", "int");
-        map.put("P2", "String");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"String", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
         
-        String[] parameterPair = {"P 1", "int"};
-        umlClass.addMethod("Method1", map, "int");
+        String[] parameterPair = {"int", "P 1"};
+        umlClass.addMethod("Method1", parameters, "int");
         
-        assertFalse(umlClass.removeParameter("MethodA", map, "int", parameterPair));
+        assertFalse(umlClass.removeParameter("MethodA", parameters, "int", parameterPair));
     }
 
-    
 /*----------------------------------------------------------------------------------------------------------------*/   
     
     /**
@@ -524,16 +571,20 @@ public class UmlClassTest {
     @Test
     @DisplayName ("changeParameters: Change the list of parameters of a method")
     public void testChangeParameters() {
-        Map<String, String> mapA = new LinkedHashMap<>();
-        mapA.put("P1", "int");
-        mapA.put("P2", "String");
-
-        Map<String, String> mapB = new LinkedHashMap<>();
-        mapB.put("P3", "int");
-
-        umlClass.addMethod("Method1", mapA, "int");
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"void", "P2"};
+        String[] P3 = {"int", "P3"};
         
-        assertTrue(umlClass.changeParameters("Method1", mapA, "int", mapB));
+        List<String[]> parametersA = new ArrayList<>();
+        parametersA.add(P1);
+        parametersA.add(P2);
+
+        List<String[]> parametersB = new ArrayList<>();
+        parametersB.add(P3);
+
+        umlClass.addMethod("Method1", parametersA, "int");
+        
+        assertTrue(umlClass.changeParameters("Method1", parametersA, "int", parametersB));
     }
 
     /**
@@ -542,14 +593,17 @@ public class UmlClassTest {
     @Test
     @DisplayName ("changeParameters: Change the list of parameters of a method from none to a few")
     public void testChangeParametersNoneFew() {
-        Map<String, String> mapA = new LinkedHashMap<>();
-        umlClass.addMethod("Method1", mapA, "int");
-
-        Map<String, String> mapB = new LinkedHashMap<>();
-        mapB.put("P1", "int");
-        mapB.put("P2", "String");
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"void", "P2"};
         
-        assertTrue(umlClass.changeParameters("Method1", mapA, "int", mapB));
+        List<String[]> parametersA = new ArrayList<>();
+        umlClass.addMethod("Method1", parametersA, "int");
+        
+        List<String[]> parametersB = new ArrayList<>();
+        parametersB.add(P1);
+        parametersB.add(P2);
+        
+        assertTrue(umlClass.changeParameters("Method1", parametersA, "int", parametersB));
     }
 
     /**
@@ -558,14 +612,18 @@ public class UmlClassTest {
     @Test
     @DisplayName ("changeParameters: Change the list of parameters of a method from a few to none")
     public void testChangeParametersFewNone() {
-        Map<String, String> mapA = new LinkedHashMap<>();
-        mapA.put("P1", "int");
-        mapA.put("P2", "String");
-        umlClass.addMethod("Method1", mapA, "int");
-
-        Map<String, String> mapB = new LinkedHashMap<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"void", "P2"};
         
-        assertTrue(umlClass.changeParameters("Method1", mapA, "int", mapB));
+        List<String[]> parametersA = new ArrayList<>();
+        parametersA.add(P1);
+        parametersA.add(P2);
+
+        List<String[]> parametersB = new ArrayList<>();
+        
+        umlClass.addMethod("Method1", parametersA, "int");
+        
+        assertTrue(umlClass.changeParameters("Method1", parametersA, "int", parametersB));
     }
 
     /**
@@ -574,11 +632,13 @@ public class UmlClassTest {
     @Test
     @DisplayName ("changeParameters: Change the list of parameters from a method that does not exist, failure test")
     public void testChangeParametersMethodNotExist() {
-        Map<String, String> mapA = new LinkedHashMap<>();
-        mapA.put("P1", "int");
-        Map<String, String> mapB = new LinkedHashMap<>();
+        String[] P1 = {"int", "P1"};
         
-        assertFalse(umlClass.changeParameters("MethodB", mapA, "int", mapB));
+        List<String[]> parametersA = new ArrayList<>();
+        parametersA.add(P1);
+        List<String[]> parametersB = new ArrayList<>();
+        
+        assertFalse(umlClass.changeParameters("MethodB", parametersA, "int", parametersB));
     }
 
     /**
@@ -587,16 +647,19 @@ public class UmlClassTest {
     @Test
     @DisplayName ("changeParameters: Change the list of parameters to the same list, failure test")
     public void testChangeParametersSameList() {
-        Map<String, String> mapA = new LinkedHashMap<>();
-        mapA.put("P1", "int");
-        mapA.put("P2", "String");
-        umlClass.addMethod("Method1", mapA, "int");
+        List<String[]> parametersA = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"String", "P2"};
+        parametersA.add(P1);
+        parametersA.add(P2);
+       
+        List<String[]> parametersB = new ArrayList<>();
+        parametersB.add(P1);
+        parametersB.add(P2);
 
-        Map<String, String> mapB = new LinkedHashMap<>();
-        mapB.put("P1", "int");
-        mapB.put("P2", "String");
+        umlClass.addMethod("Method1", parametersA, "int");
         
-        assertFalse(umlClass.changeParameters("Method1", mapA, "int", mapB));
+        assertFalse(umlClass.changeParameters("Method1", parametersA, "int", parametersB));
     }
 
     /**
@@ -605,15 +668,19 @@ public class UmlClassTest {
     @Test
     @DisplayName ("changeParameters: Change the list of parameters with invalid input, failure test")
     public void testChangeParametersInvalidInput() {
-        Map<String, String> mapA = new LinkedHashMap<>();
-        mapA.put("P1", "int");
-        mapA.put("P2", "String");
-        umlClass.addMethod("MethodA", mapA, "int");
-
-        Map<String, String> mapB = new LinkedHashMap<>();
-        mapB.put("P 1", "int");
+        List<String[]> parametersA = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"String", "P2"};
+        parametersA.add(P1);
+        parametersA.add(P2);
         
-        assertFalse(umlClass.changeParameters("MethodA", mapA, "int", mapB));
+        List<String[]> parametersB = new ArrayList<>();
+        String[] P3 = {"int", "P 3"};
+        parametersA.add(P3);
+
+        umlClass.addMethod("MethodA", parametersA, "int");
+        
+        assertFalse(umlClass.changeParameters("MethodA", parametersA, "int", parametersB));
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -628,12 +695,14 @@ public class UmlClassTest {
         umlClass.addField("int", "Field-B");
         umlClass.addField("int", "Field-C");
 
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("P1", "int");
-        map.put("P2", "String");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"String", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
 
-        umlClass.addMethod("Method1", map, "int");
-        umlClass.addMethod("Method2", map, "void");
+        umlClass.addMethod("Method1", parameters, "int");
+        umlClass.addMethod("Method2", parameters, "void");
         
         assertEquals("""
                      Class: ClassA

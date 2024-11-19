@@ -16,16 +16,6 @@ public class CLI {
     }
 
     /**
-     * Displays a generic message to the user, but with no new line
-     *  at the end of the print statement.
-     * 
-     * @param message The message to display.
-     */
-    public void displayMessageNoLn(String message) {
-        System.out.print(message);
-    }
-
-    /**
      * Displays the available commands and their descriptions to the user.
      */
     public void displayHelp() {
@@ -50,6 +40,7 @@ public class CLI {
         System.out.println("  add-method           - Add a method to a class");
         System.out.println("  delete-method        - Delete a method from a class");
         System.out.println("  rename-method        - Rename a method in a class");
+        System.out.println("  change-return-type   - Change the return type of a method");
         System.out.println("  remove-parameter     - Remove a parameter from a method");
         System.out.println("  change-parameters    - Replace all parameters for a method");
         

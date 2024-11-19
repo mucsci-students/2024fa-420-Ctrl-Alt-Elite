@@ -1,25 +1,50 @@
 package Controller;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Random;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.io.IOException;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import Model.JsonUtils;
 import Model.RelationshipType;
 import Model.UmlClass;
-import Model.UmlRelationship;
-import Model.JsonUtils;
 import Model.UmlEditorModel;
+import Model.UmlRelationship;
 
 public class UmlGuiController extends JFrame {
     private UmlEditorModel umlEditorModel;
@@ -644,7 +669,7 @@ public class UmlGuiController extends JFrame {
         submitButton.addActionListener(e -> {
             String className = (String) classNameComboBox.getSelectedItem();
             String methodName = methodNameField.getText();
-            LinkedHashMap<String, String> paraList = parseParameterList(parameterListField.getText());
+            List<String[]> paraList = parseParameterList(parameterListField.getText());
             String returnType = returnTypeField.getText(); // Get return type from the input field
 
             // Check if method addition was successful
@@ -711,7 +736,7 @@ public class UmlGuiController extends JFrame {
         submitButton.addActionListener(e -> {
             String className = (String) classNameComboBox.getSelectedItem();
             String methodName = methodNameField.getText();
-            Map<String, String> paraList = parseParameterList(parameterListField.getText());
+            List<String[]> paraList = parseParameterList(parameterListField.getText());
 
             // Update this line to reflect the correct method signature
             if (umlEditor.deleteMethod(className, methodName, paraList, "returnType")) { // Provide the correct return
@@ -782,7 +807,7 @@ public class UmlGuiController extends JFrame {
             String className = (String) classNameComboBox.getSelectedItem();
             String oldMethodName = oldMethodNameField.getText();
             String newMethodName = newMethodNameField.getText();
-            Map<String, String> paraList = parseParameterList(parameterListField.getText());
+            List<String[]> paraList = parseParameterList(parameterListField.getText());
             String returnType = returnTypeField.getText(); // Get return type from input field
 
             if (umlEditor.renameMethod(className, oldMethodName, paraList, returnType, newMethodName)) {
@@ -811,24 +836,22 @@ public class UmlGuiController extends JFrame {
     }
 
     // Helper Function
-    private LinkedHashMap<String, String> parseParameterList(String input) {
-        LinkedHashMap<String, String> paraMap = new LinkedHashMap<>();
+    private List<String[]> parseParameterList(String input) {
+        List<String[]> paraList = new ArrayList<>();
         if (input != null && !input.trim().isEmpty()) {
             String[] parameters = input.split(","); // Split the input by commas
             for (String parameter : parameters) {
                 parameter = parameter.trim(); // Trim whitespace
                 String[] parts = parameter.split(" "); // Split by space to separate type and name
                 if (parts.length == 2) {
-                    String type = parts[0].trim();
-                    String name = parts[1].trim();
-                    paraMap.put(name, type); // Add to the map
+                    paraList.add(parts); // Add to the list
                 } else {
                     // Handle invalid parameter format
                     System.out.println("Invalid parameter format: " + parameter);
                 }
             }
         }
-        return paraMap; // Return the populated parameter map
+        return paraList; // Return the populated parameter map
     }
 
     // Delete Parameter Panel
@@ -930,8 +953,8 @@ public class UmlGuiController extends JFrame {
             String oldParamsText = oldParametersField.getText();
             String newParamsText = newParametersField.getText();
 
-            Map<String, String> oldParameters = parseParameterString(oldParamsText);
-            Map<String, String> newParameters = parseParameterString(newParamsText);
+            List<String[]> oldParameters = parseParameterString(oldParamsText);
+            List<String[]> newParameters = parseParameterString(newParamsText);
 
             boolean result = umlEditor.changeParameters(className, methodName, oldParameters, returnType,
                     newParameters);
@@ -962,16 +985,14 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
 
-    private Map<String, String> parseParameterString(String parameterString) {
-        Map<String, String> parameters = new LinkedHashMap<>();
+    private List<String[]> parseParameterString(String parameterString) {
+        List<String[]> parameters = new ArrayList<>();
         String[] paramPairs = parameterString.split(",\\s*");
 
         for (String pair : paramPairs) {
             String[] parts = pair.trim().split("\\s+");
             if (parts.length == 2) {
-                String type = parts[0];
-                String name = parts[1];
-                parameters.put(name, type);
+                parameters.add(parts);
             }
         }
         return parameters;
@@ -1629,6 +1650,5 @@ public class UmlGuiController extends JFrame {
 
             return width;
         }
-
     }
 }
