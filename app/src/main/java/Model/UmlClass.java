@@ -21,6 +21,19 @@ public class UmlClass {
     /** An object to be used in the case that a method has no parameters */
     private List<String[]> parametersNull;
 
+    // GUI
+    public boolean deleteMethod(String methodName) {
+        for (Iterator<Method> iterator = methods.iterator(); iterator.hasNext();) {
+            Method method = iterator.next();
+            if (method.getName().equals(methodName)) {
+                iterator.remove(); // Remove the method
+                return true;
+            }
+        }
+        return false; // Return false if the method was not found
+    }
+
+
     public List<String[]> getMethodParameters(String methodName) {
         if (methods == null || methods.isEmpty()) {
             return null;
@@ -34,7 +47,7 @@ public class UmlClass {
 
         return null; // Return null if method is not found
     }
-    
+
     public String getMethodReturnType(String methodName) {
         if (methods == null || methods.isEmpty()) {
             return null;

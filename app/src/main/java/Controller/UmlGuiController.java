@@ -706,65 +706,59 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
 
-    // Delete Method Panel
     private void showDeleteMethodPanel() {
-        JDialog dialog = new JDialog(this, "Delete Method", true);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
-        JPanel deleteMethodPanel = new JPanel();
-        deleteMethodPanel.setLayout(new BoxLayout(deleteMethodPanel, BoxLayout.Y_AXIS));
-        deleteMethodPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
-
-        // Get class names from the model
-        String[] classNames = umlEditorModel.getClassNames();
-
-        // Create a combo box for selecting the class name
-        JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
-        JTextField methodNameField = new JTextField(15); // Adjust width
-        JTextField parameterListField = new JTextField(15); // Adjust width
-
-        deleteMethodPanel.add(new JLabel("Class Name:"));
-        deleteMethodPanel.add(Box.createVerticalStrut(5));
-        deleteMethodPanel.add(classNameComboBox);
-        deleteMethodPanel.add(Box.createVerticalStrut(10));
-        deleteMethodPanel.add(new JLabel("Method Name:"));
-        deleteMethodPanel.add(Box.createVerticalStrut(5));
-        deleteMethodPanel.add(methodNameField);
-        deleteMethodPanel.add(Box.createVerticalStrut(10));
-        deleteMethodPanel.add(new JLabel("Parameter List (format: type1 name1, type2 name2):"));
-        deleteMethodPanel.add(Box.createVerticalStrut(5));
-        deleteMethodPanel.add(parameterListField);
-        deleteMethodPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-
-        JButton submitButton = new JButton("Submit");
-        submitButton.addActionListener(e -> {
-            String className = (String) classNameComboBox.getSelectedItem();
-            String methodName = methodNameField.getText();
-            List<String[]> paraList = parseParameterList(parameterListField.getText());
-
-            // Update this line to reflect the correct method signature
-            if (umlEditor.deleteMethod(className, methodName, paraList, "returnType")) { // Provide the correct return
-                                                                                         // type
-                outputArea.append("Method '" + methodName + "' deleted from class '" + className + "'.\n");
-                drawingPanel.revalidate();
-                drawingPanel.repaint();
-            } else {
-                outputArea.append("Failed to delete method '" + methodName + "' from class '" + className + "'.\n");
+        // Step 1: Get the class name from the user (you can add another drop-down for class selection if needed)
+        String[] classNames = umlEditorModel.getClasses().keySet().toArray(new String[0]);
+        JComboBox<String> classComboBox = new JComboBox<>(classNames);
+        
+        // Step 2: Create the combo box for methods based on the selected class
+        JComboBox<String> methodComboBox = new JComboBox<>();
+        
+        // Add a listener to the class combo box to update methods based on the selected class
+        classComboBox.addActionListener(e -> {
+            String selectedClass = (String) classComboBox.getSelectedItem();
+            if (selectedClass != null) {
+                // Get the list of methods for the selected class
+                String[] methodNames = umlEditorModel.getMethodNames(selectedClass);
+                methodComboBox.removeAllItems(); // Clear existing items
+                for (String methodName : methodNames) {
+                    methodComboBox.addItem(methodName); // Add new method names to the drop-down
+                }
             }
-
-            // Clear input fields and close dialog after submission
-            methodNameField.setText("");
-            parameterListField.setText("");
-            dialog.dispose();
         });
-
-        deleteMethodPanel.add(submitButton);
-
-        dialog.add(deleteMethodPanel);
-        dialog.pack();
-        dialog.setLocationRelativeTo(this); // Center dialog
-        dialog.setVisible(true);
+        
+        // Step 3: Set up the dialog panel
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(new JLabel("Select Class:"));
+        panel.add(classComboBox);
+        panel.add(new JLabel("Select Method to Delete:"));
+        panel.add(methodComboBox);
+        
+        // Step 4: Show the dialog with only one "Submit" button
+        int option = JOptionPane.showOptionDialog(this, panel, "Delete Method",
+            JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[] {"Submit"}, null);
+        
+        if (option == JOptionPane.OK_OPTION) {
+            // Get the selected class and method
+            String selectedClass = (String) classComboBox.getSelectedItem();
+            String selectedMethod = (String) methodComboBox.getSelectedItem();
+            
+            // Step 5: Delete the method from the class
+            if (selectedClass != null && selectedMethod != null) {
+                boolean success = umlEditorModel.deleteMethod(selectedClass, selectedMethod);
+                
+                // Only update the UI if the deletion is successful
+                if (success) {
+                    // Immediate UI updates without the success popup
+                    drawingPanel.revalidate();
+                    drawingPanel.repaint();
+                    updateButtonStates(); // Ensure button states reflect the updated method list
+                }
+            }
+        }
     }
+    
 
     // Rename Method Panel
     private void showRenameMethodPanel() {

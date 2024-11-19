@@ -23,6 +23,15 @@ public class UmlEditorModel {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
+    // GUI
+    public boolean deleteMethod(String className, String methodName) {
+        UmlClass umlClass = classes.get(className); // Get the class by name
+        if (umlClass != null) {
+            return umlClass.deleteMethod(methodName); // Call UmlClass's delete method
+        }
+        return false;
+    }
+    
     public List<String[]> getParameters(String className, String methodName) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
