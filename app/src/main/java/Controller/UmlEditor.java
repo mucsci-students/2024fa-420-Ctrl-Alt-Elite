@@ -1,13 +1,11 @@
 package Controller;
-import Model.Memento;
-
-
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import Model.Memento;
 import Model.RelationshipType;
 import Model.UmlClass;
 import Model.UmlEditorModel;
@@ -17,12 +15,12 @@ public class UmlEditor {
     private UmlEditorModel model;
 
     /*----------------------------------------------------------------------------------------------------------------*/
-    private Memento memento;
+    private Memento memento = new Memento();
     
 
     public UmlEditor(UmlEditorModel initialModel) {
-        this.model = new UmlEditorModel();
-        this.memento = new Memento();
+        this.model = initialModel; // Use a deep copy here
+        //memento.saveState(this.model); // Save initial state
     }
 
 
@@ -61,7 +59,6 @@ public void redo() {
      * @return {@code true} if the class was added, {@code false} otherwise.
      */
     public boolean addClass(String name, Point position) {
-        
         if (name == null || name.isEmpty() || name.contains(" ")) {
             return false;
         }
