@@ -8,9 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-
-import java.util.Stack;
-
 import Model.RelationshipType;
 import Model.UmlClass;
 import Model.UmlEditorModel;
@@ -20,12 +17,12 @@ public class UmlEditor {
     private UmlEditorModel model;
 
     /*----------------------------------------------------------------------------------------------------------------*/
-    private Memento memento = new Memento();
+    private Memento memento;
     
 
     public UmlEditor(UmlEditorModel initialModel) {
-        this.model =  initialModel; // Use a deep copy here
-        memento.saveState(this.model); // Save initial state
+        this.model = new UmlEditorModel();
+        this.memento = new Memento();
     }
 
 
@@ -34,8 +31,8 @@ public class UmlEditor {
 public void undo() {
     UmlEditorModel previousState = memento.undoState();
     if (previousState != null) {
-        this.model = previousState;
-        System.out.println("Undo performed.");
+        model = previousState;
+        System.out.println("Undo successful.");
     } else {
         System.out.println("Nothing to undo.");
     }
@@ -45,12 +42,11 @@ public void undo() {
 public void redo() {
     UmlEditorModel nextState = memento.redoState();
     if (nextState != null) {
-        this.model = nextState;
-        System.out.println("Redo performed.");
+        model = nextState;
+        System.out.println("Redo successful.");
     } else {
         System.out.println("Nothing to redo.");
     }
-
 }
     /*----------------------------------------------------------------------------------------------------------------*/
     /*                                              CLASS MANAGEMENT METHODS                                          */
@@ -65,6 +61,7 @@ public void redo() {
      * @return {@code true} if the class was added, {@code false} otherwise.
      */
     public boolean addClass(String name, Point position) {
+        
         if (name == null || name.isEmpty() || name.contains(" ")) {
             return false;
         }
@@ -94,6 +91,7 @@ public void redo() {
  * @return {@code true} if the class was deleted, {@code false} otherwise.
  */
 public boolean deleteClass(String name) {
+    
     if (name == null || name.isEmpty()) {
         return false;
     }
@@ -110,6 +108,7 @@ public boolean deleteClass(String name) {
      * @return {@code true} if the class was renamed, {@code false} otherwise.
      */
     public boolean renameClass(String oldName, String newName) {
+        
         if (oldName == null || oldName.isEmpty() || newName == null || newName.isEmpty() || newName.contains(" ")) {
             return false;
         }
@@ -124,6 +123,7 @@ public boolean deleteClass(String name) {
      * @return The UML class if found, {@code null} otherwise.
      */
     public UmlClass getClass(String name) {
+        
         if (name == null || name.isEmpty()) {
             return null;
         }

@@ -23,6 +23,7 @@ import Model.UmlEditorModel;
 import Model.UmlRelationship;
 import View.CLI;
 
+
 /**
  * The UmlCliController class handles the command-line interface (CLI)
  * interactions
@@ -37,6 +38,7 @@ public class UmlCliController {
     private final CLI view;
     private final Scanner scanner;
     private final LineReader reader; // Moved here to be a class field
+    UmlEditor controller = new UmlEditor(model);
 
     private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
         "add-class", "delete-class", "rename-class",
@@ -659,12 +661,12 @@ public class UmlCliController {
 
 
     public void handleUndo() {
-        umlEditor.undo();
-        System.out.println("Undo performed.");
+        controller.undo();
+        System.out.println("Undo Performed");
     }
 
     public void handleRedo() {
-        umlEditor.redo();
+        controller.redo();
         System.out.println("Redo performed.");
     }
 
