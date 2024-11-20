@@ -760,55 +760,51 @@ public class UmlGuiController extends JFrame {
     }
     
 
-    // Rename Method Panel
     private void showRenameMethodPanel() {
         JDialog dialog = new JDialog(this, "Rename Method", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
+    
         JPanel renameMethodPanel = new JPanel();
         renameMethodPanel.setLayout(new BoxLayout(renameMethodPanel, BoxLayout.Y_AXIS));
         renameMethodPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
-
+    
         // Get class names from the model
         String[] classNames = umlEditorModel.getClassNames();
-
-        // Create a combo box for selecting the class name
+    
         JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
-        JTextField oldMethodNameField = new JTextField(15); // Adjust width
+        JComboBox<String> oldMethodComboBox = new JComboBox<>();
         JTextField newMethodNameField = new JTextField(15); // Adjust width
-        JTextField parameterListField = new JTextField(15); // Adjust width
-        JTextField returnTypeField = new JTextField(15); // Adjust width
-
+    
+        // Update oldMethodComboBox when classNameComboBox selection changes
+        classNameComboBox.addActionListener(e -> {
+            String selectedClass = (String) classNameComboBox.getSelectedItem();
+            String[] methodNames = umlEditorModel.getMethodNames(selectedClass); // Fetch methods for class
+            oldMethodComboBox.removeAllItems();
+            for (String method : methodNames) {
+                oldMethodComboBox.addItem(method);
+            }
+        });
+    
         renameMethodPanel.add(new JLabel("Class Name:"));
         renameMethodPanel.add(Box.createVerticalStrut(5));
         renameMethodPanel.add(classNameComboBox);
         renameMethodPanel.add(Box.createVerticalStrut(10));
         renameMethodPanel.add(new JLabel("Old Method Name:"));
         renameMethodPanel.add(Box.createVerticalStrut(5));
-        renameMethodPanel.add(oldMethodNameField);
+        renameMethodPanel.add(oldMethodComboBox);
         renameMethodPanel.add(Box.createVerticalStrut(10));
         renameMethodPanel.add(new JLabel("New Method Name:"));
         renameMethodPanel.add(Box.createVerticalStrut(5));
         renameMethodPanel.add(newMethodNameField);
-        renameMethodPanel.add(Box.createVerticalStrut(10));
-        renameMethodPanel.add(new JLabel("Parameter List (format: type1 name1, type2 name2):"));
-        renameMethodPanel.add(Box.createVerticalStrut(5));
-        renameMethodPanel.add(parameterListField);
-        renameMethodPanel.add(Box.createVerticalStrut(10));
-        renameMethodPanel.add(new JLabel("Return Type:"));
-        renameMethodPanel.add(Box.createVerticalStrut(5));
-        renameMethodPanel.add(returnTypeField);
         renameMethodPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-
+    
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             String className = (String) classNameComboBox.getSelectedItem();
-            String oldMethodName = oldMethodNameField.getText();
+            String oldMethodName = (String) oldMethodComboBox.getSelectedItem();
             String newMethodName = newMethodNameField.getText();
-            List<String[]> paraList = parseParameterList(parameterListField.getText());
-            String returnType = returnTypeField.getText(); // Get return type from input field
-
-            if (umlEditor.renameMethod(className, oldMethodName, paraList, returnType, newMethodName)) {
+    
+            if (umlEditorModel.renameMethod(className, oldMethodName, newMethodName)) { // Simplified renameMethod call
                 outputArea.append("Method '" + oldMethodName + "' renamed to '" + newMethodName + "' in class '"
                         + className + "'.\n");
                 drawingPanel.revalidate();
@@ -816,23 +812,18 @@ public class UmlGuiController extends JFrame {
             } else {
                 outputArea.append("Failed to rename method '" + oldMethodName + "' in class '" + className + "'.\n");
             }
-
-            // Clear input fields and close dialog after submission
-            oldMethodNameField.setText("");
-            newMethodNameField.setText("");
-            parameterListField.setText("");
-            returnTypeField.setText("");
+    
             dialog.dispose();
         });
-
+    
         renameMethodPanel.add(submitButton);
-
+    
         dialog.add(renameMethodPanel);
         dialog.pack();
         dialog.setLocationRelativeTo(this); // Center dialog
         dialog.setVisible(true);
     }
-
+    
     // Helper Function
     private List<String[]> parseParameterList(String input) {
         List<String[]> paraList = new ArrayList<>();

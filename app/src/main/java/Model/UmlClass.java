@@ -21,6 +21,21 @@ public class UmlClass {
     /** An object to be used in the case that a method has no parameters */
     private List<String[]> parametersNull;
 
+    public boolean renameMethod(String oldMethodName, String newMethodName) {
+        for (Method method : methods) {
+            if (method.getName().equals(oldMethodName)) {
+                if (methods.stream().anyMatch(m -> m.getName().equals(newMethodName))) {
+                    return false; // New method name already exists
+                }
+                method.setName(newMethodName);
+                return true; // Method renamed successfully
+            }
+        }
+        return false; // Old method not found
+    }
+    
+
+    
     // GUI
     public boolean deleteMethod(String methodName) {
         for (Iterator<Method> iterator = methods.iterator(); iterator.hasNext();) {

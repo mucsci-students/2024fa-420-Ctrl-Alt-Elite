@@ -23,6 +23,14 @@ public class UmlEditorModel {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
+    public boolean renameMethod(String className, String oldMethodName, String newMethodName) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass == null) {
+            return false; // Class not found
+        }
+        return umlClass.renameMethod(oldMethodName, newMethodName);
+    }
+    
     // GUI
     public boolean deleteMethod(String className, String methodName) {
         UmlClass umlClass = classes.get(className); // Get the class by name
