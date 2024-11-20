@@ -780,15 +780,22 @@ public class UmlGuiController extends JFrame {
     
         JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
         JComboBox<String> oldMethodComboBox = new JComboBox<>();
+        Map<String, Method> methodMap = new HashMap<>(); // Map to store method strings and corresponding Method objects
         JTextField newMethodNameField = new JTextField(15); // Adjust width
     
         // Update oldMethodComboBox when classNameComboBox selection changes
         classNameComboBox.addActionListener(e -> {
             String selectedClass = (String) classNameComboBox.getSelectedItem();
-            String[] methodNames = umlEditorModel.getMethodNames(selectedClass); // Fetch methods for class
-            oldMethodComboBox.removeAllItems();
-            for (String method : methodNames) {
-                oldMethodComboBox.addItem(method);
+            oldMethodComboBox.removeAllItems(); // Clear old items
+            methodMap.clear(); // Clear previous mappings
+    
+            if (selectedClass != null) {
+                List<Method> methods = umlEditorModel.getClass(selectedClass).getMethodsList(); // Fetch methods
+                for (Method method : methods) {
+                    String methodString = method.singleMethodString(); // Detailed method signature
+                    oldMethodComboBox.addItem(methodString); // Populate dropdown with method signature
+                    methodMap.put(methodString, method); // Map signature to the Method object
+                }
             }
         });
     
@@ -808,16 +815,23 @@ public class UmlGuiController extends JFrame {
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             String className = (String) classNameComboBox.getSelectedItem();
-            String oldMethodName = (String) oldMethodComboBox.getSelectedItem();
+            String selectedMethodString = (String) oldMethodComboBox.getSelectedItem();
             String newMethodName = newMethodNameField.getText();
     
-            if (umlEditorModel.renameMethod(className, oldMethodName, newMethodName)) { // Simplified renameMethod call
-                outputArea.append("Method '" + oldMethodName + "' renamed to '" + newMethodName + "' in class '"
-                        + className + "'.\n");
-                drawingPanel.revalidate();
-                drawingPanel.repaint();
+            // Retrieve the actual Method object from the map
+            Method selectedMethod = methodMap.get(selectedMethodString);
+    
+            if (className != null && selectedMethod != null) {
+                if (umlEditorModel.renameMethod(className, selectedMethod.getName(), newMethodName)) {
+                    outputArea.append("Method '" + selectedMethod.getName() + "' renamed to '" + newMethodName + "' in class '"
+                            + className + "'.\n");
+                    drawingPanel.revalidate();
+                    drawingPanel.repaint();
+                } else {
+                    outputArea.append("Failed to rename method '" + selectedMethod.getName() + "' in class '" + className + "'.\n");
+                }
             } else {
-                outputArea.append("Failed to rename method '" + oldMethodName + "' in class '" + className + "'.\n");
+                outputArea.append("Invalid selection or input. Rename failed.\n");
             }
     
             dialog.dispose();
@@ -830,6 +844,7 @@ public class UmlGuiController extends JFrame {
         dialog.setLocationRelativeTo(this); // Center dialog
         dialog.setVisible(true);
     }
+    
     
     // Helper Function
     private List<String[]> parseParameterList(String input) {
