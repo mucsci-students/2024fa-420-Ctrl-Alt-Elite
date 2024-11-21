@@ -873,31 +873,33 @@ public class UmlGuiController extends JFrame {
         changeReturnTypePanel.setLayout(new BoxLayout(changeReturnTypePanel, BoxLayout.Y_AXIS));
         changeReturnTypePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding
     
-        // Get class names from the model
-        String[] classNames = umlEditorModel.getClassNames();
+        // Step 1: Get the class names and populate the class combo box
+        String[] classNames = umlEditorModel.getClasses().keySet().toArray(new String[0]);
         JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
     
+        // Step 2: Create the combo box for methods
         JComboBox<String> methodNameComboBox = new JComboBox<>();
-        JTextField newReturnTypeField = new JTextField(10);
+        Map<String, Method> methodMap = new HashMap<>(); // Map to store method strings and their corresponding Method objects
     
-        // Populate methods when class is selected
+        // Listener to update the method combo box based on selected class
         classNameComboBox.addActionListener(e -> {
             String selectedClass = (String) classNameComboBox.getSelectedItem();
+            methodNameComboBox.removeAllItems(); // Clear existing items
+            methodMap.clear(); // Clear previous mappings
+    
             if (selectedClass != null) {
-                String[] methodNames = umlEditorModel.getMethodNames(selectedClass);
-                methodNameComboBox.setModel(new DefaultComboBoxModel<>(methodNames));
+                // Get the methods for the selected class
+                List<Method> methods = umlEditorModel.getClass(selectedClass).getMethodsList();
+                for (Method method : methods) {
+                    // Get the method signature as a string (e.g., "int m()")
+                    String methodString = method.singleMethodString();
+                    methodNameComboBox.addItem(methodString); // Add method description to the dropdown
+                    methodMap.put(methodString, method);  // Map the description to the Method object
+                }
             }
         });
     
-        // Update when method is selected
-        methodNameComboBox.addActionListener(e -> {
-            String selectedClass = (String) classNameComboBox.getSelectedItem();
-            String selectedMethod = (String) methodNameComboBox.getSelectedItem();
-            if (selectedClass != null && selectedMethod != null) {
-                // No longer need to set or display old return type
-            }
-        });
-    
+        // Step 3: Set up the panel for displaying the dropdowns
         changeReturnTypePanel.add(new JLabel("Class Name:"));
         changeReturnTypePanel.add(classNameComboBox);
         changeReturnTypePanel.add(Box.createVerticalStrut(10));
@@ -906,31 +908,35 @@ public class UmlGuiController extends JFrame {
         changeReturnTypePanel.add(methodNameComboBox);
         changeReturnTypePanel.add(Box.createVerticalStrut(10));
     
+        JTextField newReturnTypeField = new JTextField(10);
         changeReturnTypePanel.add(new JLabel("New Return Type:"));
         changeReturnTypePanel.add(newReturnTypeField);
         changeReturnTypePanel.add(Box.createVerticalStrut(10));
     
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            String className = (String) classNameComboBox.getSelectedItem();
-            String methodName = (String) methodNameComboBox.getSelectedItem();
+            String selectedClass = (String) classNameComboBox.getSelectedItem();
+            String selectedMethodString = (String) methodNameComboBox.getSelectedItem();
             String newType = newReturnTypeField.getText();
     
-            if (className != null && methodName != null && !newType.isEmpty()) {
-                String oldType = umlEditorModel.getMethodReturnType(className, methodName); // Get the old return type
+            if (selectedClass != null && selectedMethodString != null && !newType.isEmpty()) {
+                // Retrieve the corresponding Method object from the map
+                Method selectedMethod = methodMap.get(selectedMethodString);
+                if (selectedMethod != null) {
+                    // Get the old return type
+                    String oldType = umlEditorModel.getMethodReturnType(selectedClass, selectedMethod.getName());
     
-                List<String[]> parameters = umlEditorModel.getParameters(className, methodName);
-    
-                // Now, pass the old type along with the new type
-                boolean success = umlEditor.changeReturnType(className, methodName, parameters, oldType, newType);
-                if (success) {
-                    outputArea.append("Return type of method '" + methodName + "' in class '" + className
-                            + "' changed from '" + oldType + "' to '" + newType + "'.\n");
-                    drawingPanel.revalidate();
-                    drawingPanel.repaint();
-                } else {
-                    outputArea.append("Failed to change return type for method '" + methodName + "' in class '"
-                            + className + "'.\n");
+                    // Change the return type
+                    boolean success = umlEditor.changeReturnType(selectedClass, selectedMethod.getName(), selectedMethod.getParameters(), oldType, newType);
+                    if (success) {
+                        outputArea.append("Return type of method '" + selectedMethod.getName() + "' in class '" + selectedClass
+                                + "' changed from '" + oldType + "' to '" + newType + "'.\n");
+                        drawingPanel.revalidate();
+                        drawingPanel.repaint();
+                    } else {
+                        outputArea.append("Failed to change return type for method '" + selectedMethod.getName() + "' in class '"
+                                + selectedClass + "'.\n");
+                    }
                 }
             } else {
                 outputArea.append("Please fill in all fields before submitting.\n");
@@ -939,6 +945,7 @@ public class UmlGuiController extends JFrame {
     
         changeReturnTypePanel.add(submitButton);
     
+        // Show the dialog with the updated panel
         dialog.add(changeReturnTypePanel);
         dialog.pack();
         dialog.setLocationRelativeTo(this);
