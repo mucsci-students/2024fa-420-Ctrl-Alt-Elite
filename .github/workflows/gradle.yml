@@ -36,11 +36,17 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew build
 
-    - name: Add coverage to PR
-      id: jacoco
-      uses: madrapps/jacoco-report@v1.7.1
-      with:
-        paths: |
-          ${{ github.workspace }}/**/build/reports/jacoco/prodNormalDebugCoverage/prodNormalDebugCoverage.xml,
-          ${{ github.workspace }}/**/build/reports/jacoco/**/debugCoverage.xml
-        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_ORG_TOKEN }}
+
+
+#    - name: Add coverage to PR
+#      id: jacoco
+#      uses: madrapps/jacoco-report@v1.7.1
+#      with:
+#        paths: |
+#          ${{ github.workspace }}/**/build/reports/jacoco/prodNormalDebugCoverage/prodNormalDebugCoverage.xml,
+#          ${{ github.workspace }}/**/build/reports/jacoco/**/debugCoverage.xml
+#        token: ${{ secrets.GITHUB_TOKEN }}
