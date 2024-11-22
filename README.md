@@ -104,6 +104,12 @@ To ensure the quality and functionality of the project, automated tests have bee
     - **Deep Copying**: When an action is performed (e.g., adding, removing, or modifying a UML element), a deep copy of the `UmlEditorModel` is created and saved in the `undoStack`. This ensures that the original state remains unchanged and is available for future reverts or redos. The `new UmlEditorModel(model)` is responsible for cloning the model.
 
     - **State Management**: The `undoStack` and `redoStack` store these deep copies of `UmlEditorModel`. The `undoState()` and `redoState()` methods allow the editor to navigate between different states of the model, enabling undo and redo operations. When an undo operation is performed, the most recent state is popped from the `undoStack` and pushed onto the `redoStack`. Similarly, when redo is invoked, the state is moved back to the `undoStack`.
+ 
+### 5. Singleton
++ **Definition**: The Singleton design pattern ensures that a class has only one instance and provides a global point of access to that instance.
+  
++ **Usage**: In our UML editor project, we apply the Singleton pattern to the `UmlEditorModel`. This pattern is implemented in the `UmlEditorModel.java` class, ensuring that there is only one instance of the model throughout the application. The singleton instance is accessed through the `getInstance()` method, which provides a global point of access to the model. This ensures consistency of the model state across the application and avoids the need for multiple instances of the model. Additionally, the `clone()` method has been overridden to allow for a deep copy of the model, enabling features like undo and redo functionality via the Memento pattern.
+
 
 
 ## Developers
