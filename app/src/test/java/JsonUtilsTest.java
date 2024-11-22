@@ -31,7 +31,7 @@ public class JsonUtilsTest {
      */
     @BeforeEach
     public void setUp() {
-        editorModel = new UmlEditorModel();
+        editorModel = UmlEditorModel.getInstance();
 
         editorModel.addClass("ClassA"); // Add a sample class
         editorModel.addClass("ClassB"); // Add another sample class
@@ -81,7 +81,7 @@ public class JsonUtilsTest {
     @Test
     @DisplayName ("Save: Save an empty editor")
     public void testSaveEmptyEditor() throws IOException {
-        UmlEditorModel emptyEditor = new UmlEditorModel(); // Create an empty UML editor
+        UmlEditorModel emptyEditor = UmlEditorModel.getInstance(); // Create an empty UML editor
         JsonUtils.save(emptyEditor, TEST_FILENAME); // Save the empty editor
 
         // Load the UML editor from the JSON file

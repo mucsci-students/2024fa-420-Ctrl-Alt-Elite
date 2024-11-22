@@ -78,7 +78,7 @@ public class CLI {
      * @param args command-line arguments (not used).
      */
     public static void main(String[] args) {
-        UmlEditorModel model = new UmlEditorModel(); // Instantiate the model
+        UmlEditorModel model = UmlEditorModel.getInstance(); // Use the singleton method
         UmlEditor umlEditor = new UmlEditor(model); // Instantiate your UML editor
         CLI cliView = new CLI(); // Instantiate the CLI view
         UmlCliController controller = new UmlCliController(model, umlEditor, cliView); // Create the controller

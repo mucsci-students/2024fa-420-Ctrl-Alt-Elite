@@ -31,7 +31,7 @@ public class UmlEditorModelTest {
      */
     @BeforeEach
     public void setUp() {
-        model = new UmlEditorModel();
+        model = UmlEditorModel.getInstance();
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/

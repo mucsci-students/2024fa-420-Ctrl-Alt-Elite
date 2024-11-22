@@ -73,7 +73,7 @@ public class UmlGuiController extends JFrame {
     private JMenuItem changeReturnTypeItem;
 
     public UmlGuiController() {
-        umlEditorModel = new UmlEditorModel();
+        umlEditorModel = UmlEditorModel.getInstance(); // Using the singleton instance
         umlEditor = new UmlEditor(umlEditorModel);
         classPositions = new HashMap<>(); // Initialize class positions
         setTitle("UML Editor");
