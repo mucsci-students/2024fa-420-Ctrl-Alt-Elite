@@ -45,6 +45,9 @@ public class UmlEditorTest {
         
         assertTrue (((umlEditor.getClass("ClassA")) != null), 
     		() -> "Could not construct the UmlEditor.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -60,6 +63,9 @@ public class UmlEditorTest {
         
         assertNotNull(umlEditor.getClass("ClassA"), 
         	() -> "Could not retrieve the class.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     
     /**
@@ -72,6 +78,10 @@ public class UmlEditorTest {
         
         assertTrue(umlEditor.addClass("classa"), 
         	() -> "Could not add the class, case sensitive test.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
+        umlEditor.deleteClass("classa");
     }
     
     /**
@@ -87,6 +97,9 @@ public class UmlEditorTest {
 
     	assertFalse(umlEditor.addClass("ClassA"), 
     	    () -> "Error with adding duplicate class.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     
     /**
@@ -127,6 +140,9 @@ public class UmlEditorTest {
         
         assertNull(umlEditor.getClass("ClassA"), 
         	() -> "Error with assertNull on deleting a class.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     
     /**
@@ -167,6 +183,9 @@ public class UmlEditorTest {
 
         assertNotNull(umlEditor.getClass("ClassB"), 
         	() -> "Error with asserting that the new class name exists.");
+        
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     
     /**
@@ -179,6 +198,9 @@ public class UmlEditorTest {
         
         assertFalse(umlEditor.renameClass("ClassA", ""), 
         	() -> "Error with renaming a class to an empty string.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     
     /**
@@ -191,6 +213,9 @@ public class UmlEditorTest {
 
         assertFalse(umlEditor.renameClass("ClassA", null), 
         	() -> "Error with trying to rename a class to null.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -204,6 +229,9 @@ public class UmlEditorTest {
         umlEditor.addClass("ClassA");
         assertTrue(umlEditor.addField("ClassA", "int", "Field1"), 
             () -> "Error with adding field.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     
     /**
@@ -227,6 +255,9 @@ public class UmlEditorTest {
             () -> "Error with adding field in duplicate field test.");
         assertFalse(umlEditor.addField("ClassA", "int", "Field1"), 
             () -> "Error with adding a duplicate field.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     /**
      * Test adding a field with invalid input, should fail.
@@ -240,6 +271,9 @@ public class UmlEditorTest {
         
         assertFalse(umlEditor.addField("ClassA", "int", ""), 
             () -> "Error with adding a field with invalid type.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -254,6 +288,9 @@ public class UmlEditorTest {
         umlEditor.addField("ClassA", "int", "Field1");
         assertTrue(umlEditor.deleteField("ClassA", "Field1"), 
             () -> "Error with deleting a field."); 
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     /**
      * Test deleting a field that does not exist, should fail.
@@ -264,6 +301,9 @@ public class UmlEditorTest {
         umlEditor.addClass("ClassA");
         assertFalse(umlEditor.deleteField("ClassA", "NonExistentField"), 
             () -> "Error with deleting a non-existent field.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     /**
      * Test deleting a field from a class that does not exist, should fail.
@@ -287,6 +327,9 @@ public class UmlEditorTest {
         umlEditor.addField("ClassA", "int", "Field1");
         assertTrue(umlEditor.renameField("ClassA", "Field1", "Field2"), 
             () -> "Error with renaming a field.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     /**
      * Test renaming a field that does not exist, should fail.
@@ -297,6 +340,9 @@ public class UmlEditorTest {
         umlEditor.addClass("ClassA");
         assertFalse(umlEditor.renameField("ClassA", "NonExistentField", "Field2"), 
             () -> "Error with renaming a non-existent field.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     /**
      * Test renaming a field in a class that does not exist, should fail.
@@ -317,6 +363,9 @@ public class UmlEditorTest {
         umlEditor.addField("ClassA", "int", "Field1");
         assertFalse(umlEditor.renameField("ClassA", "Field1", ""), 
             () -> "Error with renaming a field to an empty name.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -336,6 +385,9 @@ public class UmlEditorTest {
 
         assertTrue(umlEditor.addMethod("ClassA", "Method1", parameters, "int"), 
         	() -> "Error with adding method.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     
     /** 
@@ -349,6 +401,9 @@ public class UmlEditorTest {
 
         assertTrue(umlEditor.addMethod("ClassA", "Method1", parameters, "int"), 
         	() -> "Error with adding method with 0 parameters.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
     /**
@@ -385,6 +440,9 @@ public class UmlEditorTest {
 
         assertFalse(umlEditor.addMethod("ClassA", "Method1", parameters, "int"),
         	() -> "Error with trying to add duplicate method.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
     /**
@@ -402,6 +460,9 @@ public class UmlEditorTest {
 
         assertFalse(umlEditor.addMethod("ClassA", "Method1", parameters, "int"),
         	() -> "Error with trying to add method with bad parameter names.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -422,6 +483,9 @@ public class UmlEditorTest {
 
         assertTrue(umlEditor.deleteMethod("ClassA", "Method1", parameters, "int"), 
         	() -> "Error with deleting a method."); 
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     
     /**
@@ -435,6 +499,9 @@ public class UmlEditorTest {
 
         assertFalse(umlEditor.deleteMethod("ClassA", "NonExistentMethod", parameters, "int"), 
     		() -> "Error with deleting a method that does not exist.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     
     /**
@@ -467,6 +534,9 @@ public class UmlEditorTest {
 
         assertTrue(umlEditor.renameMethod("ClassA", "Method1", parameters, "int", "Method2"),
         	() -> "Error with renaming an method.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     
     /**
@@ -480,6 +550,9 @@ public class UmlEditorTest {
 
         assertFalse(umlEditor.renameMethod("ClassA", "Method1", parameters, "int", "Method3"),
     		() -> "Error with renaming a method that does not exist.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     
     /**
@@ -512,6 +585,9 @@ public class UmlEditorTest {
         umlEditor.addMethod("ClassA", "MethodA", parameters, "int");
         
         assertTrue(umlEditor.removeParameter("ClassA", "MethodA", parameters, "int", parameterPair));
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
     /**
@@ -530,6 +606,9 @@ public class UmlEditorTest {
         umlEditor.addMethod("ClassA", "MethodA", parameters, "int");
         
         assertFalse(umlEditor.removeParameter("ClassA", "MethodA", parameters, "int", parameterPair));
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
     /**
@@ -543,6 +622,9 @@ public class UmlEditorTest {
         String[] parameterPair = {"int", "P3"};
 
         assertFalse(umlEditor.removeParameter("ClassA", "MethodA", parameters, "int", parameterPair));
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
     /**
@@ -562,6 +644,9 @@ public class UmlEditorTest {
         umlEditor.addMethod("ClassA", "MethodA", parameters, "int");
 
         assertFalse(umlEditor.removeParameter("ClassB", "MethodA", parameters, "int", parameterPair));
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
     /** 
@@ -581,6 +666,9 @@ public class UmlEditorTest {
         umlEditor.addMethod("ClassA", "MethodA", parameters, "int");
         
         assertFalse(umlEditor.removeParameter("ClassA", "MethodA", parameters, "int", parameterPair));
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
     
@@ -607,6 +695,9 @@ public class UmlEditorTest {
         umlEditor.addMethod("ClassA", "MethodA", parametersA, "int");
         
         assertTrue(umlEditor.changeParameters("ClassA", "MethodA", parametersA, "int", parametersB));
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
     /**
@@ -628,6 +719,9 @@ public class UmlEditorTest {
         umlEditor.addMethod("ClassA", "MethodA", parametersA, "int");
         
         assertTrue(umlEditor.changeParameters("ClassA", "MethodA", parametersA, "int", parametersB));
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
     /**
@@ -649,6 +743,9 @@ public class UmlEditorTest {
         umlEditor.addMethod("ClassA", "MethodA", parametersA, "int");
         
         assertTrue(umlEditor.changeParameters("ClassA", "MethodA", parametersA, "int", parametersB));
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
     /**
@@ -666,6 +763,9 @@ public class UmlEditorTest {
         parametersB.add(P1);
         
         assertFalse(umlEditor.changeParameters("ClassA", "MethodB", parametersA, "int", parametersB));
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
     /**
@@ -689,6 +789,9 @@ public class UmlEditorTest {
         umlEditor.addMethod("ClassA", "MethodA", parametersA, "int");
         
         assertFalse(umlEditor.changeParameters("ClassB", "MethodB", parametersA, "int", parametersB));
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
     /**
@@ -708,6 +811,9 @@ public class UmlEditorTest {
         umlEditor.addMethod("ClassA", "MethodA", parametersA, "int");
         
         assertFalse(umlEditor.changeParameters("ClassB", "MethodB", parametersA, "int", parametersA));
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
     /**
@@ -731,6 +837,9 @@ public class UmlEditorTest {
         umlEditor.addMethod("ClassA", "MethodA", parametersA, "int");
         
         assertFalse(umlEditor.changeParameters("ClassA", "MethodA", parametersA, "int", parametersB));
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -747,6 +856,10 @@ public class UmlEditorTest {
 
         assertTrue(umlEditor.addRelationship("ClassA", "ClassB", type),
         	() -> "Error with adding a relationship between classes");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
+        umlEditor.deleteClass("ClassB");
     }
     
     /**
@@ -760,6 +873,9 @@ public class UmlEditorTest {
 
         assertTrue(umlEditor.addRelationship("ClassA", "ClassA", type),
         	() -> "Error with adding a relationship between a class and itself.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
     /**
@@ -776,6 +892,9 @@ public class UmlEditorTest {
 
         assertFalse(umlEditor.addRelationship("NonExistentClass", "ClassA", type),
         	() -> "Error with adding a relationship between non-existent classes (Test 1).");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
     
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -793,6 +912,10 @@ public class UmlEditorTest {
 
         assertTrue(umlEditor.deleteRelationship("ClassA", "ClassB", type),
         	() -> "Error with deleting a relationship.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
+        umlEditor.deleteClass("ClassB");
     }
     
     /**
@@ -807,6 +930,10 @@ public class UmlEditorTest {
 
         assertFalse(umlEditor.deleteRelationship("ClassA", "ClassB", type),
         		() -> "Error with deleting a relationship that does not exist.");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
+        umlEditor.deleteClass("ClassB");
     }
     
     /**
@@ -823,6 +950,9 @@ public class UmlEditorTest {
 
         assertFalse(umlEditor.deleteRelationship("NonExistentClass", "ClassA", type),
         	() -> "Error with deleting a relationship from non-existent classes (Test 2).");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -840,6 +970,10 @@ public class UmlEditorTest {
 
         RelationshipType typeB = RelationshipType.COMPOSITION;
         assertTrue(umlEditor.changeRelationshipType("ClassA", "ClassB", typeA, typeB));
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
+        umlEditor.deleteClass("ClassB");
     }
 
     /**
@@ -853,6 +987,10 @@ public class UmlEditorTest {
         RelationshipType typeA = RelationshipType.AGGREGATION;
 
         assertFalse(umlEditor.changeRelationshipType("ClassA", "ClassB", typeA, typeA));
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
+        umlEditor.deleteClass("ClassB");
     }
 
     /**
@@ -878,6 +1016,10 @@ public class UmlEditorTest {
 
         RelationshipType typeB = RelationshipType.COMPOSITION;
         assertFalse(umlEditor.changeRelationshipType("ClassA", "ClassB", typeA, typeB));
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
+        umlEditor.deleteClass("ClassB");
     }
 }
 

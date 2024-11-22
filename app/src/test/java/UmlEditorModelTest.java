@@ -1,15 +1,14 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,6 +49,11 @@ public class UmlEditorModelTest {
         
         assertTrue ((((model.getUmlClass("ClassA")) != null) && ((model.findRelationship("ClassA", "ClassB", type))!= null)), 
     		() -> "Could not construct the UmlEditor.");
+
+        // Clean up
+        model.deleteClass("ClassA");
+        model.deleteClass("ClassB");
+        model.deleteRelationship("ClassA", "ClassB", type);
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/   
@@ -70,6 +74,10 @@ public class UmlEditorModelTest {
         
         assertTrue(model.getClasses() != null);
         assertEquals(model.getClasses().toString(), temp.toString());
+
+        // Clean up
+        model.deleteClass("ClassA");
+        model.deleteClass("ClassB");
     }
 
     /**
@@ -86,6 +94,10 @@ public class UmlEditorModelTest {
         model.setClasses(temp);
 
         assertEquals(model.getClasses(), temp);
+
+        // Clean up
+        model.deleteClass("ClassA");
+        model.deleteClass("ClassB");
     }
 
     /**
@@ -103,6 +115,11 @@ public class UmlEditorModelTest {
         model.addRelationship("ClassA", "ClassB", type);
 
         assertEquals(model.getRelationships(), temp);
+
+        // Clean up
+        model.deleteClass("ClassA");
+        model.deleteClass("ClassB");
+        model.deleteRelationship("ClassA", "ClassB", type);
     }
 
     /**
@@ -115,9 +132,16 @@ public class UmlEditorModelTest {
         RelationshipType type = RelationshipType.AGGREGATION;
         temp.add(new UmlRelationship("ClassA", "ClassB", type));
 
+        model.addClass("ClassA");
+        model.addClass("ClassB");
         model.setRelationships(temp);
 
         assertEquals(model.getRelationships().toString(), temp.toString());
+
+        //Clean up
+        model.deleteClass("ClassA");
+        model.deleteClass("ClassB");
+        model.deleteRelationship("ClassA", "ClassB", type);
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/  
@@ -132,6 +156,9 @@ public class UmlEditorModelTest {
         model.addClass("ClassA");
 
         assertEquals(model.getUmlClass("ClassA").toString(), temp.toString());
+
+        //Clean up
+        model.deleteClass("ClassA");
     }
 
     /**
@@ -143,6 +170,9 @@ public class UmlEditorModelTest {
         model.addClass("ClassA");
 
         assertTrue(model.classExist("ClassA"));
+
+        //Clean up
+        model.deleteClass("ClassA");
     }
 
     /**
@@ -160,7 +190,7 @@ public class UmlEditorModelTest {
     @Test
     @DisplayName ("getClassesValues: Return the values from the classes Map ")
     public void testGetClassesValues() {
-        Collection<UmlClass> temp = new ArrayList<UmlClass>();
+        Collection<UmlClass> temp = new ArrayList<>();
         temp.add(new UmlClass("ClassA"));
         temp.add(new UmlClass("ClassB"));
         
@@ -168,6 +198,10 @@ public class UmlEditorModelTest {
         model.addClass("ClassB");
 
         assertEquals(model.getClassesValues().toString(), temp.toString());
+
+        //Clean up
+        model.deleteClass("ClassA");
+        model.deleteClass("ClassB");
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/  
@@ -183,6 +217,9 @@ public class UmlEditorModelTest {
         
         assertNotNull(model.getUmlClass("ClassA"), 
         	() -> "Could not retrieve the class.");
+
+        //Clean up
+        model.deleteClass("ClassA");
     }
     
     /**
@@ -195,6 +232,9 @@ public class UmlEditorModelTest {
         
         assertTrue(model.addClass("classa"), 
         	() -> "Could not add the class, case sensitive test.");
+
+        //Clean up
+        model.deleteClass("ClassA");
     }
     
     /**
@@ -210,6 +250,9 @@ public class UmlEditorModelTest {
 
     	assertFalse(model.addClass("ClassA"), 
     	    () -> "Error with adding duplicate class.");
+        
+        //Clean up
+        model.deleteClass("ClassA");
     }
     
     /**
@@ -223,6 +266,9 @@ public class UmlEditorModelTest {
 
     	assertNull(model.getUmlClass(""), 
     		() -> "Error with assertNull on adding a class with an empty name.");
+
+        //Clean up
+        model.deleteClass("ClassA");
     }
     
     /**
@@ -250,6 +296,9 @@ public class UmlEditorModelTest {
         
         assertNull(model.getUmlClass("ClassA"), 
         	() -> "Error with assertNull on deleting a class.");
+
+        //Clean up
+        model.deleteClass("ClassA");
     }
     
     /**
@@ -290,6 +339,9 @@ public class UmlEditorModelTest {
 
         assertNotNull(model.getUmlClass("ClassB"), 
         	() -> "Error with asserting that the new class name exists.");
+
+        //Clean up
+        model.deleteClass("ClassA");
     }
     
     /**
@@ -302,6 +354,9 @@ public class UmlEditorModelTest {
         
         assertFalse(model.renameClass("ClassA", ""), 
         	() -> "Error with renaming a class to an empty string.");
+
+        //Clean up
+        model.deleteClass("ClassA");
     }
     
     /**
@@ -314,6 +369,9 @@ public class UmlEditorModelTest {
 
         assertFalse(model.renameClass("ClassA", null), 
         	() -> "Error with trying to rename a class to null.");
+
+        //Clean up
+        model.deleteClass("ClassA");
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -330,6 +388,11 @@ public class UmlEditorModelTest {
 
         assertTrue(model.addRelationship("ClassA", "ClassB", type),
         	() -> "Error with adding a relationship between classes");
+
+        //Clean up
+        model.deleteClass("ClassA");
+        model.deleteClass("ClassB");
+        model.deleteRelationship("ClassA", "ClassB", type);
     }
     
     /**
@@ -343,6 +406,10 @@ public class UmlEditorModelTest {
 
         assertTrue(model.addRelationship("ClassA", "ClassA", type),
         	() -> "Error with adding a relationship between a class and itself.");
+
+        //Clean up
+        model.deleteClass("ClassA");
+        model.deleteRelationship("ClassA", "ClassA", type);
     }
 
     /**
@@ -359,6 +426,9 @@ public class UmlEditorModelTest {
 
         assertFalse(model.addRelationship("NonExistentClass", "ClassA", type),
         	() -> "Error with adding a relationship between non-existent classes (Test 1).");
+
+        //Clean up
+        model.deleteClass("ClassA");
     }
     
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -376,6 +446,11 @@ public class UmlEditorModelTest {
 
         assertTrue(model.deleteRelationship("ClassA", "ClassB", type),
         	() -> "Error with deleting a relationship.");
+
+        //Clean up
+        model.deleteClass("ClassA");
+        model.deleteClass("ClassB");
+        model.deleteRelationship("ClassA", "ClassB", type);
     }
     
     /**
@@ -390,6 +465,10 @@ public class UmlEditorModelTest {
 
         assertFalse(model.deleteRelationship("ClassA", "ClassB", type),
         		() -> "Error with deleting a relationship that does not exist.");
+
+        //Clean up
+        model.deleteClass("ClassA");
+        model.deleteClass("ClassB");
     }
     
     /**
@@ -406,6 +485,9 @@ public class UmlEditorModelTest {
 
         assertFalse(model.deleteRelationship("NonExistentClass", "ClassA", type),
         	() -> "Error with deleting a relationship from non-existent classes (Test 2).");
+
+        //Clean up
+        model.deleteClass("ClassA");
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -423,6 +505,11 @@ public class UmlEditorModelTest {
 
         RelationshipType typeB = RelationshipType.COMPOSITION;
         assertTrue(model.changeRelationshipType("ClassA", "ClassB", typeA, typeB));
+
+        //Clean up
+        model.deleteClass("ClassA");
+        model.deleteClass("ClassB");
+        model.deleteRelationship("ClassA", "ClassB", typeA);
     }
 
     /**
@@ -436,6 +523,10 @@ public class UmlEditorModelTest {
         RelationshipType typeA = RelationshipType.AGGREGATION;
 
         assertFalse(model.changeRelationshipType("ClassA", "ClassB", typeA, typeA));
+
+        //Clean up
+        model.deleteClass("ClassA");
+        model.deleteClass("ClassB");
     }
 
     /**
@@ -461,6 +552,10 @@ public class UmlEditorModelTest {
 
         RelationshipType typeB = RelationshipType.COMPOSITION;
         assertFalse(model.changeRelationshipType("ClassA", "ClassB", typeA, typeB));
+
+        //Clean up
+        model.deleteClass("ClassA");
+        model.deleteClass("ClassB");
     }
 
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -481,6 +576,13 @@ public class UmlEditorModelTest {
         model.addRelationship("ClassB", "ClassC", typeB);
 
         assertTrue(model.findRelationship("ClassA", "ClassB", typeA).equals(model.getRelationships().getFirst()));
+
+        //Clean up
+        model.deleteClass("ClassA");
+        model.deleteClass("ClassB");
+        model.deleteClass("ClassC");
+        model.deleteRelationship("ClassA", "ClassB", typeA);
+        model.deleteRelationship("ClassB", "ClassC", typeB);
     }
 }
 
