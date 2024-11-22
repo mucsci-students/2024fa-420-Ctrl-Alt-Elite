@@ -1,6 +1,4 @@
 package Controller;
-import Model.Memento;
-
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -8,12 +6,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-
-import java.util.Stack;
-
 import Model.RelationshipType;
 import Model.UmlClass;
 import Model.UmlEditorModel;
+import Model.Memento;
 
 public class UmlEditor {
     /** The model that holds the classes and relationships for this Uml Editor */
@@ -21,39 +17,36 @@ public class UmlEditor {
 
     /*----------------------------------------------------------------------------------------------------------------*/
     private Memento memento = new Memento();
-    
 
     public UmlEditor(UmlEditorModel initialModel) {
-        this.model =  initialModel; // Use a deep copy here
+        this.model = initialModel; // Use a deep copy here
         memento.saveState(this.model); // Save initial state
     }
 
-
-
-// Undo the last action
-public void undo() {
-    UmlEditorModel previousState = memento.undoState();
-    if (previousState != null) {
-        this.model = previousState;
-        System.out.println("Undo performed.");
-    } else {
-        System.out.println("Nothing to undo.");
-    }
-}
-
-// Redo the last undone action
-public void redo() {
-    UmlEditorModel nextState = memento.redoState();
-    if (nextState != null) {
-        this.model = nextState;
-        System.out.println("Redo performed.");
-    } else {
-        System.out.println("Nothing to redo.");
+    // Undo the last action
+    public void undo() {
+        UmlEditorModel previousState = memento.undoState();
+        if (previousState != null) {
+            this.model = previousState;
+            System.out.println("Undo performed.");
+        } else {
+            System.out.println("Nothing to undo.");
+        }
     }
 
-}
+    // Redo the last undone action
+    public void redo() {
+        UmlEditorModel nextState = memento.redoState();
+        if (nextState != null) {
+            this.model = nextState;
+            System.out.println("Redo performed.");
+        } else {
+            System.out.println("Nothing to redo.");
+        }
+
+    }
     /*----------------------------------------------------------------------------------------------------------------*/
-    /*                                              CLASS MANAGEMENT METHODS                                          */
+    /* CLASS MANAGEMENT METHODS */
     /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
@@ -79,27 +72,26 @@ public void redo() {
      * @return {@code true} if the class was added, {@code false} otherwise.
      */
     // Example method to add a class
-   // Method to add a class
-   public boolean addClass(String name) {
-    if (name == null || name.isEmpty() || name.contains(" ")) {
-        return false;
+    // Method to add a class
+    public boolean addClass(String name) {
+        if (name == null || name.isEmpty() || name.contains(" ")) {
+            return false;
+        }
+        return model.addClass(name);
     }
-    return model.addClass(name);
-}
 
-/**
- * Deletes a class and all relationships involving that class.
- * 
- * @param name The name of the class to be deleted.
- * @return {@code true} if the class was deleted, {@code false} otherwise.
- */
-public boolean deleteClass(String name) {
-    if (name == null || name.isEmpty()) {
-        return false;
+    /**
+     * Deletes a class and all relationships involving that class.
+     * 
+     * @param name The name of the class to be deleted.
+     * @return {@code true} if the class was deleted, {@code false} otherwise.
+     */
+    public boolean deleteClass(String name) {
+        if (name == null || name.isEmpty()) {
+            return false;
+        }
+        return model.deleteClass(name);
     }
-    return model.deleteClass(name);
-}
-
 
     /**
      * Rename a class to a new name if it doesn't already exist
@@ -131,16 +123,17 @@ public boolean deleteClass(String name) {
     }
 
     /*----------------------------------------------------------------------------------------------------------------*/
-    /*                                              FIELD MANAGEMENT METHODS                                          */
+    /* FIELD MANAGEMENT METHODS */
     /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
-    * Retrieves the list of field names for a given class.
-    *
-    * @param className The name of the class whose fields are to be retrieved.
-    * @return A list of field names for the specified class. If the class does not exist, 
-    *         an empty list is returned.
-    */
+     * Retrieves the list of field names for a given class.
+     *
+     * @param className The name of the class whose fields are to be retrieved.
+     * @return A list of field names for the specified class. If the class does not
+     *         exist,
+     *         an empty list is returned.
+     */
     public List<String> getFields(String className) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
@@ -150,24 +143,25 @@ public boolean deleteClass(String name) {
     }
 
     /**
-    * Adds a new field to a specified class.
-    *
-    * @param className The name of the class to which the field will be added.
-    * @param fieldType The type of the field to be added (e.g., int, String).
-    * @param fieldName The name of the field to be added.
-    * @return {@code true} if the field was successfully added, 
-    *         {@code false} if the field already exists or the class was not found.
-    */
+     * Adds a new field to a specified class.
+     *
+     * @param className The name of the class to which the field will be added.
+     * @param fieldType The type of the field to be added (e.g., int, String).
+     * @param fieldName The name of the field to be added.
+     * @return {@code true} if the field was successfully added,
+     *         {@code false} if the field already exists or the class was not found.
+     */
     public boolean addField(String className, String fieldType, String fieldName) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
-            System.out.println("Attempting to add field: " + fieldName + " of type: " + fieldType + " to class: " + className);
+            System.out.println(
+                    "Attempting to add field: " + fieldName + " of type: " + fieldType + " to class: " + className);
             boolean result = umlClass.addField(fieldType, fieldName);
             if (!result) {
                 System.out.println("Field '" + fieldName + "' already exists in class '" + className + "'.");
             }
             return result;
-    }
+        }
         System.out.println("Class '" + className + "' not found.");
         return false;
     }
@@ -204,7 +198,7 @@ public boolean deleteClass(String name) {
     }
 
     /*----------------------------------------------------------------------------------------------------------------*/
-    /*                                              METHOD MANAGEMENT METHODS                                         */
+    /* METHOD MANAGEMENT METHODS */
     /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
@@ -261,7 +255,7 @@ public boolean deleteClass(String name) {
     }
 
     /*----------------------------------------------------------------------------------------------------------------*/
-    /*                                             PARAMETER MANAGEMENT METHODS                                       */
+    /* PARAMETER MANAGEMENT METHODS */
     /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
@@ -303,7 +297,7 @@ public boolean deleteClass(String name) {
     }
 
     /*----------------------------------------------------------------------------------------------------------------*/
-    /*                                              RELATIONSHIP MANAGEMENT METHODS                                   */
+    /* RELATIONSHIP MANAGEMENT METHODS */
     /*----------------------------------------------------------------------------------------------------------------*/
 
     /**

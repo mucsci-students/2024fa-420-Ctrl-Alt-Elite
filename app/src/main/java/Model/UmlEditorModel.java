@@ -30,8 +30,6 @@ public class UmlEditorModel {
         this.classes = new HashMap<>();
         this.relationships = new ArrayList<>();
         this.classPositions = new HashMap<>(); // Initialize the classPositions map
-
-        
     }
 
     // Copy constructor for deep copying
@@ -242,9 +240,7 @@ public class UmlEditorModel {
      * @return {@code true} if the class was renamed, {@code false} otherwise.
      */
     public boolean renameClass(String oldName, String newName) {
-        // Check for null or empty newName, if oldName exists, if the new name already
-        // exists
-        // and if the new name has white space
+        // Check for null or empty newName, if oldName exists, if the new name already exists and if the new name has white space
         if (newName == null || newName.isEmpty()
                 || !classes.containsKey(oldName)
                 || classes.containsKey(newName)

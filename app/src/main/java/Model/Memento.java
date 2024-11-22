@@ -1,12 +1,6 @@
-
 package Model;
 
-
-import java.util.ArrayDeque;
-
 import java.util.Stack;
-
-import Model.UmlEditorModel;
 
 public class Memento {
 
