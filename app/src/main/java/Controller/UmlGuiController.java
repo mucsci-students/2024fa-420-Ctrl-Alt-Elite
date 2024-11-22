@@ -711,27 +711,27 @@ public class UmlGuiController extends JFrame {
         // Step 1: Get the class names and populate the class combo box
         String[] classNames = umlEditorModel.getClasses().keySet().toArray(new String[0]);
         JComboBox<String> classComboBox = new JComboBox<>(classNames);
-    
+
         // Step 2: Create the combo box for methods
         JComboBox<String> methodComboBox = new JComboBox<>();
         Map<String, Method> methodMap = new HashMap<>(); // Map to store method strings and their corresponding objects
-    
+
         // Listener to update the method combo box based on selected class
         classComboBox.addActionListener(e -> {
             String selectedClass = (String) classComboBox.getSelectedItem();
             methodComboBox.removeAllItems(); // Clear existing items
             methodMap.clear(); // Clear previous mappings
-    
+
             if (selectedClass != null) {
                 List<Method> methods = umlEditorModel.getClass(selectedClass).getMethodsList();
                 for (Method method : methods) {
                     String methodString = method.singleMethodString();
                     methodComboBox.addItem(methodString); // Add method description
-                    methodMap.put(methodString, method);  // Map description to Method object
+                    methodMap.put(methodString, method); // Map description to Method object
                 }
             }
         });
-    
+
         // Step 3: Set up the dialog panel
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -739,22 +739,22 @@ public class UmlGuiController extends JFrame {
         panel.add(classComboBox);
         panel.add(new JLabel("Select Method to Delete:"));
         panel.add(methodComboBox);
-    
+
         // Step 4: Show the dialog with a "Submit" button
         int option = JOptionPane.showOptionDialog(this, panel, "Delete Method",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[] { "Submit" }, null);
-    
+
         if (option == JOptionPane.OK_OPTION) {
             // Get the selected class and method description
             String selectedClass = (String) classComboBox.getSelectedItem();
             String selectedMethodString = (String) methodComboBox.getSelectedItem();
-    
+
             // Step 5: Delete the method if valid
             if (selectedClass != null && selectedMethodString != null) {
                 Method selectedMethod = methodMap.get(selectedMethodString); // Retrieve the actual Method object
                 if (selectedMethod != null) {
                     boolean success = umlEditorModel.getClass(selectedClass).deleteMethod(selectedMethod.getName());
-    
+
                     if (success) {
                         drawingPanel.revalidate();
                         drawingPanel.repaint();
@@ -764,31 +764,29 @@ public class UmlGuiController extends JFrame {
             }
         }
     }
-    
-    
 
     private void showRenameMethodPanel() {
         JDialog dialog = new JDialog(this, "Rename Method", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-    
+
         JPanel renameMethodPanel = new JPanel();
         renameMethodPanel.setLayout(new BoxLayout(renameMethodPanel, BoxLayout.Y_AXIS));
         renameMethodPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
-    
+
         // Get class names from the model
         String[] classNames = umlEditorModel.getClassNames();
-    
+
         JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
         JComboBox<String> oldMethodComboBox = new JComboBox<>();
         Map<String, Method> methodMap = new HashMap<>(); // Map to store method strings and corresponding Method objects
         JTextField newMethodNameField = new JTextField(15); // Adjust width
-    
+
         // Update oldMethodComboBox when classNameComboBox selection changes
         classNameComboBox.addActionListener(e -> {
             String selectedClass = (String) classNameComboBox.getSelectedItem();
             oldMethodComboBox.removeAllItems(); // Clear old items
             methodMap.clear(); // Clear previous mappings
-    
+
             if (selectedClass != null) {
                 List<Method> methods = umlEditorModel.getClass(selectedClass).getMethodsList(); // Fetch methods
                 for (Method method : methods) {
@@ -798,7 +796,7 @@ public class UmlGuiController extends JFrame {
                 }
             }
         });
-    
+
         renameMethodPanel.add(new JLabel("Class Name:"));
         renameMethodPanel.add(Box.createVerticalStrut(5));
         renameMethodPanel.add(classNameComboBox);
@@ -811,41 +809,42 @@ public class UmlGuiController extends JFrame {
         renameMethodPanel.add(Box.createVerticalStrut(5));
         renameMethodPanel.add(newMethodNameField);
         renameMethodPanel.add(Box.createVerticalStrut(10)); // Add space before the button
-    
+
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             String className = (String) classNameComboBox.getSelectedItem();
             String selectedMethodString = (String) oldMethodComboBox.getSelectedItem();
             String newMethodName = newMethodNameField.getText();
-    
+
             // Retrieve the actual Method object from the map
             Method selectedMethod = methodMap.get(selectedMethodString);
-    
+
             if (className != null && selectedMethod != null) {
                 if (umlEditorModel.renameMethod(className, selectedMethod.getName(), newMethodName)) {
-                    outputArea.append("Method '" + selectedMethod.getName() + "' renamed to '" + newMethodName + "' in class '"
-                            + className + "'.\n");
+                    outputArea.append(
+                            "Method '" + selectedMethod.getName() + "' renamed to '" + newMethodName + "' in class '"
+                                    + className + "'.\n");
                     drawingPanel.revalidate();
                     drawingPanel.repaint();
                 } else {
-                    outputArea.append("Failed to rename method '" + selectedMethod.getName() + "' in class '" + className + "'.\n");
+                    outputArea.append("Failed to rename method '" + selectedMethod.getName() + "' in class '"
+                            + className + "'.\n");
                 }
             } else {
                 outputArea.append("Invalid selection or input. Rename failed.\n");
             }
-    
+
             dialog.dispose();
         });
-    
+
         renameMethodPanel.add(submitButton);
-    
+
         dialog.add(renameMethodPanel);
         dialog.pack();
         dialog.setLocationRelativeTo(this); // Center dialog
         dialog.setVisible(true);
     }
-    
-    
+
     // Helper Function
     private List<String[]> parseParameterList(String input) {
         List<String[]> paraList = new ArrayList<>();
@@ -868,25 +867,26 @@ public class UmlGuiController extends JFrame {
     private void showChangeReturnTypePanel() {
         JDialog dialog = new JDialog(this, "Change Return Type", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-    
+
         JPanel changeReturnTypePanel = new JPanel();
         changeReturnTypePanel.setLayout(new BoxLayout(changeReturnTypePanel, BoxLayout.Y_AXIS));
         changeReturnTypePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding
-    
+
         // Step 1: Get the class names and populate the class combo box
         String[] classNames = umlEditorModel.getClasses().keySet().toArray(new String[0]);
         JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
-    
+
         // Step 2: Create the combo box for methods
         JComboBox<String> methodNameComboBox = new JComboBox<>();
-        Map<String, Method> methodMap = new HashMap<>(); // Map to store method strings and their corresponding Method objects
-    
+        Map<String, Method> methodMap = new HashMap<>(); // Map to store method strings and their corresponding Method
+                                                         // objects
+
         // Listener to update the method combo box based on selected class
         classNameComboBox.addActionListener(e -> {
             String selectedClass = (String) classNameComboBox.getSelectedItem();
             methodNameComboBox.removeAllItems(); // Clear existing items
             methodMap.clear(); // Clear previous mappings
-    
+
             if (selectedClass != null) {
                 // Get the methods for the selected class
                 List<Method> methods = umlEditorModel.getClass(selectedClass).getMethodsList();
@@ -894,68 +894,67 @@ public class UmlGuiController extends JFrame {
                     // Get the method signature as a string (e.g., "int m()")
                     String methodString = method.singleMethodString();
                     methodNameComboBox.addItem(methodString); // Add method description to the dropdown
-                    methodMap.put(methodString, method);  // Map the description to the Method object
+                    methodMap.put(methodString, method); // Map the description to the Method object
                 }
             }
         });
-    
+
         // Step 3: Set up the panel for displaying the dropdowns
         changeReturnTypePanel.add(new JLabel("Class Name:"));
         changeReturnTypePanel.add(classNameComboBox);
         changeReturnTypePanel.add(Box.createVerticalStrut(10));
-    
+
         changeReturnTypePanel.add(new JLabel("Method Name:"));
         changeReturnTypePanel.add(methodNameComboBox);
         changeReturnTypePanel.add(Box.createVerticalStrut(10));
-    
+
         JTextField newReturnTypeField = new JTextField(10);
         changeReturnTypePanel.add(new JLabel("New Return Type:"));
         changeReturnTypePanel.add(newReturnTypeField);
         changeReturnTypePanel.add(Box.createVerticalStrut(10));
-    
+
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             String selectedClass = (String) classNameComboBox.getSelectedItem();
             String selectedMethodString = (String) methodNameComboBox.getSelectedItem();
             String newType = newReturnTypeField.getText();
-    
+
             if (selectedClass != null && selectedMethodString != null && !newType.isEmpty()) {
                 // Retrieve the corresponding Method object from the map
                 Method selectedMethod = methodMap.get(selectedMethodString);
                 if (selectedMethod != null) {
                     // Get the old return type
                     String oldType = umlEditorModel.getMethodReturnType(selectedClass, selectedMethod.getName());
-    
+
                     // Change the return type
-                    boolean success = umlEditor.changeReturnType(selectedClass, selectedMethod.getName(), selectedMethod.getParameters(), oldType, newType);
+                    boolean success = umlEditor.changeReturnType(selectedClass, selectedMethod.getName(),
+                            selectedMethod.getParameters(), oldType, newType);
                     if (success) {
-                        outputArea.append("Return type of method '" + selectedMethod.getName() + "' in class '" + selectedClass
-                                + "' changed from '" + oldType + "' to '" + newType + "'.\n");
+                        outputArea.append(
+                                "Return type of method '" + selectedMethod.getName() + "' in class '" + selectedClass
+                                        + "' changed from '" + oldType + "' to '" + newType + "'.\n");
                         drawingPanel.revalidate();
                         drawingPanel.repaint();
                     } else {
-                        outputArea.append("Failed to change return type for method '" + selectedMethod.getName() + "' in class '"
-                                + selectedClass + "'.\n");
+                        outputArea.append(
+                                "Failed to change return type for method '" + selectedMethod.getName() + "' in class '"
+                                        + selectedClass + "'.\n");
                     }
                 }
             } else {
                 outputArea.append("Please fill in all fields before submitting.\n");
             }
         });
-    
+
         changeReturnTypePanel.add(submitButton);
-    
+
         // Show the dialog with the updated panel
         dialog.add(changeReturnTypePanel);
         dialog.pack();
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
-    
-    
-    
 
-    // Delete Parameter Panel
     private void showDeleteParameterPanel() {
         JDialog dialog = new JDialog(this, "Delete Parameter", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -967,45 +966,120 @@ public class UmlGuiController extends JFrame {
         // Get class names from the model
         String[] classNames = umlEditorModel.getClassNames();
 
-        // Create a combo box for selecting the class name
+        // Create UI components
         JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
         JTextField methodNameField = new JTextField(10);
-        JTextField parameterNameField = new JTextField(10);
+        JComboBox<String> parameterComboBox = new JComboBox<>();
 
+        // Add components to panel
         deleteParameterPanel.add(new JLabel("Class Name:"));
         deleteParameterPanel.add(Box.createVerticalStrut(5));
         deleteParameterPanel.add(classNameComboBox);
         deleteParameterPanel.add(Box.createVerticalStrut(10));
+
         deleteParameterPanel.add(new JLabel("Method Name:"));
-        deleteParameterPanel.add(Box.createVerticalStrut(5)); // Add space
+        deleteParameterPanel.add(Box.createVerticalStrut(5));
         deleteParameterPanel.add(methodNameField);
-        deleteParameterPanel.add(Box.createVerticalStrut(10)); // Add space
-        deleteParameterPanel.add(new JLabel("Parameter Name:"));
-        deleteParameterPanel.add(Box.createVerticalStrut(5)); // Add space
-        deleteParameterPanel.add(parameterNameField);
-        deleteParameterPanel.add(Box.createVerticalStrut(10)); // Add space
+        deleteParameterPanel.add(Box.createVerticalStrut(10));
+
+        deleteParameterPanel.add(new JLabel("Parameter:"));
+        deleteParameterPanel.add(Box.createVerticalStrut(5));
+        deleteParameterPanel.add(parameterComboBox);
+        deleteParameterPanel.add(Box.createVerticalStrut(10));
+
+        JButton loadParametersButton = new JButton("Load Parameters");
+        loadParametersButton.addActionListener(e -> {
+            String className = (String) classNameComboBox.getSelectedItem();
+            String methodName = methodNameField.getText();
+            if (className == null || methodName.isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, "Please provide a class name and method name.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Fetch the class and method
+            UmlClass selectedClass = umlEditorModel.getClass(className);
+            if (selectedClass == null) {
+                JOptionPane.showMessageDialog(dialog, "Class not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Method selectedMethod = selectedClass.getMethod(methodName);
+            if (selectedMethod == null) {
+                JOptionPane.showMessageDialog(dialog, "Method not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Populate parameter combo box
+            parameterComboBox.removeAllItems();
+            for (String[] parameter : selectedMethod.getParameters()) {
+                parameterComboBox.addItem(parameter[0] + " " + parameter[1]); // Type and Name
+            }
+
+            if (parameterComboBox.getItemCount() == 0) {
+                JOptionPane.showMessageDialog(dialog, "No parameters found for this method.", "Info",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        deleteParameterPanel.add(loadParametersButton);
+        deleteParameterPanel.add(Box.createVerticalStrut(10));
 
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             String className = (String) classNameComboBox.getSelectedItem();
             String methodName = methodNameField.getText();
-            String parameterName = parameterNameField.getText();
-            // if (umlEditor.removeParameter(className, methodName, parameterName)) {
-            // outputArea.append("Parameter '" + parameterName + "' deleted from method '" +
-            // methodName
-            // + "' in class '" + className + "'.\n");
-            // drawingPanel.revalidate();
-            // drawingPanel.repaint();
-            // } else {
-            // outputArea.append("Failed to delete parameter '" + parameterName + "' from
-            // method '" + methodName
-            // + "' in class '" + className + "'.\n");
-            // }
+            String selectedParameter = (String) parameterComboBox.getSelectedItem();
 
+            if (className == null || methodName.isEmpty() || selectedParameter == null) {
+                JOptionPane.showMessageDialog(dialog, "Please complete all fields.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Split selected parameter into type and name
+            String[] parameterPair = selectedParameter.split(" ");
+            if (parameterPair.length != 2) {
+                JOptionPane.showMessageDialog(dialog, "Invalid parameter format.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            String parameterType = parameterPair[0];
+            String parameterName = parameterPair[1];
+
+            // Fetch class and method from the model
+            UmlClass selectedClass = umlEditorModel.getClass(className);
+            if (selectedClass == null) {
+                JOptionPane.showMessageDialog(dialog, "Class not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Method selectedMethod = selectedClass.getMethod(methodName);
+            if (selectedMethod == null) {
+                JOptionPane.showMessageDialog(dialog, "Method not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Get the method's parameters and return type
+            List<String[]> methodParameters = selectedMethod.getParameters();
+            String returnType = selectedMethod.getReturnType();
+
+            // Attempt to remove the parameter
+            if (umlEditor.removeParameter(className, methodName, methodParameters, returnType, parameterPair)) {
+                JOptionPane.showMessageDialog(dialog, "Parameter removed successfully.", "Success",
+                        JOptionPane.INFORMATION_MESSAGE);
+                // Refresh the drawing panel
+                drawingPanel.revalidate();
+                drawingPanel.repaint();
+            } else {
+                JOptionPane.showMessageDialog(dialog, "Failed to remove parameter.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
+            // Reset fields
             methodNameField.setText("");
-            parameterNameField.setText("");
+            parameterComboBox.removeAllItems();
         });
-        deleteParameterPanel.add(Box.createVerticalStrut(10)); // Add space before the button
+
         deleteParameterPanel.add(submitButton);
 
         dialog.add(deleteParameterPanel);
