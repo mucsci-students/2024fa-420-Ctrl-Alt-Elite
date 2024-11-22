@@ -26,7 +26,7 @@ public class UmlCliControllerTest {
      */
     @BeforeEach
     public void setUp() {
-        model = new UmlEditorModel();
+        model = UmlEditorModel.getInstance();
         umlEditor = new UmlEditor(model);
         view = new CLI();
 

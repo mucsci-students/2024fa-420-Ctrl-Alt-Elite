@@ -29,7 +29,7 @@ public class UmlEditorTest {
      */
     @BeforeEach
     public void setUp() {
-        model = new UmlEditorModel();
+        model = UmlEditorModel.getInstance();
         umlEditor = new UmlEditor(model);
     }
 
