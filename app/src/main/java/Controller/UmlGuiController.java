@@ -1065,8 +1065,6 @@ public class UmlGuiController extends JFrame {
 
             // Attempt to remove the parameter
             if (umlEditor.removeParameter(className, methodName, methodParameters, returnType, parameterPair)) {
-                JOptionPane.showMessageDialog(dialog, "Parameter removed successfully.", "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
                 // Refresh the drawing panel
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
