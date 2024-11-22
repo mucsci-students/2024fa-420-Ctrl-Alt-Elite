@@ -7,81 +7,101 @@ import java.util.List;
 import java.util.Map;
 import java.awt.Point;
 
-/**
- * A class that holds the classes and relationships data structures for a UML
- * Editor
- */
-public class UmlEditorModel {
-    /** A map to store UML classes by their name */
+public class UmlEditorModel implements Cloneable {
+    // Static instance of the class
+    private static UmlEditorModel instance;
+
+    // Instance variables
     private Map<String, UmlClass> classes;
-
-    /** List to store all the relationships created */
     private List<UmlRelationship> relationships;
-
-    /** A map to store the positions of UML classes by their name */
     private Map<String, Point> classPositions;
 
-    /*----------------------------------------------------------------------------------------------------------------*/
-
-    /**
-     * A model that holds the classes and relationships for the UML Editor.
-     */
-    public UmlEditorModel() {
+    // Private constructor to prevent instantiation
+    private UmlEditorModel() {
         this.classes = new HashMap<>();
         this.relationships = new ArrayList<>();
-        this.classPositions = new HashMap<>(); // Initialize the classPositions map
-
-        
-    }
-
-    // Copy constructor for deep copying
-    public UmlEditorModel(UmlEditorModel other) {
-        // Deep copy classes
-        this.classes = new HashMap<>();
-        for (Map.Entry<String, UmlClass> entry : other.classes.entrySet()) {
-            this.classes.put(entry.getKey(), new UmlClass(entry.getValue())); // Assuming UmlClass has a copy constructor
-        }
-
-        // Deep copy relationships
-        this.relationships = new ArrayList<>();
-        for (UmlRelationship relationship : other.relationships) {
-            this.relationships.add(new UmlRelationship(relationship)); // Assuming UmlRelationship has a copy constructor
-        }
-
-        // Deep copy class positions
         this.classPositions = new HashMap<>();
-        for (Map.Entry<String, Point> entry : other.classPositions.entrySet()) {
-            this.classPositions.put(entry.getKey(), new Point(entry.getValue())); // Create a new Point for deep copy
+    }
+
+    // Public static method to get the instance
+    public static UmlEditorModel getInstance() {
+        if (instance == null) {
+            instance = new UmlEditorModel();
+        }
+        return instance;
+    }
+
+    @Override
+    public UmlEditorModel clone() {
+        try {
+            UmlEditorModel cloned = (UmlEditorModel) super.clone(); // Create a shallow copy
+
+            // Perform deep copy for mutable fields to ensure the clone is independent of
+            // the original
+            cloned.classes = new HashMap<>(this.classes); // Deep copy of classes map
+            cloned.relationships = new ArrayList<>(this.relationships); // Deep copy of relationships list
+            cloned.classPositions = new HashMap<>(this.classPositions); // Deep copy of class positions map
+
+            // Deep copy any other mutable fields if necessary...
+
+            return cloned; // Return the deep-copied instance
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null; // Return null if cloning is not supported
         }
     }
 
-    /*----------------------------------------------------------------------------------------------------------------*/
-    /**
-     * Retrieves a UML class by name.
-     * 
-     * @param name The name of the UML class to retrieve.
-     * @return The UML class if found, {@code null} otherwise.
-     */
+    public boolean renameMethod(String className, String oldMethodName, String newMethodName) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass == null) {
+            return false; // Class not found
+        }
+        return umlClass.renameMethod(oldMethodName, newMethodName);
+    }
+
+    public boolean deleteMethod(String className, String methodName) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.deleteMethod(methodName);
+        }
+        return false;
+    }
+
+    public List<String[]> getParameters(String className, String methodName) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.getMethodParameters(methodName);
+        }
+        return null;
+    }
+
+    public String getMethodReturnType(String className, String methodName) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            return umlClass.getMethodReturnType(methodName);
+        }
+        return null;
+    }
+
+    public String[] getMethodNames(String className) {
+        UmlClass umlClass = classes.get(className);
+        if (umlClass != null) {
+            List<String> methodNames = umlClass.getMethodNames();
+            return methodNames.toArray(new String[0]);
+        }
+        return new String[0];
+    }
+
     public UmlClass getClass(String name) {
         return classes.get(name);
     }
 
-    /**
-     * Get all of the UML classes.
-     * 
-     * @return The map of UML classes.
-     */
     public Map<String, UmlClass> getClasses() {
         return classes;
     }
 
-    /**
-     * Method to get class names as an array of strings
-     * 
-     * @return An array of class names
-     */
     public String[] getClassNames() {
-        return classes.keySet().toArray(new String[0]); // Convert key set to an array
+        return classes.keySet().toArray(new String[0]);
     }
 
     /**
