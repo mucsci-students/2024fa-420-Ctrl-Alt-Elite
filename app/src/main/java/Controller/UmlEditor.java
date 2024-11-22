@@ -4,8 +4,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
+import Model.Memento;
 import Model.RelationshipType;
 import Model.UmlClass;
 import Model.UmlEditorModel;
@@ -197,6 +197,35 @@ public class UmlEditor {
         return false;
     }
 
+    /**
+     * Updates the type of an existing field in a specified class.
+     *
+     * @param className The name of the class containing the field to be updated.
+     * @param fieldName The name of the field to be updated.
+     * @param newFieldType The new type for the field.
+     * @return {@code true} if the field type was successfully updated,
+     *         {@code false} if the field was not found or the new type is invalid.
+     */
+    public boolean updateFieldType(String className, String fieldName, String newFieldType) {
+        // Validate input
+        if (newFieldType.isEmpty()) {
+            System.out.println("Field type cannot be empty.");
+            return false;
+        }
+        
+        UmlClass umlClass = model.getUmlClass(className);
+        if (umlClass != null) {
+            System.out.println("Attempting to update field: " + fieldName + " to type: " + newFieldType + " in class: " + className);
+            boolean result = umlClass.updateFieldType(fieldName, newFieldType);
+            if (!result) {
+                System.out.println("Field '" + fieldName + "' not found in class '" + className + "' or failed to update type.");
+            }
+            return result;
+        }
+        System.out.println("Class '" + className + "' not found.");
+        return false;
+    }
+
     /*----------------------------------------------------------------------------------------------------------------*/
     /* METHOD MANAGEMENT METHODS */
     /*----------------------------------------------------------------------------------------------------------------*/
@@ -210,7 +239,7 @@ public class UmlEditor {
      * @param returnType The return type of the method.
      * @return {@code true} if the method was added, {@code false} otherwise.
      */
-    public boolean addMethod(String className, String methodName, Map<String, String> paraList, String returnType) {
+    public boolean addMethod(String className, String methodName, List<String[]> paraList, String returnType) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.addMethod(methodName, paraList, returnType);
@@ -227,7 +256,7 @@ public class UmlEditor {
      * @param returnType The return type of the method.
      * @return {@code true} if the method was deleted, {@code false} otherwise.
      */
-    public boolean deleteMethod(String className, String methodName, Map<String, String> paraList, String returnType) {
+    public boolean deleteMethod(String className, String methodName, List<String[]> paraList, String returnType) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.deleteMethod(methodName, paraList, returnType);
@@ -245,11 +274,30 @@ public class UmlEditor {
      * @param newName    The new name of the method.
      * @return {@code true} if the method was renamed, {@code false} otherwise.
      */
-    public boolean renameMethod(String className, String oldName, Map<String, String> paraList, String returnType,
+    public boolean renameMethod(String className, String oldName, List<String[]> paraList, String returnType,
             String newName) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.renameMethod(oldName, paraList, returnType, newName);
+        }
+        return false;
+    }
+
+    /**
+     * Change the return type of a method.
+     * 
+     * @param className The name of the class in which the method belongs.
+     * @param methodName The name of the method
+     * @param paraList The list of parameters that belong to the method
+     * @param oldType The old return type
+     * @param newType The new return type
+     * @return {@code true} if the method's return type was changed, {@code false} otherwise.
+     */
+    public boolean changeReturnType(String className, String methodName, List<String[]> paraList, String oldType, 
+                                        String newType) {
+        UmlClass umlClass = model.getUmlClass(className);
+        if (umlClass != null) {
+            return umlClass.changeReturnType(methodName, paraList, oldType, newType);
         }
         return false;
     }
@@ -268,7 +316,7 @@ public class UmlEditor {
      * @param paraName   The name of the parameter to remove.
      * @return {@code true} if the parameter was removed, {@code false} otherwise.
      */
-    public boolean removeParameter(String className, String methodName, Map<String, String> parameters,
+    public boolean removeParameter(String className, String methodName, List<String[]> parameters,
             String returnType, String[] parameterPair) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
@@ -287,8 +335,8 @@ public class UmlEditor {
      * @param newParameters The new list of parameters for the method.
      * @return {@code true} if the parameters were changed, {@code false} otherwise.
      */
-    public boolean changeParameters(String className, String methodName, Map<String, String> oldParameters,
-            String returnType, Map<String, String> newParameters) {
+    public boolean changeParameters(String className, String methodName, List<String[]> oldParameters,
+            String returnType, List<String[]> newParameters) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.changeParameters(methodName, oldParameters, returnType, newParameters);

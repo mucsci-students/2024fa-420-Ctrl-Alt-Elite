@@ -31,7 +31,7 @@ public class JsonUtilsTest {
      */
     @BeforeEach
     public void setUp() {
-        editorModel = new UmlEditorModel();
+        editorModel = UmlEditorModel.getInstance();
 
         editorModel.addClass("ClassA"); // Add a sample class
         editorModel.addClass("ClassB"); // Add another sample class
@@ -71,25 +71,6 @@ public class JsonUtilsTest {
         assertEquals(1, loadedEditor.getRelationships().size()); // Check the number of relationships
         assertTrue(loadedEditor.getClasses().containsKey("ClassA")); // Verify ClassA exists
         assertTrue(loadedEditor.getClasses().containsKey("ClassB")); // Verify ClassB exists
-    }
-
-    /**
-     * Test saving and loading an empty UML editor
-     * 
-     * @throws IOException
-     */
-    @Test
-    @DisplayName ("Save: Save an empty editor")
-    public void testSaveEmptyEditor() throws IOException {
-        UmlEditorModel emptyEditor = new UmlEditorModel(); // Create an empty UML editor
-        JsonUtils.save(emptyEditor, TEST_FILENAME); // Save the empty editor
-
-        // Load the UML editor from the JSON file
-        UmlEditorModel loadedEditor = JsonUtils.load(TEST_FILENAME);
-        // Verify that the loaded editor is empty
-        assertNotNull(loadedEditor);
-        assertTrue(loadedEditor.getClasses().isEmpty()); // Check no classes
-        assertTrue(loadedEditor.getRelationships().isEmpty()); // Check no relationships
     }
     
     /**

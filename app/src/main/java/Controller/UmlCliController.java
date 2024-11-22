@@ -3,7 +3,6 @@ package Controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,13 +38,12 @@ public class UmlCliController {
     private final LineReader reader; // Moved here to be a class field
 
     private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
-        "add-class", "delete-class", "rename-class",
-        "add-field", "delete-field", "rename-field",
-        "add-method", "delete-method", "rename-method",
-        "add-parameter", "delete-parameter", "change-parameter",
-        "list-classes", "list-class", "list-relationship",
-        "undo", "redo", "help", "exit"
-    ));
+            "add-class", "delete-class", "rename-class",
+            "add-field", "delete-field", "rename-field",
+            "add-method", "delete-method", "rename-method",
+            "add-parameter", "delete-parameter", "change-parameter",
+            "list-classes", "list-class", "list-relationship",
+            "undo", "redo", "help", "exit"));
 
     /**
      * Constructs a new UmlCliController.
@@ -61,8 +59,8 @@ public class UmlCliController {
         this.view = view;
         this.scanner = new Scanner(System.in);
         this.reader = LineReaderBuilder.builder()
-            .completer(new StringsCompleter(COMMANDS))
-            .build();
+                .completer(new StringsCompleter(COMMANDS))
+                .build();
     }
 
     /**
@@ -95,6 +93,9 @@ public class UmlCliController {
                 case "rename-field":
                     handleRenameField();
                     break;
+                case "change-field-type":
+                    handleChangeFieldType();
+                    break;
                 case "add-method":
                     handleAddMethod();
                     break;
@@ -103,6 +104,9 @@ public class UmlCliController {
                     break;
                 case "rename-method":
                     handleRenameMethod();
+                    break;
+                case "change-return-type":
+                    handleChangeReturnType();
                     break;
                 case "remove-parameter":
                     handleRemoveParameter();
@@ -136,20 +140,20 @@ public class UmlCliController {
                     break;
                 case "help":
 
-                      // Displays a list of available commands
+                    // Displays a list of available commands
                     view.displayHelp();
                     break;
                 case "exit":
                     exit = true;
                     view.displayMessage("Exiting the program...");
                     break;
-                    
+
                 case "undo":
-                handleUndo();
-                break;
+                    handleUndo();
+                    break;
                 case "redo":
-                handleRedo();
-                break;
+                    handleRedo();
+                    break;
 
                 default:
                     view.displayMessage("Invalid command. Type 'help' for options.");
@@ -158,7 +162,6 @@ public class UmlCliController {
         }
         scanner.close(); // Close the scanner when done
     }
-
 
     /**
      * Handles the 'add-class' command by prompting the user for a class name and
@@ -309,6 +312,45 @@ public class UmlCliController {
     }
 
     /**
+     * Handles the 'change-field-type' command by prompting the user for a class,
+     * field name, and new field type, then changing the field's type.
+     */
+    public void handleChangeFieldType() {
+        // Find the class to modify the field in
+        String classAction = "change the field type of"; // The action that this function will take
+        String classToChangeFieldType = chooseClass(classAction); // Call helper to find the class's name
+        if (classToChangeFieldType == null) {
+            return; // Stop if chooseClass found an error
+        }
+
+        // Find the field whose type needs to be changed
+        String fieldAction = "change type of"; // The action that this function will take
+        String fieldToChangeType = chooseField(classToChangeFieldType, fieldAction); // Call helper to find the field's
+                                                                                     // name
+        if (fieldToChangeType == null) {
+            return; // Stop if chooseField found an error
+        }
+
+        // Prompt for the new field type
+        view.displayMessage("Enter the new field type: ");
+        String newFieldType = scanner.nextLine().trim();
+
+        // Validate the new field type
+        if (newFieldType.isEmpty()) {
+            view.displayMessage("Field type cannot be empty.");
+            return;
+        }
+
+        // Attempt to change the field type
+        if (umlEditor.updateFieldType(classToChangeFieldType, fieldToChangeType, newFieldType)) {
+            view.displayMessage("Field '" + fieldToChangeType + "' in class '" + classToChangeFieldType +
+                    "' changed to type '" + newFieldType + "'.");
+        } else {
+            view.displayMessage("Failed to change field type. Class or field may not exist.");
+        }
+    }
+
+    /**
      * Handles adding a method to a class by prompting the user for class name,
      * method name, and parameters, and then adding the method to the UML editor.
      */
@@ -325,17 +367,13 @@ public class UmlCliController {
         view.displayMessage("Enter the parameters for the method (String p1, int p2, etc.): ");
         String parameters = scanner.nextLine().trim();
 
-        Map<String, String> paraList = new HashMap<>();
+        List<String[]> paraList = new ArrayList<>();
         if (!parameters.trim().isEmpty()) {
             String[] splitParameters = parameters.split(",");
             for (String parameter : splitParameters) {
                 parameter = parameter.trim();
                 String[] splitSpace = parameter.split(" ");
-                if (paraList.containsKey(splitSpace[1])) {
-                    view.displayMessage("Parameters must have different names.");
-                    return; 
-                }
-                paraList.put(splitSpace[1], splitSpace[0]);
+                paraList.add(splitSpace);
             }
         }
 
@@ -411,6 +449,38 @@ public class UmlCliController {
     }
 
     /**
+     * Handles the changing of a method's return type by prompting 
+     * the user to choose the class and method, then asking them
+     * for the new return type.
+     */
+    public void handleChangeReturnType() {
+        // Change the return type of a method in a class
+        String action = "change the return type of"; // The action that this function will take
+        String classOfMethod = chooseClass(action); // Call helper to find the class's name
+        if (classOfMethod == null) {
+            return;
+        } // Stop if chooseClass found an error.
+
+        String methodAction = "change the return type"; // The action that this function will take
+        Method method = chooseMethod(classOfMethod, methodAction); // Call helper to find the method's name
+        if (method == null) {
+            return;
+        } // Stop if chooseMethod found an error.
+
+        view.displayMessage("Enter the new return type (String, int, etc.): ");
+        String newReturnType = scanner.nextLine().trim();
+
+        if (umlEditor.changeReturnType(classOfMethod, method.getName(), method.getParameters(),
+            method.getReturnType(), newReturnType)) {
+            view.displayMessage(
+                    "The return type of method '" + method.getName() + "' has been changed to '" + newReturnType + "' in class '"
+                            + classOfMethod + "'.");
+        } else {
+            view.displayMessage("Failed to change the return type. Name may be invalid or duplicated, or class does not exist.");
+        }
+    }
+
+    /**
      * Handles removing a parameter from a method by prompting the user for class
      * name,
      * method name, and parameter name, and then removing the parameter from the
@@ -442,7 +512,7 @@ public class UmlCliController {
                 methodOfParameter.getParameters(),
                 methodOfParameter.getReturnType(), parameterPair)) {
             view.displayMessage(
-                    "Parameter '" + parameterPair[0] + "' was removed from '" + methodOfParameter.getName() + "'.");
+                    "Parameter '" + parameterPair[1] + "' was removed from '" + methodOfParameter.getName() + "'.");
         } else {
             view.displayMessage("Failed to remove parameter. Name may be invalid, or class does not exist.");
         }
@@ -471,13 +541,13 @@ public class UmlCliController {
         view.displayMessage("Enter the new parameters for the method (String p1, int p2, etc.): ");
         String parameters = scanner.nextLine().trim();
 
-        Map<String, String> newParaList = new HashMap<>();
+        List<String[]> newParaList = new ArrayList<>();
         if (!parameters.trim().isEmpty()) {
             String[] splitParameters = parameters.split(",");
             for (String parameter : splitParameters) {
                 parameter = parameter.trim();
                 String[] splitSpace = parameter.split(" ");
-                newParaList.put(splitSpace[1], splitSpace[0]);
+                newParaList.add(splitSpace);
             }
         }
 
@@ -657,7 +727,6 @@ public class UmlCliController {
         }
     }
 
-
     public void handleUndo() {
         umlEditor.undo();
         System.out.println("Undo performed.");
@@ -672,7 +741,7 @@ public class UmlCliController {
     // Helper Functions
     /**
      * Go through all created classes and retrieve the class
-     *  the user selects.
+     * the user selects.
      * 
      * @param action The action that the calling function is performing.
      * @return The name of the class
@@ -717,10 +786,10 @@ public class UmlCliController {
 
     /**
      * Go through all created fields and retrieve the field
-     *  the user selects.
+     * the user selects.
      * 
      * @param className The name of the class that the fields are in
-     * @param action The action that the calling function is performing.
+     * @param action    The action that the calling function is performing.
      * @return The name of the field
      */
     private String chooseField(String className, String action) {
@@ -729,27 +798,30 @@ public class UmlCliController {
             view.displayMessage("There is no class to choose from.");
             return null;
         }
-    
+
         // Retrieve fields from the UmlClass as a LinkedHashMap
         LinkedHashMap<String, String> fieldMap = fieldClass.getFields();
         if (fieldMap.isEmpty()) {
             view.displayMessage("There are no fields to choose from.");
             return null;
         }
-    
+
         view.displayMessage("Select the number of the field to " + action + ": ");
         String[] fields = new String[fieldMap.size()]; // Prepare an array for field names
         int index = 0;
         int displayIndex = 1;
-    
+
         // Populate the fields array and display them
         for (Map.Entry<String, String> entry : fieldMap.entrySet()) {
             fields[index] = entry.getKey(); // Get the field name (key)
-            view.displayMessage("\t" + displayIndex + ". " + fields[index] + " (" + entry.getValue() + ")"); // Show field name and type
+            view.displayMessage("\t" + displayIndex + ". " + fields[index] + " (" + entry.getValue() + ")"); // Show
+                                                                                                             // field
+                                                                                                             // name and
+                                                                                                             // type
             index++;
             displayIndex++;
         }
-    
+
         int fieldIndex;
         try {
             fieldIndex = scanner.nextInt();
@@ -760,21 +832,21 @@ public class UmlCliController {
             return null;
         }
         scanner.nextLine(); // Clear the buffer
-    
+
         if (fieldIndex > displayIndex || fieldIndex < 1) {
             view.displayMessage("Field number does not exist.");
             return null;
         }
-    
+
         return fields[fieldIndex - 1]; // Return the selected field name
     }
-    
+
     /**
      * Go through all created methods and retrieve the method
-     *  the user selects.
+     * the user selects.
      * 
      * @param className The name of the class that the methods are in
-     * @param action The action that the calling function is performing
+     * @param action    The action that the calling function is performing
      * @return The method object the user selected
      */
     private Method chooseMethod(String className, String action) {
@@ -819,7 +891,7 @@ public class UmlCliController {
 
     /**
      * Go through all created parameters and retrieve the parameter
-     *  the user selects.
+     * the user selects.
      * 
      * @param method The method that the parameter belongs to
      * @param action The action that the calling function is performing
@@ -832,24 +904,18 @@ public class UmlCliController {
         }
 
         // The name of the parameter is the key, the type is the value
-        Map<String, String> parameters = method.getParameters();
-        
+        List<String[]> parameters = method.getParameters();
+
         if (parameters.isEmpty()) {
             view.displayMessage("There are no parameters to choose from.");
             return null;
         }
 
         view.displayMessage("Select the number of the parameter to " + action + ": ");
-        String[][] paras = new String[parameters.size() + 1][parameters.size() + 1];
-
-        int keyIndex = 0;
         int displayIndex = 1;
-        for (Map.Entry<String, String> element : parameters.entrySet()) {
-            paras[keyIndex][0] = element.getKey();
-            paras[keyIndex][1] = element.getValue();
-            view.displayMessage("\t" + displayIndex + ". " + paras[keyIndex][0] + " " + paras[keyIndex][1]);
+        for (String[] element : parameters) {
+            view.displayMessage("\t" + displayIndex + ". " + element[0] + " " + element[1]);
 
-            keyIndex++;
             displayIndex++;
         }
 
@@ -870,16 +936,12 @@ public class UmlCliController {
             return null;
         }
 
-        String[] parameterPair = new String[2];
-        parameterPair[0] = paras[(parameterIndex - 1)][0];
-        parameterPair[1] = paras[(parameterIndex - 1)][1];
-
-        return parameterPair;
+        return parameters.get(parameterIndex - 1);
     }
 
     /**
      * Go through all created relationships and retrieve the relationship
-     *  the user selects.
+     * the user selects.
      * 
      * @param action The action that the calling function is performing
      * @return The UmlRelationship object
@@ -920,7 +982,7 @@ public class UmlCliController {
 
     /**
      * Go through all relationships types and retrieve the type
-     *  the user selects.
+     * the user selects.
      * 
      * @param action The action that the calling function is performing
      * @return The RelationshipType object
