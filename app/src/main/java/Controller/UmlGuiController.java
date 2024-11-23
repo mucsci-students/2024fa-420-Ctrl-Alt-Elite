@@ -24,7 +24,7 @@ import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultComboBoxModel;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -95,7 +95,6 @@ public class UmlGuiController extends JFrame {
         JMenu fileMenu = new JMenu("File");
         addMenuItem(fileMenu, "Save UML File", e -> showSaveFilePanel());
         addMenuItem(fileMenu, "Load UML File", e -> showLoadFilePanel());
-        // Add the "Export as Image" menu item
         addMenuItem(fileMenu, "Export as Image", e -> exportAsImage());
         menuBar.add(fileMenu);
 
@@ -529,13 +528,13 @@ public class UmlGuiController extends JFrame {
             String newFieldName = newFieldNameField.getText();
 
             if (umlEditor.renameField(className, oldFieldName, newFieldName)) {
-                outputArea.append("Field '" + oldFieldName + "' renamed to '" + newFieldName + "' in class '"
-                        + className + "'.\n");
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
             } else {
-                outputArea.append("Failed to rename field '" + oldFieldName + "' to '" + newFieldName + "' in class '"
-                        + className + "'.\n");
+                JOptionPane.showMessageDialog(dialog,
+                "Field '" + newFieldName + "' already exists in class '" + className + "'.",
+                "Duplicate Field",
+                JOptionPane.ERROR_MESSAGE);
             }
             dialog.dispose();
         });
