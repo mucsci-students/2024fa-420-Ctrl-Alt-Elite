@@ -182,8 +182,7 @@ public class UmlGuiController extends JFrame {
         // Check if there are fields in the first class
         boolean hasFields = hasClasses && !umlEditorModel.getClasses().values().iterator().next().getFields().isEmpty();
         // Check if there are methods in the first class
-        boolean hasMethods = hasClasses
-                && !umlEditorModel.getClasses().values().iterator().next().getMethods().isEmpty();
+        boolean hasMethods = hasClasses && !umlEditorModel.getClasses().values().iterator().next().getMethods().isEmpty();
         // Check if there are any relationships
         boolean hasRelationships = !umlEditorModel.getRelationships().isEmpty();
 
@@ -288,7 +287,6 @@ public class UmlGuiController extends JFrame {
         submitButton.addActionListener(e -> {
             String className = (String) classComboBox.getSelectedItem(); // Get selected class name
             umlEditorModel.deleteClass(className);
-                outputArea.append("Class '" + className + "' deleted.\n");
                 removeClassRectangle(className);
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
@@ -368,7 +366,7 @@ public class UmlGuiController extends JFrame {
         addFieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
 
         // Get class names from the model
-        String[] classNames = umlEditorModel.getClassNames(); // Assuming getClassNames() returns String[]
+        String[] classNames = umlEditorModel.getClassNames(); 
 
         // Combo box for selecting the class name
         JComboBox<String> classNameComboBox = new JComboBox<>(classNames);
@@ -403,20 +401,16 @@ public class UmlGuiController extends JFrame {
                         "Field name and type cannot be empty.",
                         "Input Error",
                         JOptionPane.ERROR_MESSAGE);
-                return;
             }
 
-            if (!umlEditor.addField(className, fieldType, fieldName)) { // Single call to addField
+            else if (!umlEditor.addField(className, fieldType, fieldName)) { // Single call to addField
                 JOptionPane.showMessageDialog(dialog,
                         "Field '" + fieldName + "' already exists in class '" + className + "'.",
                         "Duplicate Field",
                         JOptionPane.ERROR_MESSAGE);
-                return;
             }
 
             // Success path
-            outputArea.append(
-                    "Field '" + fieldName + "' of type '" + fieldType + "' added to class '" + className + "'.\n");
             drawingPanel.revalidate();
             drawingPanel.repaint();
             updateButtonStates(); // Update button states after adding the field
@@ -475,13 +469,16 @@ public class UmlGuiController extends JFrame {
         submitButton.addActionListener(e -> {
             String className = (String) classNameComboBox.getSelectedItem();
             String fieldName = (String) fieldNameComboBox.getSelectedItem();
-            if (umlEditor.deleteField(className, fieldName)) {
-                outputArea.append("Field '" + fieldName + "' deleted from class '" + className + "'.\n");
+            if(umlEditor.deleteField(className, fieldName)){
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
-            } else {
-                outputArea.append("Failed to delete field '" + fieldName + "' from class '" + className + "'.\n");
+            } else{
+                JOptionPane.showMessageDialog(dialog,
+                        "You must select a Class and Field.",
+                        "Input Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
+            
             dialog.dispose();
         });
 
@@ -545,6 +542,12 @@ public class UmlGuiController extends JFrame {
             if (umlEditor.renameField(className, oldFieldName, newFieldName)) {
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
+            } 
+            else if (newFieldName.isEmpty()) {
+                JOptionPane.showMessageDialog(dialog,
+                        "New Field name cannot be empty.",
+                        "Input Error",
+                        JOptionPane.ERROR_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(dialog,
                 "Field '" + newFieldName + "' already exists in class '" + className + "'.",
@@ -562,7 +565,7 @@ public class UmlGuiController extends JFrame {
         dialog.setVisible(true);
     }
 
-    // Update Field Panel (only updates the type, not the name)
+    // Change Field Type Panel
     private void showChangeFieldTypePanel() {
         JDialog dialog = new JDialog(this, "Update Field Type", true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -616,23 +619,18 @@ public class UmlGuiController extends JFrame {
 
             if (newFieldType.isEmpty()) {
                 JOptionPane.showMessageDialog(dialog,
-                        "Field type cannot be empty.",
+                        "New field type cannot be empty.",
                         "Input Error",
                         JOptionPane.ERROR_MESSAGE);
-                return;
             }
-
-            if (!umlEditor.updateFieldType(className, oldFieldName, newFieldType)) {
+            else if (!umlEditor.updateFieldType(className, oldFieldName, newFieldType)) {
                 JOptionPane.showMessageDialog(dialog,
-                        "Failed to update field type for '" + oldFieldName + "' in class '" + className + "'.",
-                        "Update Failed",
+                        "Failed to change the field type for '" + oldFieldName + "' in class '" + className + "'.",
+                        "Change Field Type Failed",
                         JOptionPane.ERROR_MESSAGE);
-                return;
             }
 
             // Success path
-            outputArea.append("Field type for '" + oldFieldName + "' updated to '" + newFieldType + "' in class '"
-                    + className + "'.\n");
             drawingPanel.revalidate();
             drawingPanel.repaint();
             updateButtonStates(); // Update button states after updating the field
