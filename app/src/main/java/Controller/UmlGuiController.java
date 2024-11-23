@@ -238,14 +238,23 @@ public class UmlGuiController extends JFrame {
             int yPosition = random.nextInt(500); // Change range as needed
 
             if (umlEditorModel.addClass(className, new Point(xPosition, yPosition))) {
-                outputArea.append(
-                        "Class '" + className + "' added at position (" + xPosition + ", " + yPosition + ").\n");
                 addClassRectangle(className, xPosition, yPosition); // Draw rectangle for the new class
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
                 updateButtonStates(); // Update button states after adding
-            } else {
-                outputArea.append("Failed to add class '" + className + "'.\n");
+            } 
+            else if (className.isEmpty()) {
+                JOptionPane.showMessageDialog(dialog,
+                        "Class name cannot be empty.",
+                        "Input Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            else {
+                JOptionPane.showMessageDialog(dialog,
+                        "Class " + className + " already exists.",
+                        "Duplicate Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
             dialog.dispose(); // Close the dialog after submission
         });
@@ -278,15 +287,12 @@ public class UmlGuiController extends JFrame {
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
             String className = (String) classComboBox.getSelectedItem(); // Get selected class name
-            if (umlEditorModel.deleteClass(className)) {
+            umlEditorModel.deleteClass(className);
                 outputArea.append("Class '" + className + "' deleted.\n");
                 removeClassRectangle(className);
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
                 updateButtonStates(); // Update button states after deletion
-            } else {
-                outputArea.append("Failed to delete class '" + className + "'.\n");
-            }
             dialog.dispose();
         });
 
@@ -324,13 +330,22 @@ public class UmlGuiController extends JFrame {
             String oldName = (String) oldClassComboBox.getSelectedItem(); // Get selected old class name
             String newName = newClassNameField.getText();
             if (umlEditorModel.renameClass(oldName, newName)) {
-                outputArea.append("Class '" + oldName + "' renamed to '" + newName + "'.\n");
                 renameClassRectangle(oldName, newName);
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
                 updateButtonStates(); // Update button states after renaming
-            } else {
-                outputArea.append("Failed to rename class from '" + oldName + "' to '" + newName + "'.\n");
+            } 
+            else if (newName.isEmpty()) {
+                JOptionPane.showMessageDialog(dialog,
+                        "New class name cannot be empty.",
+                        "Input Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            else {
+                JOptionPane.showMessageDialog(dialog,
+                        "Class " + newName + " already exists.",
+                        "Duplicate Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
             dialog.dispose();
         });
