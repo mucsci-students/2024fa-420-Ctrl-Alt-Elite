@@ -402,7 +402,6 @@ public class UmlGuiController extends JFrame {
                         "Input Error",
                         JOptionPane.ERROR_MESSAGE);
             }
-
             else if (!umlEditor.addField(className, fieldType, fieldName)) { // Single call to addField
                 JOptionPane.showMessageDialog(dialog,
                         "Field '" + fieldName + "' already exists in class '" + className + "'.",

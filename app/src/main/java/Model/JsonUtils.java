@@ -14,7 +14,11 @@ import com.google.gson.reflect.TypeToken;
  * Utility class for saving and loading UML editor data in JSON format.
  */
 public class JsonUtils {
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    // Register the UmlClassAdapter with GsonBuilder
+    private static final Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(UmlClass.class, new UmlClassAdapter()) // Custom adapter for UmlClass
+            .create();
 
     /**
      * Saves the UML editor data (classes and relationships) to a JSON file.
@@ -23,9 +27,9 @@ public class JsonUtils {
      * @param filename    The name of the file to save the data to.
      * @throws IOException If there is an issue writing to the file.
      */
-    public static void save(UmlEditorModel editorModel, String filename) throws IOException, NullPointerException {
+    public static void save(UmlEditorModel editorModel, String filename) throws IOException {
         try (FileWriter writer = new FileWriter(filename)) {
-            gson.toJson(editorModel, writer);
+            gson.toJson(editorModel, writer); // Uses UmlClassAdapter for UmlClass objects
         }
     }
 
@@ -40,7 +44,7 @@ public class JsonUtils {
         try (FileReader reader = new FileReader(filename)) {
             Type type = new TypeToken<UmlEditorModel>() {}.getType();
             try {
-                return gson.fromJson(reader, type);
+                return gson.fromJson(reader, type); // Deserializes the JSON
             } catch (JsonParseException e) {
                 throw new IOException("Invalid JSON format", e);
             }
