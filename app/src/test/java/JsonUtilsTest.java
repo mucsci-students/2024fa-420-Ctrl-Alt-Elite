@@ -51,6 +51,13 @@ public class JsonUtilsTest {
         }
     }
 
+    @Test
+    @DisplayName ("Constructor: Test that the object initializes")
+    public void testConstructor() {
+        JsonUtils jsonU = new JsonUtils();
+        assertNotNull(jsonU);
+    }
+
     /**
      * Test saving and loading UML editor data.
      * 
