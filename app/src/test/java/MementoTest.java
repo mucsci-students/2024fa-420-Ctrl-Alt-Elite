@@ -19,21 +19,55 @@ public class MementoTest {
     }
 
     /**
+     * Test undoing the last action of the user, when the state is empty
+     */
+    @Test
+    @DisplayName ("undoState: Undo the last action when the state is empty")
+    public void testUndoStateIsEmpty() {
+        memento.undoState();
+    }
+    
+    /**
      * Test undoing the last action of the user
      */
     @Test
     @DisplayName ("undoState: Undo the last action")
     public void testUndoState() {
+        UmlEditorModel model = UmlEditorModel.getInstance();
+        model.addClass("ClassA");
+        memento.saveState(model);
+
         memento.undoState();
+
+        //Clean up
+        model.deleteClass("ClassA");
     }
 
+    /**
+     * Test redoing the last action of the user, , when the state is empty
+     */
+    @Test
+    @DisplayName ("redoState: Redo the last action when the state is empty")
+    public void testRedoStateIsEmpty() {
+        memento.redoState();
+    }
+
+    
     /**
      * Test redoing the last action of the user
      */
     @Test
     @DisplayName ("redoState: Redo the last action")
     public void testRedoState() {
+        UmlEditorModel model = UmlEditorModel.getInstance();
+        model.addClass("ClassA");
+        memento.saveState(model);
+
+        memento.undoState();
         memento.redoState();
+
+        //Clean up
+        model.deleteClass("ClassA");
     }
 
 }
