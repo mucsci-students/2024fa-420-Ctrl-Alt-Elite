@@ -21,75 +21,16 @@ public class UmlClass {
     /** An object to be used in the case that a method has no parameters */
     private List<String[]> parametersNull;
 
-    public boolean renameMethod(String oldMethodName, String newMethodName) {
-        for (Method method : methods) {
-            if (method.getName().equals(oldMethodName)) {
-                if (methods.stream().anyMatch(m -> m.getName().equals(newMethodName))) {
-                    return false; // New method name already exists
-                }
-                method.setName(newMethodName);
-                return true; // Method renamed successfully
-            }
-        }
-        return false; // Old method not found
-    }
-    
-
-    
-    // GUI
-    public boolean deleteMethod(String methodName) {
-        for (Iterator<Method> iterator = methods.iterator(); iterator.hasNext();) {
-            Method method = iterator.next();
-            if (method.getName().equals(methodName)) {
-                iterator.remove(); // Remove the method
-                return true;
-            }
-        }
-        return false; // Return false if the method was not found
-    }
-
-
-    public List<String[]> getMethodParameters(String methodName) {
-        if (methods == null || methods.isEmpty()) {
-            return null;
-        }
-
-        for (Method method : methods) {
-            if (method.getName().equals(methodName)) {
-                return method.getParameters(); // Assumes Method class has getParameters() method
-            }
-        }
-
-        return null; // Return null if method is not found
-    }
-
-    public String getMethodReturnType(String methodName) {
-        if (methods == null || methods.isEmpty()) {
-            return null;
-        }
-
-        for (Method method : methods) {
-            if (method.getName().equals(methodName)) {
-                return method.getReturnType(); // Assumes Method class has getReturnType method
-            }
-        }
-
-        return null; // Return null if method not found
-    }
-
     /**
-     * Get the names of all methods in this UML class.
-     *
-     * @return A list of method names.
+     * Constructs a new UmlClass with the specified name.
+     * 
+     * @param name The name of the UML class.
      */
-    public List<String> getMethodNames() {
-        if (methods == null || methods.isEmpty()) {
-            return new ArrayList<>(); // Return empty list if no methods
-        }
-        return methods.stream()
-                      .map(Method::getName) // Assumes Method class has a getName() method
-                      .collect(Collectors.toList());
+    public UmlClass(String name) {
+        this.name = name;
+        this.methods = new ArrayList<>();
     }
+    
     /**
      * Constructs a new UmlClass with the specified name and position.
      * 
@@ -110,23 +51,119 @@ public class UmlClass {
         this.fields = new LinkedHashMap<>(other.fields); // Deep copy of fields
     }
 
+/*----------------------------------------------------------------------------------------------------------------*/
+    // GUI Methods
+    
     /**
-     * Constructs a new UmlClass with the specified name.
+     * Return the position of a point.
      * 
-     * @param name The name of the UML class.
+     * @return The point
      */
-    public UmlClass(String name) {
-        this.name = name;
-        this.methods = new ArrayList<>();
-    }
-
     public Point getPosition() {
         return position;
     }
 
+    /**
+     * Set a position to a new point.
+     * 
+     * @param position The new point.
+     */
     public void setPosition(Point position) {
         this.position = position;
     }
+
+    /**
+     * Get the names of all methods in this UML class.
+     *
+     * @return A list of method names.
+     */
+    public List<String> getMethodNames() {
+        if (methods == null || methods.isEmpty()) {
+            return new ArrayList<>(); // Return empty list if no methods
+        }
+        return methods.stream()
+                      .map(Method::getName) // Assumes Method class has a getName() method
+                      .collect(Collectors.toList());
+    }
+
+    /**
+     * Return the list of parameters of a method.
+     * 
+     * @param methodName The name of the method.
+     * @return The list of parameters.
+     */
+    public List<String[]> getMethodParameters(String methodName) {
+        if (methods == null || methods.isEmpty()) {
+            return null;
+        }
+
+        for (Method method : methods) {
+            if (method.getName().equals(methodName)) {
+                return method.getParameters(); // Assumes Method class has getParameters() method
+            }
+        }
+
+        return null; // Return null if method is not found
+    }
+
+    /**
+     * Return the return type of the given method.
+     * 
+     * @param methodName The name of the method.
+     * @return The method's return type.
+     */
+    public String getMethodReturnType(String methodName) {
+        if (methods == null || methods.isEmpty()) {
+            return null;
+        }
+
+        for (Method method : methods) {
+            if (method.getName().equals(methodName)) {
+                return method.getReturnType(); // Assumes Method class has getReturnType method
+            }
+        }
+
+        return null; // Return null if method not found
+    }
+    
+    /**
+     * Rename a method.
+     * 
+     * @param oldMethodName The old method name.
+     * @param newMethodName The new method name.
+     * @return {@code true} if the method name was changed, {@code false} otherwise.
+     */
+    public boolean renameMethod(String oldMethodName, String newMethodName) {
+        for (Method method : methods) {
+            if (method.getName().equals(oldMethodName)) {
+                if (methods.stream().anyMatch(m -> m.getName().equals(newMethodName))) {
+                    return false; // New method name already exists
+                }
+                method.setName(newMethodName);
+                return true; // Method renamed successfully
+            }
+        }
+        return false; // Old method not found
+    }
+    
+    /**
+     * Delete a method.
+     * 
+     * @param methodName The name of the method.
+     * @return {@code true} if the method was deleted, {@code false} otherwise.
+     */
+    public boolean deleteMethod(String methodName) {
+        for (Iterator<Method> iterator = methods.iterator(); iterator.hasNext();) {
+            Method method = iterator.next();
+            if (method.getName().equals(methodName)) {
+                iterator.remove(); // Remove the method
+                return true;
+            }
+        }
+        return false; // Return false if the method was not found
+    }
+
+/*----------------------------------------------------------------------------------------------------------------*/  
 
     /**
      * Gets the name of the UML class.
@@ -214,6 +251,15 @@ public class UmlClass {
      */
     public ArrayList<Method> getMethodsList() {
         return methods;
+    }
+
+    /**
+     * Sets the list of method objects.
+     * 
+     * @param methodList The new list of methods.
+     */
+    public void setMethodsList(ArrayList<Method> methodList) {
+        methods = methodList;
     }
 
     public boolean addField(String fieldType, String fieldName) {
@@ -433,6 +479,9 @@ public class UmlClass {
                 if (other.parameters != null) {
                     return false;
                 }
+                else {
+                    return true;
+                }
             } else if (parameters.size() != other.parameters.size()) {
                 return false;
             } else {
@@ -470,9 +519,9 @@ public class UmlClass {
         }
 
         /**
-         * Generates a string representation of the representation object.
+         * Generates a string representation of the method object.
          * 
-         * @return A string representation of the Method class.
+         * @return A string representation of a Method.
          */
         @Override
         public String toString() {
@@ -574,7 +623,7 @@ public class UmlClass {
     public boolean renameMethod(String oldName, List<String[]> parameters, String returnType, String newName) {
         // If the names are empty, if there are no methods, or if there is white space
         // in the new name, return false.
-        if (oldName.isEmpty() || newName.isEmpty() || methods.isEmpty() || newName.contains(" ")) {
+        if (oldName.isEmpty() || newName.isEmpty() || newName.contains(" ")) {
             return false;
         }
 
@@ -677,8 +726,10 @@ public class UmlClass {
         if (!newParameters.isEmpty()) {
             // Check that all of the parameter names are valid
             for (String[] element : newParameters) {
-                if (element[0].isEmpty() || element[1].isEmpty()
-                        || element[0].contains(" ") || element[1].contains(" ")
+                if (element[0].isEmpty() 
+                        || element[1].isEmpty()
+                        || element[0].contains(" ") 
+                        || element[1].contains(" ")
                         || !nameList.add(element[1])) {
                     return false;
                 }
