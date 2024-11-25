@@ -110,6 +110,11 @@ To ensure the quality and functionality of the project, automated tests have bee
   
 + **Usage**: In our UML editor project, we apply the Singleton pattern to the `UmlEditorModel`. This pattern is implemented in the `UmlEditorModel.java` class, ensuring that there is only one instance of the model throughout the application. The singleton instance is accessed through the `getInstance()` method, which provides a global point of access to the model. This ensures consistency of the model state across the application and avoids the need for multiple instances of the model. Additionally, the `clone()` method has been overridden to allow for a deep copy of the model, enabling features like undo and redo functionality via the Memento pattern.
 
+### 6. Adapter
++ **Definition**: The Adapter pattern allows incompatible interfaces to work together by converting one interface into another.
+
++ **Usage**: In our UML editor, we use the Adapter pattern with `UmlClassAdapter` and `UmlEditorModelAdapter` in the `Model` to handle JSON serialization and deserialization. These adapters convert `UmlClass` and `UmlEditorModel` objects into a format Gson can process, ensuring proper saving and loading of UML data. The adapters handle converting complex objects into JSON and vice versa, maintaining the integrity of the editor's state.
+
 
 
 ## Developers
