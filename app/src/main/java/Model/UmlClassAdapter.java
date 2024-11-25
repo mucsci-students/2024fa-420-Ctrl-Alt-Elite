@@ -9,8 +9,17 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * Adapter class for converting UmlClass objects into JSON format.
+ * Implements the Adapter design pattern to facilitate custom serialization
+ * of UmlClass attributes, methods, and position.
+ */
 public class UmlClassAdapter implements JsonSerializer<UmlClass> {
 
+    /**
+     * Converts a UmlClass object into its JSON representation,
+     * including its name, fields, methods, and position.
+     */
     @Override
     public JsonElement serialize(UmlClass src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject jsonClass = new JsonObject();
