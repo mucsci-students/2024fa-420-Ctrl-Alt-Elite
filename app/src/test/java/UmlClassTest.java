@@ -1582,6 +1582,28 @@ public class UmlClassTest {
         assertFalse(umlClass.changeParameters("Method1", parametersA, "int", parametersB));
     }
 
+    /**
+     * Test changing the list of parameters of a method.
+     */
+    @Test
+    @DisplayName ("changeParameters: Change the list of parameters of a method")
+    public void testChangeParametersNoOldMethod() {
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"void", "P2"};
+        String[] P3 = {"int", "P3"};
+        
+        List<String[]> parametersA = new ArrayList<>();
+        parametersA.add(P1);
+        parametersA.add(P2);
+
+        List<String[]> parametersB = new ArrayList<>();
+        parametersB.add(P3);
+
+        umlClass.addMethod("Method1", parametersA, "int");
+        
+        assertFalse(umlClass.changeParameters("Method2", parametersA, "int", parametersB));
+    }
+
 /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
