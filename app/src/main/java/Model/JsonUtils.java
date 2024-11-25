@@ -18,6 +18,7 @@ public class JsonUtils {
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(UmlClass.class, new UmlClassAdapter()) // Custom adapter for UmlClass
+            .registerTypeAdapter(UmlEditorModel.class, new UmlEditorModelAdapter())  // Register UmlEditorModelAdapter
             .create();
 
     /**
