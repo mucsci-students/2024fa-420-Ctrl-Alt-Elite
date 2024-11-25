@@ -5,8 +5,8 @@ package Model;
  * These include AGGREGATION, COMPOSITION, INHERITANCE, and REALIZATION.
  */
 public enum RelationshipType {
-    AGGREGATION,
-    COMPOSITION,
-    INHERITANCE,
-    REALIZATION
+    Aggregation,
+    Composition,
+    Inheritance,
+    Realization
 }

@@ -1197,7 +1197,7 @@ public class UmlGuiController extends JFrame {
         JComboBox<String> destinationComboBox = new JComboBox<>(availableClasses);
 
         // Create a combo box for RelationshipType
-        String[] relationshipTypes = { "REALIZATION", "AGGREGATION", "COMPOSITION", "INHERITANCE" };
+        String[] relationshipTypes = { "Realization", "Aggregation", "Composition", "Inheritance" };
         JComboBox<String> typeComboBox = new JComboBox<>(relationshipTypes);
 
         // Set alignment for each component to the left
@@ -1276,7 +1276,7 @@ public class UmlGuiController extends JFrame {
         JComboBox<String> destinationComboBox = new JComboBox<>(classNames);
 
         // Create a combo box for RelationshipType
-        String[] relationshipTypes = { "REALIZATION", "AGGREGATION", "COMPOSITION", "INHERITANCE" };
+        String[] relationshipTypes = { "Realization", "Aggregation", "Composition", "Inheritance" };
         JComboBox<String> typeComboBox = new JComboBox<>(relationshipTypes);
 
         // Create and align labels and fields
@@ -1588,14 +1588,14 @@ public class UmlGuiController extends JFrame {
 
                     // Determine color and line style based on relationship type
                     switch (relationship.getType()) {
-                        case INHERITANCE:
+                        case Inheritance:
                             g2d.setColor(Color.BLUE); // Color for inheritance
                             // Check for self-relationship
                             if (relationship.getSource().equals(relationship.getDestination())) {
                                 // Draw the arrowhead shape at the top middle of the box
                                 drawArrow(g, sourcePosition.x + 50,
                                         sourcePosition.y + offset, // Arrowhead at the top of the source box
-                                        "inheritance"); // Pass "inheritance" for arrowhead style
+                                        "Inheritance"); // Pass "inheritance" for arrowhead style
                             } else {
                                 g2d.drawLine(sourcePosition.x + 50,
                                         // Start from the bottom middle
@@ -1606,18 +1606,18 @@ public class UmlGuiController extends JFrame {
                                 drawArrow(g, destinationPosition.x + 50,
                                         destinationPosition.y + getBoxHeight(relationship.getDestination())
                                                 + arrowheadOffset1, // Offset for arrowhead
-                                        "inheritance"); // Pass "inheritance" for arrowhead style
+                                        "Inheritance"); // Pass "inheritance" for arrowhead style
                             }
                             break;
 
-                        case REALIZATION:
+                        case Realization:
                             g2d.setColor(Color.GREEN); // Color for realization
                             // Check for self-relationship
                             if (relationship.getSource().equals(relationship.getDestination())) {
                                 // Draw the arrowhead shape at the top middle of the box
                                 drawArrow(g, sourcePosition.x + 50,
                                         sourcePosition.y + offset, // Arrowhead at the top of the source box
-                                        "realization"); // Pass "realization" for arrowhead style
+                                        "Realization"); // Pass "realization" for arrowhead style
                             } else {
                                 // Draw dotted line for realization
                                 float[] dottedPattern = { 2f, 5f }; // Dotted line pattern
@@ -1638,18 +1638,18 @@ public class UmlGuiController extends JFrame {
                                 drawArrow(g, destinationPosition.x + 50,
                                         destinationPosition.y + getBoxHeight(relationship.getDestination())
                                                 + arrowheadOffset1, // Offset for arrowhead
-                                        "realization"); // Pass "realization" for arrowhead style
+                                        "Realization"); // Pass "realization" for arrowhead style
                             }
                             break;
 
-                        case AGGREGATION:
+                        case Aggregation:
                             g2d.setColor(Color.ORANGE); // Color for aggregation
                             // Check for self-relationship
                             if (relationship.getSource().equals(relationship.getDestination())) {
                                 // Draw the arrowhead shape at the top middle of the box
                                 drawArrow(g, sourcePosition.x + 50,
                                         sourcePosition.y + offset, // Arrowhead at the top of the source box
-                                        "aggregation"); // Pass "aggregation" for arrowhead style
+                                        "Aggregation"); // Pass "aggregation" for arrowhead style
                             } else {
                                 // Draw dashed line for aggregation
                                 float[] dashPattern = { 10f, 5f }; // Dashed line pattern
@@ -1670,18 +1670,18 @@ public class UmlGuiController extends JFrame {
                                 drawArrow(g, destinationPosition.x + 50,
                                         destinationPosition.y + getBoxHeight(relationship.getDestination())
                                                 + arrowheadOffset2, // Offset for arrowhead
-                                        "aggregation"); // Pass "aggregation" for arrowhead style
+                                        "Aggregation"); // Pass "aggregation" for arrowhead style
                             }
                             break;
 
-                        case COMPOSITION:
+                        case Composition:
                             g2d.setColor(Color.RED); // Color for composition
                             // Check for self-relationship
                             if (relationship.getSource().equals(relationship.getDestination())) {
                                 // Draw the arrowhead shape at the top middle of the box
                                 drawArrow(g, sourcePosition.x + 50,
                                         sourcePosition.y + offset, // Arrowhead at the top of the source box
-                                        "composition"); // Pass "composition" for arrowhead style
+                                        "Composition"); // Pass "composition" for arrowhead style
                             } else {
                                 g2d.drawLine(sourcePosition.x + 50,
                                         sourcePosition.y + getBoxHeight(relationship.getSource()) + offset, // Start
@@ -1697,7 +1697,7 @@ public class UmlGuiController extends JFrame {
                                 drawArrow(g, destinationPosition.x + 50,
                                         destinationPosition.y + getBoxHeight(relationship.getDestination())
                                                 + arrowheadOffset2, // Offset for arrowhead
-                                        "composition"); // Pass "composition" for arrowhead style
+                                        "Composition"); // Pass "composition" for arrowhead style
                             }
                             break;
                     }
@@ -1766,29 +1766,29 @@ public class UmlGuiController extends JFrame {
         private void drawArrow(Graphics g, int x, int y, String relationshipType) {
             int arrowSize = 10; // Size of the arrowhead
 
-            switch (relationshipType.toLowerCase()) {
-                case "inheritance":
+            switch (relationshipType) {
+                case "Inheritance":
                     // Open triangle arrowhead for inheritance
                     int[] inhXPoints = { x, x - arrowSize, x + arrowSize };
                     int[] inhYPoints = { y, y - arrowSize, y - arrowSize };
                     g.drawPolygon(inhXPoints, inhYPoints, 3); // Draw only the outline
                     break;
 
-                case "realization":
+                case "Realization":
                     // Open triangle arrowhead for realization, similar to inheritance
                     int[] realXPoints = { x, x - arrowSize, x + arrowSize };
                     int[] realYPoints = { y, y - arrowSize, y - arrowSize };
                     g.drawPolygon(realXPoints, realYPoints, 3); // Draw only the outline
                     break;
 
-                case "aggregation":
+                case "Aggregation":
                     // Hollow diamond for aggregation
                     int[] aggXPoints = { x, x - arrowSize, x, x + arrowSize };
                     int[] aggYPoints = { y, y - arrowSize, y - (2 * arrowSize), y - arrowSize };
                     g.drawPolygon(aggXPoints, aggYPoints, 4); // Draw diamond shape
                     break;
 
-                case "composition":
+                case "Composition":
                     // Filled diamond for composition
                     int[] compXPoints = { x, x - arrowSize, x, x + arrowSize };
                     int[] compYPoints = { y, y - arrowSize, y - (2 * arrowSize), y - arrowSize };
