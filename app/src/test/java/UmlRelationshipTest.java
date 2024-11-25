@@ -18,10 +18,10 @@ public class UmlRelationshipTest {
 
 
     /* An AGGREGATION relationship type variable */
-    private final RelationshipType type = RelationshipType.AGGREGATION;
+    private final RelationshipType type = RelationshipType.Aggregation;
 
     /* An COMPOSITION relationship type variable */
-    private final RelationshipType typeComp = RelationshipType.COMPOSITION;
+    private final RelationshipType typeComp = RelationshipType.Composition;
 	
 	/**
      * Creates an instance of a UmlRelationship object to be used in tests.
