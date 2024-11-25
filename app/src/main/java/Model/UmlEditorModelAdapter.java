@@ -1,12 +1,12 @@
 package Model;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
-import java.util.Map;
 
 public class UmlEditorModelAdapter implements JsonSerializer<UmlEditorModel> {
 
@@ -14,13 +14,12 @@ public class UmlEditorModelAdapter implements JsonSerializer<UmlEditorModel> {
     public JsonElement serialize(UmlEditorModel src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject jsonModel = new JsonObject();
         
-        // Serialize classes (using UmlClassAdapter for each UmlClass)
-        JsonObject jsonClasses = new JsonObject();
-        for (Map.Entry<String, UmlClass> entry : src.getClasses().entrySet()) {
-            UmlClass umlClass = entry.getValue();
-            jsonClasses.add(entry.getKey(), context.serialize(umlClass, UmlClass.class));  // Uses UmlClassAdapter here
+        // Serialize classes as an array
+        JsonArray classArray = new JsonArray();
+        for (UmlClass umlClass : src.getClasses().values()) {
+            classArray.add(context.serialize(umlClass, UmlClass.class));  // Uses UmlClassAdapter for serialization
         }
-        jsonModel.add("classes", jsonClasses);
+        jsonModel.add("classes", classArray);
 
         // Serialize relationships
         jsonModel.add("relationships", context.serialize(src.getRelationships()));
