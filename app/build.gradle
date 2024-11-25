@@ -26,7 +26,7 @@ java {
 
 jacoco {
     toolVersion = "0.8.12"
-    reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
+    //reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
 }
 
 application {
@@ -39,10 +39,10 @@ test {
 }
 
 jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
-    reports {
+     reports {
         xml.required = true
         csv.required = false
+        //html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
 }
 

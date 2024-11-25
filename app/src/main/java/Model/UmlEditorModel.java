@@ -1,11 +1,11 @@
 package Model;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.awt.Point;
 
 public class UmlEditorModel implements Cloneable {
     // Static instance of the class
@@ -15,6 +15,9 @@ public class UmlEditorModel implements Cloneable {
     private Map<String, UmlClass> classes;
     private List<UmlRelationship> relationships;
     private Map<String, Point> classPositions;
+
+    // A string used in testing the model
+    public String testString = "";
 
     // Private constructor to prevent instantiation
     private UmlEditorModel() {
@@ -31,9 +34,18 @@ public class UmlEditorModel implements Cloneable {
         return instance;
     }
 
+    /**
+     * Clone the model.
+     * 
+     * @return A clone of the instance.
+     */
     @Override
     public UmlEditorModel clone() {
         try {
+            if (testString.equals("GO")) {
+                throw new CloneNotSupportedException();
+            }
+            
             UmlEditorModel cloned = (UmlEditorModel) super.clone(); // Create a shallow copy
 
             // Perform deep copy for mutable fields to ensure the clone is independent of
@@ -51,6 +63,14 @@ public class UmlEditorModel implements Cloneable {
         }
     }
 
+    /**
+     * Rename a method.
+     * 
+     * @param className The name of the class.
+     * @param oldMethodName The old name of the method.
+     * @param newMethodName The new name of the method.
+     * @return {@code true} if the method was rename, {@code false} otherwise.
+     */
     public boolean renameMethod(String className, String oldMethodName, String newMethodName) {
         UmlClass umlClass = classes.get(className);
         if (umlClass == null) {
@@ -59,14 +79,28 @@ public class UmlEditorModel implements Cloneable {
         return umlClass.renameMethod(oldMethodName, newMethodName);
     }
 
+    /**
+     * Delete the method.
+     * 
+     * @param className The name of the class.
+     * @param methodName The name of the method.
+     * @return {@code true} if the method was deleted, {@code false} otherwise.
+     */
     public boolean deleteMethod(String className, String methodName) {
         UmlClass umlClass = classes.get(className);
-        if (umlClass != null) {
-            return umlClass.deleteMethod(methodName);
+        if (umlClass == null) {
+            return false;
         }
-        return false;
+        return umlClass.deleteMethod(methodName);
     }
 
+    /**
+     * Get the list of parameters.
+     * 
+     * @param className The name of the class.
+     * @param methodName The name of the method.
+     * @return The list of parameters.
+     */
     public List<String[]> getParameters(String className, String methodName) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
@@ -75,6 +109,13 @@ public class UmlEditorModel implements Cloneable {
         return null;
     }
 
+    /**
+     * Get the return type of a method.
+     * 
+     * @param className The name of the class.
+     * @param methodName The name of the method.
+     * @return The method return type.
+     */
     public String getMethodReturnType(String className, String methodName) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
@@ -83,6 +124,12 @@ public class UmlEditorModel implements Cloneable {
         return null;
     }
 
+    /**
+     * Get the list of method names.
+     * 
+     * @param className The name of the class.
+     * @return The list of method names.
+     */
     public String[] getMethodNames(String className) {
         UmlClass umlClass = classes.get(className);
         if (umlClass != null) {
@@ -92,14 +139,30 @@ public class UmlEditorModel implements Cloneable {
         return new String[0];
     }
 
+    /**
+     * Get a single class.
+     * 
+     * @param name The name of the class.
+     * @return The UmlClass object.
+     */
     public UmlClass getClass(String name) {
         return classes.get(name);
     }
 
+    /**
+     * Get the map of classes.
+     * 
+     * @return The map of classes.
+     */
     public Map<String, UmlClass> getClasses() {
         return classes;
     }
 
+    /**
+     * Ge the list of class names.
+     * 
+     * @return The list of class names.
+     */
     public String[] getClassNames() {
         return classes.keySet().toArray(new String[0]);
     }
@@ -132,17 +195,32 @@ public class UmlEditorModel implements Cloneable {
         this.relationships = relationships;
     }
 
+    /**
+     * Set the test string.
+     * 
+     * @param newString The new set of relationship.
+     */
+    public void setTestString(String newString) {
+        this.testString = newString;
+    }
+    
+
     /*----------------------------------------------------------------------------------------------------------------*/
 
+    /**
+     * Update the position of a class.
+     * 
+     * @param className The name of the class.
+     * @param position The classes new position.
+     */
     public void updateClassPosition(String className, Point position) {
         if (classes.containsKey(className)) {
             // Update the position in the model
             classPositions.put(className, position); // Assuming you have a map for positions in the model
             UmlClass umlClass = classes.get(className);
-            if (umlClass != null) {
-                // Set the position in the UmlClass object if needed
-                umlClass.setPosition(position); // Ensure UmlClass has a setPosition method
-            }
+            // Set the position in the UmlClass object if needed
+            umlClass.setPosition(position); // Ensure UmlClass has a setPosition method
+            
         }
     }
 
@@ -207,11 +285,13 @@ public class UmlEditorModel implements Cloneable {
     public boolean addClass(String name, Point position) {
         // Return false if name is null, empty, class already exists, or the name has
         // white space
-        if (classes.containsKey(name) || name == null || name.isEmpty() || name.contains(" ")) {
+        if (classes.containsKey(name) || name == null || name.isEmpty() 
+                || name.contains(" ")) {
             return false;
         }
 
         classes.put(name, new UmlClass(name, position)); // Pass the position to the UmlClass constructor
+        classPositions.put(name, position);
         return true;
     }
 
