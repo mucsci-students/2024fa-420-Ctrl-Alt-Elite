@@ -35,7 +35,7 @@ public class JsonUtilsTest {
 
         editorModel.addClass("ClassA"); // Add a sample class
         editorModel.addClass("ClassB"); // Add another sample class
-        RelationshipType type = RelationshipType.AGGREGATION;
+        RelationshipType type = RelationshipType.Aggregation;
 
         editorModel.addRelationship("ClassA", "ClassB", type); // Add a relationship between the classes
     }
