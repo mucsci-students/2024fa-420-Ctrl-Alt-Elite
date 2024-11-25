@@ -16,6 +16,7 @@ public class UmlRelationshipTest {
 	/** A UmlRelationship object that will be tested on. */
 	private UmlRelationship relationship;
 
+
     /* An AGGREGATION relationship type variable */
     private final RelationshipType type = RelationshipType.AGGREGATION;
 
@@ -91,7 +92,7 @@ public class UmlRelationshipTest {
     @Test
     @DisplayName ("SetType: Alter the type of the relationship")
     public void testSetType() {
-        RelationshipType newType = RelationshipType.COMPOSITION;
+        RelationshipType newType = RelationshipType.Composition;
         relationship.setType(newType);
         
         assertEquals(newType, relationship.getType());

@@ -51,8 +51,22 @@ public class UmlClass {
         this.fields = new LinkedHashMap<>(other.fields); // Deep copy of fields
     }
 
-/*----------------------------------------------------------------------------------------------------------------*/
+ /*----------------------------------------------------------------------------------------------------------------*/
     // GUI Methods
+
+    public Method getMethod(String methodName) {
+        if (methodName == null || methodName.isEmpty()) {
+            return null;
+        }
+    
+        for (Method method : methods) {
+            if (method.getName().equals(methodName)) {
+                return method;
+            }
+        }
+    
+        return null; // Return null if the method is not found
+    }
     
     /**
      * Return the position of a point.
