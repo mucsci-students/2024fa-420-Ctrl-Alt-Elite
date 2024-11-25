@@ -35,6 +35,20 @@ public class UmlClass {
     }
     
 
+    public Method getMethod(String methodName) {
+        if (methodName == null || methodName.isEmpty()) {
+            return null;
+        }
+    
+        for (Method method : methods) {
+            if (method.getName().equals(methodName)) {
+                return method;
+            }
+        }
+    
+        return null; // Return null if the method is not found
+    }
+    
     
     // GUI
     public boolean deleteMethod(String methodName) {

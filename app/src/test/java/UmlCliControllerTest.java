@@ -86,7 +86,7 @@ public class UmlCliControllerTest {
     	
     	umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
-        RelationshipType type = RelationshipType.AGGREGATION;
+        RelationshipType type = RelationshipType.Aggregation;
         umlEditor.addRelationship("ClassA", "ClassB", type);
         
         System.out.print("Output: ");
