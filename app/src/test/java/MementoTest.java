@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 import Model.Memento;
 import Model.UmlEditorModel;
 
+/**
+ * A class that tests the memento file.
+ */
 public class MementoTest {
     
     Memento memento = new Memento();

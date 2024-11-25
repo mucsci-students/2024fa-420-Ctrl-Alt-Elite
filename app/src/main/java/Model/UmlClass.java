@@ -54,6 +54,12 @@ public class UmlClass {
  /*----------------------------------------------------------------------------------------------------------------*/
     // GUI Methods
 
+    /**
+     * Get a method.
+     * 
+     * @param methodName The name of the method.
+     * @return The method object.
+     */
     public Method getMethod(String methodName) {
         if (methodName == null || methodName.isEmpty()) {
             return null;

@@ -74,7 +74,7 @@ public class JsonUtilsTest {
         // Validate that the loaded data is not null and matches the original data
         //assertNotNull(loadedEditor);
         //assertEquals(2, loadedEditor.getClasses().size()); // Check the number of classes
-       // assertEquals(1, loadedEditor.getRelationships().size()); // Check the number of relationships
+        //assertEquals(1, loadedEditor.getRelationships().size()); // Check the number of relationships
         //assertTrue(loadedEditor.getClasses().containsKey("ClassA")); // Verify ClassA exists
         //assertTrue(loadedEditor.getClasses().containsKey("ClassB")); // Verify ClassB exists
     }

@@ -81,6 +81,27 @@ public class UmlClassTest {
 //Test GUI methods
 
     /**
+     * Test getting a method.
+     */
+    @Test
+    @DisplayName ("GetMethod: Test getting the position of a point")
+    public void testGetMethodGUI() {
+        UmlClass umlClassTest = new UmlClass("ClassB");
+        List<String[]> parameters = new ArrayList<>();
+        String[] P1 = {"int", "P1"};
+        String[] P2 = {"int", "P2"};
+        parameters.add(P1);
+        parameters.add(P2);
+        String returnType = "String";
+        umlClassTest.addMethod("Method1", parameters, returnType);
+
+        umlClassTest.getMethod("Method1");
+        umlClassTest.getMethod("Method2");
+        umlClassTest.getMethod("");
+        umlClassTest.getMethod(null);
+    }
+
+    /**
      * Test getting the position of a point.
      */
     @Test
