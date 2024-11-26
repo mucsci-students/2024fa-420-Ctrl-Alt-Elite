@@ -15,9 +15,9 @@ dependencies {
     // Dependencies used by the application.
     implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'com.google.guava:guava:31.0.1-jre' // Specify the Guava version
-    implementation 'org.jline:jline:3.21.0' // For Tab-Completion
+    // https://mvnrepository.com/artifact/org.jline/jline
+    implementation 'org.jline:jline:3.27.1'
 }
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
@@ -26,7 +26,7 @@ java {
 
 jacoco {
     toolVersion = "0.8.12"
-    reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
+    //reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
 }
 
 application {
@@ -39,11 +39,10 @@ test {
 }
 
 jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
-    reports {
+     reports {
         xml.required = true
         csv.required = false
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+        //html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
 }
 

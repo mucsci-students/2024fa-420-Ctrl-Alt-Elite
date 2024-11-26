@@ -1,16 +1,11 @@
 package Controller;
-import Model.Memento;
-
 
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-
-import java.util.Stack;
-
+import Model.Memento;
 import Model.RelationshipType;
 import Model.UmlClass;
 import Model.UmlEditorModel;
@@ -21,39 +16,36 @@ public class UmlEditor {
 
     /*----------------------------------------------------------------------------------------------------------------*/
     private Memento memento = new Memento();
-    
 
     public UmlEditor(UmlEditorModel initialModel) {
-        this.model =  initialModel; // Use a deep copy here
+        this.model = initialModel; // Use a deep copy here
         memento.saveState(this.model); // Save initial state
     }
 
-
-
-// Undo the last action
-public void undo() {
-    UmlEditorModel previousState = memento.undoState();
-    if (previousState != null) {
-        this.model = previousState;
-        System.out.println("Undo performed.");
-    } else {
-        System.out.println("Nothing to undo.");
-    }
-}
-
-// Redo the last undone action
-public void redo() {
-    UmlEditorModel nextState = memento.redoState();
-    if (nextState != null) {
-        this.model = nextState;
-        System.out.println("Redo performed.");
-    } else {
-        System.out.println("Nothing to redo.");
+    // Undo the last action
+    public void undo() {
+        UmlEditorModel previousState = memento.undoState();
+        if (previousState != null) {
+            this.model = previousState;
+            System.out.println("Undo performed.");
+        } else {
+            System.out.println("Nothing to undo.");
+        }
     }
 
-}
+    // Redo the last undone action
+    public void redo() {
+        UmlEditorModel nextState = memento.redoState();
+        if (nextState != null) {
+            this.model = nextState;
+            System.out.println("Redo performed.");
+        } else {
+            System.out.println("Nothing to redo.");
+        }
+
+    }
     /*----------------------------------------------------------------------------------------------------------------*/
-    /*                                              CLASS MANAGEMENT METHODS                                          */
+    /* CLASS MANAGEMENT METHODS */
     /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
@@ -79,27 +71,26 @@ public void redo() {
      * @return {@code true} if the class was added, {@code false} otherwise.
      */
     // Example method to add a class
-   // Method to add a class
-   public boolean addClass(String name) {
-    if (name == null || name.isEmpty() || name.contains(" ")) {
-        return false;
+    // Method to add a class
+    public boolean addClass(String name) {
+        if (name == null || name.isEmpty() || name.contains(" ")) {
+            return false;
+        }
+        return model.addClass(name);
     }
-    return model.addClass(name);
-}
 
-/**
- * Deletes a class and all relationships involving that class.
- * 
- * @param name The name of the class to be deleted.
- * @return {@code true} if the class was deleted, {@code false} otherwise.
- */
-public boolean deleteClass(String name) {
-    if (name == null || name.isEmpty()) {
-        return false;
+    /**
+     * Deletes a class and all relationships involving that class.
+     * 
+     * @param name The name of the class to be deleted.
+     * @return {@code true} if the class was deleted, {@code false} otherwise.
+     */
+    public boolean deleteClass(String name) {
+        if (name == null || name.isEmpty()) {
+            return false;
+        }
+        return model.deleteClass(name);
     }
-    return model.deleteClass(name);
-}
-
 
     /**
      * Rename a class to a new name if it doesn't already exist
@@ -131,16 +122,17 @@ public boolean deleteClass(String name) {
     }
 
     /*----------------------------------------------------------------------------------------------------------------*/
-    /*                                              FIELD MANAGEMENT METHODS                                          */
+    /* FIELD MANAGEMENT METHODS */
     /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
-    * Retrieves the list of field names for a given class.
-    *
-    * @param className The name of the class whose fields are to be retrieved.
-    * @return A list of field names for the specified class. If the class does not exist, 
-    *         an empty list is returned.
-    */
+     * Retrieves the list of field names for a given class.
+     *
+     * @param className The name of the class whose fields are to be retrieved.
+     * @return A list of field names for the specified class. If the class does not
+     *         exist,
+     *         an empty list is returned.
+     */
     public List<String> getFields(String className) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
@@ -150,24 +142,25 @@ public boolean deleteClass(String name) {
     }
 
     /**
-    * Adds a new field to a specified class.
-    *
-    * @param className The name of the class to which the field will be added.
-    * @param fieldType The type of the field to be added (e.g., int, String).
-    * @param fieldName The name of the field to be added.
-    * @return {@code true} if the field was successfully added, 
-    *         {@code false} if the field already exists or the class was not found.
-    */
+     * Adds a new field to a specified class.
+     *
+     * @param className The name of the class to which the field will be added.
+     * @param fieldType The type of the field to be added (e.g., int, String).
+     * @param fieldName The name of the field to be added.
+     * @return {@code true} if the field was successfully added,
+     *         {@code false} if the field already exists or the class was not found.
+     */
     public boolean addField(String className, String fieldType, String fieldName) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
-            System.out.println("Attempting to add field: " + fieldName + " of type: " + fieldType + " to class: " + className);
+            System.out.println(
+                    "Attempting to add field: " + fieldName + " of type: " + fieldType + " to class: " + className);
             boolean result = umlClass.addField(fieldType, fieldName);
             if (!result) {
                 System.out.println("Field '" + fieldName + "' already exists in class '" + className + "'.");
             }
             return result;
-    }
+        }
         System.out.println("Class '" + className + "' not found.");
         return false;
     }
@@ -203,8 +196,37 @@ public boolean deleteClass(String name) {
         return false;
     }
 
+    /**
+     * Updates the type of an existing field in a specified class.
+     *
+     * @param className The name of the class containing the field to be updated.
+     * @param fieldName The name of the field to be updated.
+     * @param newFieldType The new type for the field.
+     * @return {@code true} if the field type was successfully updated,
+     *         {@code false} if the field was not found or the new type is invalid.
+     */
+    public boolean updateFieldType(String className, String fieldName, String newFieldType) {
+        // Validate input
+        if (newFieldType.isEmpty()) {
+            System.out.println("Field type cannot be empty.");
+            return false;
+        }
+        
+        UmlClass umlClass = model.getUmlClass(className);
+        if (umlClass != null) {
+            System.out.println("Attempting to update field: " + fieldName + " to type: " + newFieldType + " in class: " + className);
+            boolean result = umlClass.updateFieldType(fieldName, newFieldType);
+            if (!result) {
+                System.out.println("Field '" + fieldName + "' not found in class '" + className + "' or failed to update type.");
+            }
+            return result;
+        }
+        System.out.println("Class '" + className + "' not found.");
+        return false;
+    }
+
     /*----------------------------------------------------------------------------------------------------------------*/
-    /*                                              METHOD MANAGEMENT METHODS                                         */
+    /* METHOD MANAGEMENT METHODS */
     /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
@@ -216,7 +238,7 @@ public boolean deleteClass(String name) {
      * @param returnType The return type of the method.
      * @return {@code true} if the method was added, {@code false} otherwise.
      */
-    public boolean addMethod(String className, String methodName, Map<String, String> paraList, String returnType) {
+    public boolean addMethod(String className, String methodName, List<String[]> paraList, String returnType) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.addMethod(methodName, paraList, returnType);
@@ -233,7 +255,7 @@ public boolean deleteClass(String name) {
      * @param returnType The return type of the method.
      * @return {@code true} if the method was deleted, {@code false} otherwise.
      */
-    public boolean deleteMethod(String className, String methodName, Map<String, String> paraList, String returnType) {
+    public boolean deleteMethod(String className, String methodName, List<String[]> paraList, String returnType) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.deleteMethod(methodName, paraList, returnType);
@@ -251,7 +273,7 @@ public boolean deleteClass(String name) {
      * @param newName    The new name of the method.
      * @return {@code true} if the method was renamed, {@code false} otherwise.
      */
-    public boolean renameMethod(String className, String oldName, Map<String, String> paraList, String returnType,
+    public boolean renameMethod(String className, String oldName, List<String[]> paraList, String returnType,
             String newName) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
@@ -260,8 +282,27 @@ public boolean deleteClass(String name) {
         return false;
     }
 
+    /**
+     * Change the return type of a method.
+     * 
+     * @param className The name of the class in which the method belongs.
+     * @param methodName The name of the method
+     * @param paraList The list of parameters that belong to the method
+     * @param oldType The old return type
+     * @param newType The new return type
+     * @return {@code true} if the method's return type was changed, {@code false} otherwise.
+     */
+    public boolean changeReturnType(String className, String methodName, List<String[]> paraList, String oldType, 
+                                        String newType) {
+        UmlClass umlClass = model.getUmlClass(className);
+        if (umlClass != null) {
+            return umlClass.changeReturnType(methodName, paraList, oldType, newType);
+        }
+        return false;
+    }
+
     /*----------------------------------------------------------------------------------------------------------------*/
-    /*                                             PARAMETER MANAGEMENT METHODS                                       */
+    /* PARAMETER MANAGEMENT METHODS */
     /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
@@ -274,7 +315,7 @@ public boolean deleteClass(String name) {
      * @param paraName   The name of the parameter to remove.
      * @return {@code true} if the parameter was removed, {@code false} otherwise.
      */
-    public boolean removeParameter(String className, String methodName, Map<String, String> parameters,
+    public boolean removeParameter(String className, String methodName, List<String[]> parameters,
             String returnType, String[] parameterPair) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
@@ -293,8 +334,8 @@ public boolean deleteClass(String name) {
      * @param newParameters The new list of parameters for the method.
      * @return {@code true} if the parameters were changed, {@code false} otherwise.
      */
-    public boolean changeParameters(String className, String methodName, Map<String, String> oldParameters,
-            String returnType, Map<String, String> newParameters) {
+    public boolean changeParameters(String className, String methodName, List<String[]> oldParameters,
+            String returnType, List<String[]> newParameters) {
         UmlClass umlClass = model.getUmlClass(className);
         if (umlClass != null) {
             return umlClass.changeParameters(methodName, oldParameters, returnType, newParameters);
@@ -303,7 +344,7 @@ public boolean deleteClass(String name) {
     }
 
     /*----------------------------------------------------------------------------------------------------------------*/
-    /*                                              RELATIONSHIP MANAGEMENT METHODS                                   */
+    /* RELATIONSHIP MANAGEMENT METHODS */
     /*----------------------------------------------------------------------------------------------------------------*/
 
     /**

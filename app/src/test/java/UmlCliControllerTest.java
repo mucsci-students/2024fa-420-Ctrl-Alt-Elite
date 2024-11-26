@@ -26,7 +26,7 @@ public class UmlCliControllerTest {
      */
     @BeforeEach
     public void setUp() {
-        model = new UmlEditorModel();
+        model = UmlEditorModel.getInstance();
         umlEditor = new UmlEditor(model);
         view = new CLI();
 
@@ -86,7 +86,7 @@ public class UmlCliControllerTest {
     	
     	umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
-        RelationshipType type = RelationshipType.AGGREGATION;
+        RelationshipType type = RelationshipType.Aggregation;
         umlEditor.addRelationship("ClassA", "ClassB", type);
         
         System.out.print("Output: ");
