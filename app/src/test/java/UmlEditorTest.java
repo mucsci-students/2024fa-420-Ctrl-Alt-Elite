@@ -852,7 +852,7 @@ public class UmlEditorTest {
     public void testAddRelationship() {
         umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
-        RelationshipType type = RelationshipType.AGGREGATION;
+        RelationshipType type = RelationshipType.Aggregation;
 
         assertTrue(umlEditor.addRelationship("ClassA", "ClassB", type),
         	() -> "Error with adding a relationship between classes");
@@ -869,7 +869,7 @@ public class UmlEditorTest {
     @DisplayName ("AddRelationship: Add a relationship between a class and itself")
     public void testAddRelationshipBetweenSameClass() {
         umlEditor.addClass("ClassA");
-        RelationshipType type = RelationshipType.AGGREGATION;
+        RelationshipType type = RelationshipType.Aggregation;
 
         assertTrue(umlEditor.addRelationship("ClassA", "ClassA", type),
         	() -> "Error with adding a relationship between a class and itself.");
@@ -885,7 +885,7 @@ public class UmlEditorTest {
     @DisplayName ("AddRelationship: Add a relationship between non-existent classes, failure test")
     public void testAddRelationshipNonExistentClasses() {
         umlEditor.addClass("ClassA");
-        RelationshipType type = RelationshipType.AGGREGATION;
+        RelationshipType type = RelationshipType.Aggregation;
 
         assertFalse(umlEditor.addRelationship("ClassA", "NonExistentClass", type),
         	() -> "Error with adding a relationship between non-existent classes (Test 1).");
@@ -907,7 +907,7 @@ public class UmlEditorTest {
     public void testDeleteRelationship() {
         umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
-        RelationshipType type = RelationshipType.AGGREGATION;
+        RelationshipType type = RelationshipType.Aggregation;
         umlEditor.addRelationship("ClassA", "ClassB", type);
 
         assertTrue(umlEditor.deleteRelationship("ClassA", "ClassB", type),
@@ -926,7 +926,7 @@ public class UmlEditorTest {
     public void testDeleteRelationshipNotExist() {
     	umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
-    	RelationshipType type = RelationshipType.AGGREGATION;
+    	RelationshipType type = RelationshipType.Aggregation;
 
         assertFalse(umlEditor.deleteRelationship("ClassA", "ClassB", type),
         		() -> "Error with deleting a relationship that does not exist.");
@@ -943,7 +943,7 @@ public class UmlEditorTest {
     @DisplayName ("DeleteRelationship: Delete a relationship between two classes that do not exist, failure test")
     public void testDeleteRelationshipNonExistentClasses() {
         umlEditor.addClass("ClassA");
-        RelationshipType type = RelationshipType.AGGREGATION;
+        RelationshipType type = RelationshipType.Aggregation;
         
         assertFalse(umlEditor.deleteRelationship("ClassA", "NonExistentClass", type),
         	() -> "Error with deleting a relationship from non-existent classes (Test 1).");
@@ -965,10 +965,10 @@ public class UmlEditorTest {
     public void testChangeRelationshipType() {
         umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
-        RelationshipType typeA = RelationshipType.AGGREGATION;
+        RelationshipType typeA = RelationshipType.Aggregation;
         umlEditor.addRelationship("ClassA", "ClassB", typeA);
 
-        RelationshipType typeB = RelationshipType.COMPOSITION;
+        RelationshipType typeB = RelationshipType.Composition;
         assertTrue(umlEditor.changeRelationshipType("ClassA", "ClassB", typeA, typeB));
 
         //Clean up
@@ -984,7 +984,7 @@ public class UmlEditorTest {
     public void testChangeRelationshipTypeSameType() {
         umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
-        RelationshipType typeA = RelationshipType.AGGREGATION;
+        RelationshipType typeA = RelationshipType.Aggregation;
 
         assertFalse(umlEditor.changeRelationshipType("ClassA", "ClassB", typeA, typeA));
 
@@ -999,8 +999,8 @@ public class UmlEditorTest {
     @Test
     @DisplayName ("changeRelationshipType: Change the type of a relationship between classes that do not exist, failure test.")
     public void testChangeRelationshipTypeClassNotExist() {
-        RelationshipType typeA = RelationshipType.AGGREGATION;
-        RelationshipType typeB = RelationshipType.COMPOSITION;
+        RelationshipType typeA = RelationshipType.Aggregation;
+        RelationshipType typeB = RelationshipType.Composition;
         assertFalse(umlEditor.changeRelationshipType("ClassA", "ClassB", typeA, typeB));
     }
 
@@ -1012,9 +1012,9 @@ public class UmlEditorTest {
     public void testChangeRelationshipTypeNotExist() {
         umlEditor.addClass("ClassA");
         umlEditor.addClass("ClassB");
-        RelationshipType typeA = RelationshipType.AGGREGATION;
+        RelationshipType typeA = RelationshipType.Aggregation;
 
-        RelationshipType typeB = RelationshipType.COMPOSITION;
+        RelationshipType typeB = RelationshipType.Composition;
         assertFalse(umlEditor.changeRelationshipType("ClassA", "ClassB", typeA, typeB));
 
         //Clean up
