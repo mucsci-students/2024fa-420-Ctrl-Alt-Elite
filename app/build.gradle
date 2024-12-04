@@ -15,8 +15,7 @@ dependencies {
     // Dependencies used by the application.
     implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'com.google.guava:guava:31.0.1-jre' // Specify the Guava version
-    // https://mvnrepository.com/artifact/org.jline/jline
-    implementation 'org.jline:jline:3.27.1'
+    implementation 'org.jline:jline:3.21.0' // For Tab-Completion
 }
 java {
     toolchain {
