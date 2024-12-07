@@ -23,7 +23,7 @@ public class UmlClassAdapter implements JsonSerializer<UmlClass> {
     @Override
     public JsonElement serialize(UmlClass src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject jsonClass = new JsonObject();
-        
+
         // Add name
         jsonClass.addProperty("name", src.getName());
 
@@ -39,37 +39,49 @@ public class UmlClassAdapter implements JsonSerializer<UmlClass> {
 
         // Serialize methods as an array of objects (name, return_type, params)
         ArrayList<JsonObject> methodsList = new ArrayList<>();
-        for (String methodString : src.getMethods()) {  
+        for (String methodString : src.getMethods()) {
             JsonObject methodObj = new JsonObject();
-            
-            // Extract method details (methodName(returnType, params))
-            String[] methodParts = methodString.split("\\(");
-            String methodNameWithReturnType = methodParts[0].trim(); // Example: "setPSI"
-            String returnType = methodNameWithReturnType.split(" ")[0].trim();  // Extract return type
-            String methodName = methodNameWithReturnType.split(" ")[1].trim();  // Extract method name
-            
-            methodObj.addProperty("name", methodName);
-            methodObj.addProperty("return_type", returnType);
-            
-            // Extract parameters
-            ArrayList<JsonObject> paramsList = new ArrayList<>();
-            if (methodParts.length > 1 && methodParts[1].contains(")")) {
-                String paramString = methodParts[1].split("\\)")[0].trim(); // Extract the part inside parentheses
-                if (!paramString.isEmpty()) {
-                    String[] params = paramString.split(",");
-                    for (String param : params) {
-                        JsonObject paramObj = new JsonObject();
-                        String[] paramParts = param.trim().split(" ");  // Assuming "type name" format
-                        if (paramParts.length == 2) {
-                            paramObj.addProperty("name", paramParts[1]);
-                            paramObj.addProperty("type", paramParts[0]);
+
+            try {
+                // Extract method details (methodName(returnType, params))
+                String[] methodParts = methodString.split("\\(");
+                if (methodParts.length < 1)
+                    continue; // Skip if no method name or params
+
+                String methodNameWithReturnType = methodParts[0].trim(); // Example: "setPSI"
+                String[] nameAndType = methodNameWithReturnType.split(" ");
+                if (nameAndType.length < 2)
+                    continue; // Skip if no return type or method name
+
+                String returnType = nameAndType[0].trim(); // Extract return type
+                String methodName = nameAndType[1].trim(); // Extract method name
+
+                methodObj.addProperty("name", methodName);
+                methodObj.addProperty("return_type", returnType);
+
+                // Extract parameters
+                ArrayList<JsonObject> paramsList = new ArrayList<>();
+                if (methodParts.length > 1 && methodParts[1].contains(")")) {
+                    String paramString = methodParts[1].split("\\)")[0].trim(); // Extract the part inside parentheses
+                    if (!paramString.isEmpty()) {
+                        String[] params = paramString.split(",");
+                        for (String param : params) {
+                            JsonObject paramObj = new JsonObject();
+                            String[] paramParts = param.trim().split(" "); // Assuming "type name" format
+                            if (paramParts.length == 2) {
+                                paramObj.addProperty("name", paramParts[1]);
+                                paramObj.addProperty("type", paramParts[0]);
+                            }
+                            paramsList.add(paramObj);
                         }
-                        paramsList.add(paramObj);
                     }
                 }
+                methodObj.add("params", context.serialize(paramsList));
+                methodsList.add(methodObj);
+            } catch (Exception e) {
+                System.err.println("Error serializing method: " + methodString);
+                e.printStackTrace(); // Log the error for debugging
             }
-            methodObj.add("params", context.serialize(paramsList));
-            methodsList.add(methodObj);
         }
 
         jsonClass.add("methods", context.serialize(methodsList));
@@ -84,4 +96,5 @@ public class UmlClassAdapter implements JsonSerializer<UmlClass> {
 
         return jsonClass;
     }
+
 }
