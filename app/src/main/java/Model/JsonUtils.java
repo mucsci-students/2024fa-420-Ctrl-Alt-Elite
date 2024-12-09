@@ -14,29 +14,20 @@ import com.google.gson.reflect.TypeToken;
  * Utility class for saving and loading UML editor data in JSON format.
  */
 public class JsonUtils {
-    // Register the UmlClassAdapter with GsonBuilder
-    private static final Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .registerTypeAdapter(UmlClass.class, new UmlClassAdapter()) // Custom adapter for UmlClass
-            .registerTypeAdapter(UmlEditorModel.class, new UmlEditorModelAdapter())  // Register UmlEditorModelAdapter
-            .create();
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-            public static void save(UmlEditorModel editorModel, String filename) throws IOException {
-                if (editorModel == null) {
-                    throw new IllegalArgumentException("Editor model is null and cannot be saved.");
-                }
-            
-                try (FileWriter writer = new FileWriter(filename)) {
-                    String json = gson.toJson(editorModel);
-                    System.out.println("Serialized JSON: " + json); // Debugging
-                    gson.toJson(editorModel, writer); // Uses UmlClassAdapter for UmlClass objects
-                    System.out.println("Data saved successfully to " + filename);
-                } catch (IOException e) {
-                    System.err.println("Error saving data to file: " + e.getMessage());
-                    throw e;
-                }
-            }
-            
+    /**
+     * Saves the UML editor data (classes and relationships) to a JSON file.
+     *
+     * @param editorModel The {@link UmlEditorModel} containing the classes and relationships.
+     * @param filename    The name of the file to save the data to.
+     * @throws IOException If there is an issue writing to the file.
+     */
+    public static void save(UmlEditorModel editorModel, String filename) throws IOException, NullPointerException {
+        try (FileWriter writer = new FileWriter(filename)) {
+            gson.toJson(editorModel, writer);
+        }
+    }
 
     /**
      * Loads the UML editor data (classes and relationships) from a JSON file.
@@ -49,7 +40,7 @@ public class JsonUtils {
         try (FileReader reader = new FileReader(filename)) {
             Type type = new TypeToken<UmlEditorModel>() {}.getType();
             try {
-                return gson.fromJson(reader, type); // Deserializes the JSON
+                return gson.fromJson(reader, type);
             } catch (JsonParseException e) {
                 throw new IOException("Invalid JSON format", e);
             }
