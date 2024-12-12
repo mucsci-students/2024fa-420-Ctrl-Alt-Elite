@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;  // JUnit 5 assertions
 
@@ -1021,6 +1022,69 @@ public class UmlEditorTest {
         umlEditor.deleteClass("ClassA");
         umlEditor.deleteClass("ClassB");
     }
-}
 
+
+/*----------------------------------------------------------------------------------------------------------------*/
+// Misc.
+
+    /**
+     * Test undo.
+     */
+    @Test
+    @DisplayName ("Undo: Test Undo")
+    public void testUndo() {
+        umlEditor.addClass("ClassA");
+        umlEditor.undo();
+        umlEditor.undo();
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
+    }
+
+    /**
+     * Test redo.
+     */
+    @Test
+    @DisplayName ("Redo: Test Redo")
+    public void testRedo() {
+        umlEditor.addClass("ClassA");
+        umlEditor.undo();
+        umlEditor.redo();
+        umlEditor.redo();
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
+    }
+
+    /**
+     * Test add class but with points.
+     */
+    @Test
+    @DisplayName ("Redo: Test Redo")
+    public void testAddClassWithPoints() {
+        Point point = new Point(0, 0);
+        umlEditor.addClass("ClassA", point);
+        umlEditor.addClass("", point);
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
+    }
+
+    /**
+     * Test getFields.
+     */
+    @Test
+    @DisplayName ("GetFields: Test getFields")
+    public void testGetField() {
+        umlEditor.addClass("ClassA");
+        umlEditor.addField("ClassA", "int", "F");
+        umlEditor.getFields("ClassA");
+
+        //Clean up
+        umlEditor.deleteClass("ClassA");
+    }
+
+
+
+}
 /*----------------------------------------------------------------------------------------------------------------*/
