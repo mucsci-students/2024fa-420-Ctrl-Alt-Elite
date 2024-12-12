@@ -9,7 +9,6 @@ import Model.Memento;
 import Model.RelationshipType;
 import Model.UmlClass;
 import Model.UmlEditorModel;
-import Model.Memento;
 
 public class UmlEditor {
     /** The model that holds the classes and relationships for this Uml Editor */
