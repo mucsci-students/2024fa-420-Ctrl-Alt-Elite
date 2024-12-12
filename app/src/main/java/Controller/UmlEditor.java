@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import Model.RelationshipType;
 import Model.UmlClass;
 import Model.UmlEditorModel;
@@ -13,20 +14,37 @@ public class UmlEditor {
     private UmlEditorModel model;
 
     /*----------------------------------------------------------------------------------------------------------------*/
-    // private Memento memento = new Memento();
+    private Memento memento;
     
 
     public UmlEditor(UmlEditorModel initialModel) {
-        this.model = initialModel; // Use a deep copy here
-        //memento.saveState(this.model); // Save initial state
+        this.model = new UmlEditorModel();
+        this.memento = new Memento();
     }
 
 
-    // public Memento getMemento() {
-    //     return memento;
-    // }
 
+// Undo the last action
+public void undo() {
+    UmlEditorModel previousState = memento.undoState();
+    if (previousState != null) {
+        model = previousState;
+        System.out.println("Undo successful.");
+    } else {
+        System.out.println("Nothing to undo.");
+    }
+}
 
+// Redo the last undone action
+public void redo() {
+    UmlEditorModel nextState = memento.redoState();
+    if (nextState != null) {
+        model = nextState;
+        System.out.println("Redo successful.");
+    } else {
+        System.out.println("Nothing to redo.");
+    }
+}
     /*----------------------------------------------------------------------------------------------------------------*/
     /*                                              CLASS MANAGEMENT METHODS                                          */
     /*----------------------------------------------------------------------------------------------------------------*/
@@ -40,7 +58,6 @@ public class UmlEditor {
      * @return {@code true} if the class was added, {@code false} otherwise.
      */
     public boolean addClass(String name, Point position) {
-        
         if (name == null || name.isEmpty() || name.contains(" ")) {
             return false;
         }
