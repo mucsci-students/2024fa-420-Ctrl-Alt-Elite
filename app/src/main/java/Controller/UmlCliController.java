@@ -38,7 +38,7 @@ public class UmlCliController {
     private final CLI view;
     private final Scanner scanner;
     private final LineReader reader; // Moved here to be a class field
-    UmlEditor controller = new UmlEditor(model);
+   UmlEditorModel controller = new UmlEditorModel();
 
     private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
         "add-class", "delete-class", "rename-class",
@@ -661,13 +661,19 @@ public class UmlCliController {
 
 
     public void handleUndo() {
-        controller.undo();
-        System.out.println("Undo Performed");
+        if (umlEditor.getModel().undo()) {
+            System.out.println("Undo performed successfully.");
+        } else {
+            System.out.println("Nothing to undo.");
+        }
     }
 
     public void handleRedo() {
-        controller.redo();
-        System.out.println("Redo performed.");
+        if (umlEditor.getModel().redo()) {
+            System.out.println("Redo performed successfully.");
+        } else {
+            System.out.println("Nothing to redo.");
+        }
     }
 
     /*************************************************************************************************/

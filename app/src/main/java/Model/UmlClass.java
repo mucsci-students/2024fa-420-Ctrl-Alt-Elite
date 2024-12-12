@@ -34,6 +34,10 @@ public class UmlClass {
         this.name = other.name;
         this.position = (other.position != null) ? new Point(other.position) : new Point(0, 0);
         this.fields = new LinkedHashMap<>(other.fields); // Deep copy of fields
+        this.methods = new ArrayList<>();  // Initialize methods ArrayList
+        if (other.methods != null) {
+            this.methods.addAll(other.methods);  // Copy methods if they exist
+        }
     }
 
     /**

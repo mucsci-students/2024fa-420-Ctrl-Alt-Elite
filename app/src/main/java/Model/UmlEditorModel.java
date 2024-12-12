@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import java.awt.Point;
 
 /**
@@ -20,6 +21,8 @@ public class UmlEditorModel {
 
     /** A map to store the positions of UML classes by their name */
     private Map<String, Point> classPositions;
+    private transient Memento memento;
+
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -30,9 +33,10 @@ public class UmlEditorModel {
         this.classes = new HashMap<>();
         this.relationships = new ArrayList<>();
         this.classPositions = new HashMap<>(); // Initialize the classPositions map
+        this.memento = new Memento();
+        };
 
         
-    }
 
     // Copy constructor for deep copying
     public UmlEditorModel(UmlEditorModel other) {
@@ -52,7 +56,79 @@ public class UmlEditorModel {
         this.classPositions = new HashMap<>();
         for (Map.Entry<String, Point> entry : other.classPositions.entrySet()) {
             this.classPositions.put(entry.getKey(), new Point(entry.getValue())); // Create a new Point for deep copy
+
         }
+        this.memento = other.memento;
+    }
+
+    public Memento getMemento() {
+		return memento;
+	}
+
+    public boolean saveState() {
+        // Create a deep copy of current state and save it
+        UmlEditorModel stateCopy = new UmlEditorModel(this);
+        memento.saveState(stateCopy);
+        return true;
+    }
+    
+    public boolean undo() {
+        UmlEditorModel previousState = memento.undoState();
+        if (previousState == null) {
+            return false;
+        }
+        
+        // No need to save current state for redo as it's handled in memento.undoState()
+        
+        // Use deep copy methods to restore state
+        this.classes = deepCopyClasses(previousState.getClasses());
+        this.relationships = deepCopyRelationships(previousState.getRelationships());
+        this.classPositions = deepCopyPositions(previousState.getClassPositions());
+        
+        return true;
+    }
+    
+    private Map<String, UmlClass> deepCopyClasses(Map<String, UmlClass> original) {
+        Map<String, UmlClass> copy = new HashMap<>();
+        for (Map.Entry<String, UmlClass> entry : original.entrySet()) {
+            copy.put(entry.getKey(), new UmlClass(entry.getValue()));
+        }
+        return copy;
+    }
+
+    
+    // Example deep copy methods
+    private List<UmlRelationship> deepCopyRelationships(List<UmlRelationship> original) {
+        List<UmlRelationship> copy = new ArrayList<>();
+        for (UmlRelationship relationship : original) {
+            copy.add(new UmlRelationship(relationship));  // Assuming UmlRelationship has a copy constructor
+        }
+        return copy;
+    }
+
+    private Map<String, Point> deepCopyPositions(Map<String, Point> original) {
+        Map<String, Point> copy = new HashMap<>();
+        for (Map.Entry<String, Point> entry : original.entrySet()) {
+            copy.put(entry.getKey(), new Point(entry.getValue()));  // Deep copy each Point
+        }
+        return copy;
+    }
+    
+    
+    
+    
+    public boolean redo() {
+        UmlEditorModel nextState = memento.redo();
+        if (nextState == null) {
+            return false;
+        }
+        
+        // Use deep copy methods to restore state
+        this.classes = deepCopyClasses(nextState.getClasses());
+        this.relationships = deepCopyRelationships(nextState.getRelationships());
+        this.classPositions = deepCopyPositions(nextState.getClassPositions());
+        
+        return true;
     }
 
     /*----------------------------------------------------------------------------------------------------------------*/
@@ -146,7 +222,6 @@ public class UmlEditorModel {
         if (name == null || name.isEmpty()) {
             return null;
         }
-
         return classes.get(name);
     }
 
@@ -187,6 +262,8 @@ public class UmlEditorModel {
     public boolean addClass(String name, Point position) {
         // Return false if name is null, empty, class already exists, or the name has
         // white space
+        memento.clearRedo();
+        saveState();
         if (classes.containsKey(name) || name == null || name.isEmpty() || name.contains(" ")) {
             return false;
         }
@@ -203,8 +280,8 @@ public class UmlEditorModel {
      * @return {@code true} if the class was added, {@code false} otherwise.
      */
     public boolean addClass(String name) {
-        // Return false if name is null, empty, class already exists, or the name has
-        // white space
+        memento.clearRedo();
+        saveState();
         if (classes.containsKey(name) || name == null || name.isEmpty() || name.contains(" ")) {
             return false;
         }
@@ -220,6 +297,8 @@ public class UmlEditorModel {
      * @return {@code true} if the class was deleted, {@code false} otherwise.
      */
     public boolean deleteClass(String name) {
+        memento.clearRedo();
+        saveState();
         if (name == null || name.isEmpty()) {
             return false;
         }
@@ -230,6 +309,7 @@ public class UmlEditorModel {
             relationships.removeIf(rel -> rel.getSource().equals(name) || rel.getDestination().equals(name));
             return true;
         }
+           
         return false;
     }
 
@@ -377,6 +457,15 @@ public class UmlEditorModel {
             }
         }
         return null; // Return null if no relationship is found
+    }
+
+    /**
+     * Get all of the class positions.
+     * 
+     * @return The map of class positions.
+     */
+    public Map<String, Point> getClassPositions() {
+        return classPositions;
     }
 }
 

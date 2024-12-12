@@ -1,13 +1,9 @@
 package Controller;
-import Model.Memento;
-
-
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
 import Model.RelationshipType;
 import Model.UmlClass;
 import Model.UmlEditorModel;
@@ -17,37 +13,20 @@ public class UmlEditor {
     private UmlEditorModel model;
 
     /*----------------------------------------------------------------------------------------------------------------*/
-    private Memento memento;
+    // private Memento memento = new Memento();
     
 
     public UmlEditor(UmlEditorModel initialModel) {
-        this.model = new UmlEditorModel();
-        this.memento = new Memento();
+        this.model = initialModel; // Use a deep copy here
+        //memento.saveState(this.model); // Save initial state
     }
 
 
+    // public Memento getMemento() {
+    //     return memento;
+    // }
 
-// Undo the last action
-public void undo() {
-    UmlEditorModel previousState = memento.undoState();
-    if (previousState != null) {
-        model = previousState;
-        System.out.println("Undo successful.");
-    } else {
-        System.out.println("Nothing to undo.");
-    }
-}
 
-// Redo the last undone action
-public void redo() {
-    UmlEditorModel nextState = memento.redoState();
-    if (nextState != null) {
-        model = nextState;
-        System.out.println("Redo successful.");
-    } else {
-        System.out.println("Nothing to redo.");
-    }
-}
     /*----------------------------------------------------------------------------------------------------------------*/
     /*                                              CLASS MANAGEMENT METHODS                                          */
     /*----------------------------------------------------------------------------------------------------------------*/
@@ -65,7 +44,9 @@ public void redo() {
         if (name == null || name.isEmpty() || name.contains(" ")) {
             return false;
         }
+       
         return model.addClass(name, position); // Pass the position to the model
+        
     }
 
     /**
@@ -78,6 +59,7 @@ public void redo() {
     // Example method to add a class
    // Method to add a class
    public boolean addClass(String name) {
+    
     if (name == null || name.isEmpty() || name.contains(" ")) {
         return false;
     }
@@ -91,7 +73,6 @@ public void redo() {
  * @return {@code true} if the class was deleted, {@code false} otherwise.
  */
 public boolean deleteClass(String name) {
-    
     if (name == null || name.isEmpty()) {
         return false;
     }
@@ -352,6 +333,11 @@ public boolean deleteClass(String name) {
             return model.changeRelationshipType(source, destination, currentType, newType);
         }
         return false;
+    }
+
+    // Add this getter method
+    public UmlEditorModel getModel() {
+        return model;
     }
 }
 

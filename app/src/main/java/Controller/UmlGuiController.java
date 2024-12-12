@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.border.EmptyBorder;
+import java.awt.event.KeyEvent;
+import javax.swing.KeyStroke;
 
 import Model.RelationshipType;
 import Model.UmlClass;
@@ -46,6 +48,8 @@ public class UmlGuiController extends JFrame {
     private JMenuItem addRelationshipItem;
     private JMenuItem deleteRelationshipItem;
     private JMenuItem changeRelationshipItem;
+    private JMenuItem undoItem;
+    private JMenuItem redoItem;
 
     public UmlGuiController() {
         umlEditorModel = new UmlEditorModel();
@@ -145,6 +149,16 @@ public class UmlGuiController extends JFrame {
         addMenuItem(listMenu, "List Relationships", e -> showListRelationshipsPanel());
         menuBar.add(listMenu);
 
+        // Create the "Edit" menu
+        JMenu editMenu = new JMenu("Edit");
+        undoItem = addMenuItem(editMenu, "Undo", e -> handleUndo());
+        redoItem = addMenuItem(editMenu, "Redo", e -> handleRedo());
+        menuBar.add(editMenu);
+
+        // Add keyboard shortcuts
+        undoItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+        redoItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+
         // Set the menu bar
         setJMenuBar(menuBar);
 
@@ -199,6 +213,10 @@ public class UmlGuiController extends JFrame {
         changeRelationshipItem.setEnabled(hasRelationships); // Enable "Change Relationship" if there are relationships
         changeParametersItem.setEnabled(hasMethods); // Enable "Change Parameters" if there are methods in the class
         deleteParameterItem.setEnabled(hasMethods); // Enable "Delete Parameter" if there are methods in the class
+
+        // Update undo/redo button states
+        undoItem.setEnabled(umlEditorModel.getMemento().canUndo());
+        redoItem.setEnabled(umlEditorModel.getMemento().canRedo());
     }
 
     // Add Class Panel
@@ -253,25 +271,22 @@ public class UmlGuiController extends JFrame {
 
         JPanel deleteClassPanel = new JPanel();
         deleteClassPanel.setLayout(new BoxLayout(deleteClassPanel, BoxLayout.Y_AXIS));
-        deleteClassPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
+        deleteClassPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Get class names from the model
         String[] classNames = umlEditorModel.getClassNames();
-
-        // Create a combo box for selecting the class to delete
         JComboBox<String> classComboBox = new JComboBox<>(classNames);
         deleteClassPanel.add(new JLabel("Select Class to Delete:"));
         deleteClassPanel.add(classComboBox);
 
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            String className = (String) classComboBox.getSelectedItem(); // Get selected class name
+            String className = (String) classComboBox.getSelectedItem();
             if (umlEditorModel.deleteClass(className)) {
                 outputArea.append("Class '" + className + "' deleted.\n");
-                removeClassRectangle(className);
+                classPositions.remove(className);  // Remove from positions map
                 drawingPanel.revalidate();
                 drawingPanel.repaint();
-                updateButtonStates(); // Update button states after deletion
+                updateButtonStates();
             } else {
                 outputArea.append("Failed to delete class '" + className + "'.\n");
             }
@@ -1220,11 +1235,20 @@ private void showRenameMethodPanel() {
                     for (Map.Entry<String, Point> entry : classPositions.entrySet()) {
                         String className = entry.getKey();
                         Point position = entry.getValue();
-                        Rectangle rect = new Rectangle(position.x, position.y, 100,
-                                50 + (umlEditorModel.getClass(className).getFields().size() * 15));
+                        
+                        // Get the UML class and check if it exists
+                        UmlClass umlClass = umlEditorModel.getClass(className);
+                        if (umlClass == null) continue;  // Skip if class doesn't exist
+                        
+                        // Calculate box height based on fields
+                        int boxHeight = 50 + (umlClass.getFields().size() * 15);
+                        
+                        // Create rectangle for hit detection
+                        Rectangle rect = new Rectangle(position.x, position.y, 100, boxHeight);
+                        
                         if (rect.contains(e.getPoint())) {
-                            selectedClassName = className; // Set the selected class
-                            dragStartPoint = e.getPoint(); // Store the initial drag point
+                            selectedClassName = className;
+                            dragStartPoint = e.getPoint();
                             break;
                         }
                     }
@@ -1232,7 +1256,6 @@ private void showRenameMethodPanel() {
 
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    // Clear selection on mouse release
                     selectedClassName = null;
                     dragStartPoint = null;
                 }
@@ -1520,9 +1543,51 @@ private void showRenameMethodPanel() {
         // Helper method to get the box height based on the class name
         private int getBoxHeight(String className) {
             UmlClass umlClass = umlEditorModel.getClass(className);
-            int attributeCount = (umlClass != null) ? umlClass.getFields().size() : 0;
-            int methodCount = (umlClass != null) ? umlClass.getMethods().size() : 0; // Get the number of methods
-            return 50 + (attributeCount * 15) + (methodCount * 15); // Base height + dynamic attribute and method height
+            if (umlClass == null) return 50;  // Return default height if class doesn't exist
+            
+            int attributeCount = umlClass.getFields().size();
+            int methodCount = umlClass.getMethods().size();
+            return 50 + (attributeCount * 15) + (methodCount * 15);
+        }
+    }
+
+    // Add these methods to handle undo/redo
+    private void handleUndo() {
+        if (umlEditorModel.undo()) {
+            outputArea.append("Undo successful.\n");
+            syncClassPositionsWithModel();  // Sync GUI state with model
+            drawingPanel.repaint();
+            updateButtonStates();
+        } else {
+            outputArea.append("Nothing to undo.\n");
+        }
+    }
+
+    private void handleRedo() {
+        if (umlEditorModel.redo()) {
+            outputArea.append("Redo successful.\n");
+            syncClassPositionsWithModel();  // Sync GUI state with model
+            drawingPanel.repaint();
+            updateButtonStates();
+        } else {
+            outputArea.append("Nothing to redo.\n");
+        }
+    }
+
+    // Add this helper method to sync classPositions with the model
+    private void syncClassPositionsWithModel() {
+        // Remove positions for classes that no longer exist
+        classPositions.keySet().removeIf(className -> !umlEditorModel.getClasses().containsKey(className));
+        
+        // Add positions for new classes
+        for (String className : umlEditorModel.getClasses().keySet()) {
+            if (!classPositions.containsKey(className)) {
+                // Generate random position for new classes
+                Random random = new Random();
+                int xPosition = random.nextInt(500);
+                int yPosition = random.nextInt(500);
+                classPositions.put(className, new Point(xPosition, yPosition));
+            }
         }
     }
 }
