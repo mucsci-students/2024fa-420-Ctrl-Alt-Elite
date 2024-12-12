@@ -179,38 +179,54 @@ public class UmlGuiController extends JFrame {
     private void updateButtonStates() {
         // Check if there are any classes
         boolean hasClasses = !umlEditorModel.getClasses().isEmpty();
-        // Check if there are fields in the first class
-        boolean hasFields = hasClasses && !umlEditorModel.getClasses().values().iterator().next().getFields().isEmpty();
-        // Check if there are methods in the first class
-        boolean hasMethods = hasClasses && !umlEditorModel.getClasses().values().iterator().next().getMethods().isEmpty();
+    
+        // Initialize variables to check for fields and methods across all classes
+        boolean hasFields = false;
+        boolean hasMethods = false;
+    
+        // Check each class for fields and methods
+        for (UmlClass umlClass : umlEditorModel.getClasses().values()) {
+            if (!umlClass.getFields().isEmpty()) {
+                hasFields = true;
+            }
+            if (!umlClass.getMethods().isEmpty()) {
+                hasMethods = true;
+            }
+            // If both haveFields and hasMethods are true, no need to continue checking
+            if (hasFields && hasMethods) {
+                break;
+            }
+        }
+    
         // Check if there are any relationships
         boolean hasRelationships = !umlEditorModel.getRelationships().isEmpty();
-
+    
         // Enable/disable relevant items
         deleteClassItem.setEnabled(hasClasses);
         renameClassItem.setEnabled(hasClasses);
-
+    
         // Field menu items
         addFieldItem.setEnabled(hasClasses); // Enable "Add Field" if there's at least one class
-        deleteFieldItem.setEnabled(hasFields); // Enable "Delete Field" if there are fields in the class
-        renameFieldItem.setEnabled(hasFields); // Enable "Rename Field" if there are fields in the class
+        deleteFieldItem.setEnabled(hasFields); // Enable "Delete Field" if there are fields in any class
+        renameFieldItem.setEnabled(hasFields); // Enable "Rename Field" if there are fields in any class
         changeFieldTypeItem.setEnabled(hasFields);
-
+    
         // Method menu items
         addMethodItem.setEnabled(hasClasses); // Enable "Add Method" if there's at least one class
-        deleteMethodItem.setEnabled(hasMethods); // Enable "Delete Method" if there are methods in the class
-        renameMethodItem.setEnabled(hasMethods); // Enable "Rename Method" if there are methods in the class
+        deleteMethodItem.setEnabled(hasMethods); // Enable "Delete Method" if there are methods in any class
+        renameMethodItem.setEnabled(hasMethods); // Enable "Rename Method" if there are methods in any class
         changeReturnTypeItem.setEnabled(hasMethods);
-
+    
         // Relationship menu items
         addRelationshipItem.setEnabled(hasClasses); // Enable "Add Relationship" if there's at least one class
         deleteRelationshipItem.setEnabled(hasRelationships); // Enable "Delete Relationship" if there are relationships
-
+    
         // Other related items
         changeRelationshipItem.setEnabled(hasRelationships); // Enable "Change Relationship" if there are relationships
-        changeParametersItem.setEnabled(hasMethods); // Enable "Change Parameters" if there are methods in the class
-        deleteParameterItem.setEnabled(hasMethods); // Enable "Delete Parameter" if there are methods in the class
+        changeParametersItem.setEnabled(hasMethods); // Enable "Change Parameters" if there are methods in any class
+        deleteParameterItem.setEnabled(hasMethods); // Enable "Delete Parameter" if there are methods in any class
     }
+    
 
     // Add Class Panel
     private void showAddClassPanel() {
